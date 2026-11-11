@@ -7,18 +7,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kohistanbookingapp.databinding.ItemRouteTimeBinding
-import com.example.kohistanbookingapp.models.response.RouteTime
+import com.example.kohistanbookingapp.models.response.RouteData
 import com.example.kohistanbookingapp.util.AppUtils
 
 class RouteTimeAdapter(
-    private var fromCity: String,
-    private var toCity: String,
-    private val onTimeSelected: (RouteTime) -> Unit
-) : ListAdapter<RouteTime, RouteTimeAdapter.RouteTimeViewHolder>(DiffCallback) {
+    private val onTimeSelected: (RouteData) -> Unit
+) : ListAdapter<RouteData, RouteTimeAdapter.RouteTimeViewHolder>(DiffCallback) {
 
     fun updateRouteCities(from: String, to: String) {
-        this.fromCity = from
-        this.toCity = to
+        /*this.fromCity = from
+        this.toCity = to*/
         notifyItemRangeChanged(0, itemCount)
     }
 
@@ -39,15 +37,16 @@ class RouteTimeAdapter(
         private val binding: ItemRouteTimeBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: RouteTime) {
+        fun bind(item: RouteData) {
             Log.e("Route",item.toString())
 
-            binding.tvDepartureTime.text = AppUtils.formatToAmPm(item.routeTime.orEmpty())
-            binding.tvType.text = item.timeType ?: "Regular"
+            binding.tvDepartureTime.text = AppUtils.formatToAmPm(item.routeTimeValue.orEmpty())
+            binding.tvType.text = item.routeTimeType ?: "Regular"
+            binding.tvPrice.text = item.fare.toString()
 
             // Bound from the cities passed from the Activity
-            binding.tvFromCity.text = fromCity
-            binding.tvToCity.text = toCity
+            binding.tvFromCity.text = item.fromCity
+            binding.tvToCity.text = item.toCity
 
             binding.btnConfirm.setOnClickListener {
                 onTimeSelected(item)
@@ -58,12 +57,12 @@ class RouteTimeAdapter(
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<RouteTime>() {
-        override fun areItemsTheSame(oldItem: RouteTime, newItem: RouteTime): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<RouteData>() {
+        override fun areItemsTheSame(oldItem: RouteData, newItem: RouteData): Boolean {
             return oldItem.routeTimeId == newItem.routeTimeId
         }
 
-        override fun areContentsTheSame(oldItem: RouteTime, newItem: RouteTime): Boolean {
+        override fun areContentsTheSame(oldItem: RouteData, newItem: RouteData): Boolean {
             return oldItem == newItem
         }
     }

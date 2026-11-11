@@ -3,8 +3,6 @@ package com.example.kohistanbookingapp.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +12,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.databinding.ActivitySplashBinding
+import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
 @SuppressLint("CustomSplashScreen")
@@ -24,6 +24,9 @@ import kotlin.time.Duration.Companion.milliseconds
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
+
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -40,7 +43,6 @@ class SplashActivity : AppCompatActivity() {
         }
 
         startSplashAnimations()
-
     }
 
     private fun startSplashAnimations() {
@@ -59,13 +61,19 @@ class SplashActivity : AppCompatActivity() {
 
             val bookingText = "BOOKING"
             val bookingStringBuilder = StringBuilder()
-
             for (char in bookingText) {
                 bookingStringBuilder.append(char)
                 binding.tvBooking.text = bookingStringBuilder.toString()
                 delay(100.milliseconds)
             }
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+
+            val destination = if (sharedPreferencesHelper.isLoggedIn) {
+                MainActivity::class.java
+            } else {
+                LoginActivity::class.java
+            }
+
+            startActivity(Intent(this@SplashActivity, destination))
             finish()
         }
     }

@@ -11,9 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.ActivityMainBinding
 import com.example.kohistanbookingapp.util.AppLoader
@@ -21,8 +18,8 @@ import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.NavTab
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.ApiViewModel
+import com.example.kohistanbookingapp.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val apiViewModel: ApiViewModel by viewModels()
-
+    private val authViewModel: AuthViewModel by viewModels()
     private val locationPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -92,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 handleApiStatus(status)
             }
         }
-        apiViewModel.filteredRoutes.observe(this) { event ->
+        /*apiViewModel.routeDetailResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { routes ->
                 if (routes.isEmpty()) {
                     AppUtils.showCustomToast(
@@ -104,6 +101,18 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this, RoutesActivity::class.java)
                     startActivity(intent)
                 }
+            }
+        }*/
+
+        authViewModel.logoutResponse.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                sharedPreferencesHelper.clearUserData()
+                apiViewModel.clearSession()
+                val intent = Intent(this, LoginActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
+                finishAffinity()
             }
         }
 
@@ -214,7 +223,9 @@ class MainActivity : AppCompatActivity() {
             NavTab.PROFILE -> loadFragment(ProfileFragment())
             NavTab.SETTINGS -> {}
             NavTab.PRIVACY -> {}
-            NavTab.LOGOUT -> {}
+            NavTab.LOGOUT -> {
+                authViewModel.logout()
+            }
         }
     }
 

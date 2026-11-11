@@ -16,42 +16,46 @@ class ApiViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     val apiRequestStatus = apiRepository.apiRequestStatus
-    val citiesData = apiRepository.citiesData
+    val allDepartureCities = apiRepository.allDepartureCities
 
-    val allRoutesData = apiRepository.allRoutesData
+    val allDestinationCities = apiRepository.allDestinationCities
+
 
     val selectedFromCity = apiRepository.selectedFromCity
     val selectedToCity = apiRepository.selectedToCity
 
-    val filteredRoutes = apiRepository.filteredRoutes
-
-    val selectedUtcDate = apiRepository.selectedUtcDate
+    val routeDetailResponse = apiRepository.routeDetailResponse
 
     fun setFromCity(city: CityData?) = apiRepository.setSelectedFromCity(city)
     fun setToCity(city: CityData?) = apiRepository.setSelectedToCity(city)
     fun swapCities() = apiRepository.swapCities()
 
-    fun setSelectedDate(formattedUtcDate: String) {
-        apiRepository.setSelectedDate(formattedUtcDate)
+    fun setSelectedDate(date: String){
+        apiRepository.setSelectedDate(date)
     }
 
-    fun getSelectedDate(): String?{
+    fun getSelectedDate(): String{
         return apiRepository.getSelectedDate()
     }
-
-    fun getAllCities(){
+    fun getAllDepartureCities(){
         viewModelScope.launch {
-            apiRepository.getAllCities()
+            apiRepository.getAllDepartureCities()
         }
     }
 
-    fun getAllRoutes(){
+    fun getAllDestinationCities(){
         viewModelScope.launch {
-            apiRepository.getAllRoutes()
+            apiRepository.getAllDestinationCities()
         }
     }
 
-    fun searchRoutes(){
-        apiRepository.searchRoutes()
+    fun getRouteDetails(date: String){
+        viewModelScope.launch {
+            apiRepository.getRouteDetails(date)
+        }
+    }
+
+    fun clearSession(){
+        apiRepository.clearSession()
     }
 }

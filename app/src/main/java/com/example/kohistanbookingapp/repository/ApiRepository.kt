@@ -10,6 +10,9 @@ import com.example.kohistanbookingapp.models.response.RouteData
 import com.example.kohistanbookingapp.util.Event
 import com.example.kohistanbookingapp.util.ExceptionHandler
 import com.example.kohistanbookingapp.util.handleResponse
+import java.net.URLDecoder
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +22,8 @@ class ApiRepository @Inject constructor(
 ) {
     private var isRequestInProgress = false
 
+
+    private var selectedDate: String = ""
     private val _apiRequestStatus = MutableLiveData<Event<ApiRequestStatus>>()
     val apiRequestStatus: LiveData<Event<ApiRequestStatus>> = _apiRequestStatus
 
@@ -29,26 +34,25 @@ class ApiRepository @Inject constructor(
     private val _selectedToCity = MutableLiveData<CityData?>()
     val selectedToCity: LiveData<CityData?> = _selectedToCity
 
-    private val _selectedUtcDate = MutableLiveData<String?>()
-    val selectedUtcDate: LiveData<String?> = _selectedUtcDate
 
     // ==================== Route & City Data ====================
-    private val _filteredRoutes = MutableLiveData< Event<List<RouteData>>>()
-    val filteredRoutes: LiveData<Event<List<RouteData>>> = _filteredRoutes
+    private val _allDepartureCities = MutableLiveData<Event<List<CityData>>>()
+    val allDepartureCities: LiveData<Event<List<CityData>>> = _allDepartureCities
 
-    private val _citiesData = MutableLiveData<Event<List<CityData>>>()
-    val citiesData: LiveData<Event<List<CityData>>> = _citiesData
+    private val _allDestinationCities = MutableLiveData<Event<List<CityData>>>()
+    val allDestinationCities: LiveData<Event<List<CityData>>> = _allDestinationCities
 
-    private val _allRoutesData = MutableLiveData<Event<List<RouteData>>>()
-    val allRoutesData: LiveData<Event<List<RouteData>>> = _allRoutesData
+    private val _routeDetailResponse = MutableLiveData<Event<List<RouteData>>>()
+    val routeDetailResponse: LiveData<Event<List<RouteData>>> = _routeDetailResponse
 
     // ==================== Getters & Setters ====================
-    fun setSelectedDate(formattedUtcDate: String?) {
-        _selectedUtcDate.postValue(formattedUtcDate)
+    fun setSelectedDate(date: String) {
+        selectedDate = date
     }
 
-    fun getSelectedDate(): String? = _selectedUtcDate.value
-
+    fun getSelectedDate(): String {
+        return selectedDate
+    }
     fun setSelectedFromCity(city: CityData?) {
         _selectedFromCity.postValue(city)
     }
@@ -68,17 +72,17 @@ class ApiRepository @Inject constructor(
     }
 
     // ==================== API Calls ====================
-    suspend fun getAllCities() {
+    suspend fun getAllDepartureCities() {
         isRequestInProgress = true
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
 
         try {
-            val response = apiService.getAllCities()
+            val response = apiService.getAllDepartureCities()
             _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
             response.handleResponse(
                 onSuccess = { res ->
                     res.data?.let { cities ->
-                        _citiesData.postValue(Event(cities))
+                        _allDepartureCities.postValue(Event(cities))
                     } ?: run {
                         _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("No cities found.")))
                     }
@@ -94,19 +98,19 @@ class ApiRepository @Inject constructor(
         }
     }
 
-    suspend fun getAllRoutes() {
+    suspend fun getAllDestinationCities() {
         isRequestInProgress = true
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
 
         try {
-            val response = apiService.getAllRoutes()
+            val response = apiService.getAllDestinationCities()
             _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
             response.handleResponse(
                 onSuccess = { res ->
-                    res.data?.let { routes ->
-                        _allRoutesData.postValue(Event(routes))
+                    res.data?.let { cities ->
+                        _allDestinationCities.postValue(Event(cities))
                     } ?: run {
-                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("No routes found.")))
+                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("No cities found.")))
                     }
                 },
                 onError = { error ->
@@ -119,8 +123,63 @@ class ApiRepository @Inject constructor(
             isRequestInProgress = false
         }
     }
+    fun formatToIsoDate(encodedDate: String): String {
+        return try {
+            val decoded = URLDecoder.decode(encodedDate, "UTF-8") // "Wed, 11 Nov 2026"
+            val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val date = inputFormat.parse(decoded)
+            date?.let { outputFormat.format(it) } ?: ""
+        } catch (e: Exception) {
+            ""
+        }
+    }
+    suspend fun getRouteDetails(date: String) {
+        val fromCityId = _selectedFromCity.value?.cityId
+        val toCityId = _selectedToCity.value?.cityId
+        val date = formatToIsoDate(date)
 
-    // ==================== Route Search Logic ====================
+
+        Log.e("Cities",_selectedFromCity.value.toString())
+        if (fromCityId == null || toCityId == null || date.isNullOrBlank()) {
+            _apiRequestStatus.postValue(
+                Event(ApiRequestStatus.Error("Please select departure city, destination city, and date."))
+            )
+            return
+        }
+
+        isRequestInProgress = true
+        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+        try {
+            val response = apiService.getRouteDetails(
+                fromCityId = fromCityId,
+                toCityId = toCityId,
+                date = date
+            )
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+            response.handleResponse(
+                onSuccess = { res ->
+                    res.data?.let { details ->
+                        _routeDetailResponse.postValue(Event(details))
+                    } ?: run {
+                        _routeDetailResponse.postValue(Event(emptyList()))
+                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("No route time details found.")))
+                    }
+                },
+                onError = { error ->
+                    _routeDetailResponse.postValue(Event(emptyList()))
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))
+                }
+            )
+        } catch (e: Exception) {
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e))))
+        } finally {
+            isRequestInProgress = false
+        }
+    }
+
+    /*// ==================== Route Search Logic ====================
     fun searchRoutes() {
         val fromCityCode = _selectedFromCity.value?.cityCode?.trim()
         val toCityCode = _selectedToCity.value?.cityCode?.trim()
@@ -133,7 +192,7 @@ class ApiRepository @Inject constructor(
             return
         }
 
-        val routes = _allRoutesData.value?.lastContent().orEmpty()
+        val routes = _routeDetailResponse.value?.lastContent().orEmpty()
 
         val result = routes.filter { route ->
             val dropPoints = route.dropPointCollection.orEmpty()
@@ -161,10 +220,9 @@ class ApiRepository @Inject constructor(
         }
 
         _filteredRoutes.postValue(Event(result))
-    }
+    }*/
 
     fun clearSession() {
-        _selectedUtcDate.postValue(null)
         _selectedFromCity.postValue(null)
         _selectedToCity.postValue(null)
     }

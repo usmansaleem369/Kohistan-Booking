@@ -20,29 +20,35 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(sharedPreferencesHelper: SharedPreferencesHelper): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor { message ->
-            Log.d("OkHttp", message)  // Log the message (request/response details)
+            Log.d("OkHttp", message)
         }.apply {
-            level = HttpLoggingInterceptor.Level.BODY // Log body of the requests/responses
+            level = HttpLoggingInterceptor.Level.BODY
         }
-        val contentTypeInterceptor = Interceptor { chain ->
-            val request = chain.request().newBuilder()
-                .build()
-            chain.proceed(request)
-        }
-        
+
         return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(contentTypeInterceptor)  // Add content type interceptor if needed
-        .addInterceptor { chain ->
-            val token =
-                sharedPreferencesHelper.token.toString()
-            val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $token")
-                .build()
-            chain.proceed(request)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor { chain ->
+                val originalRequest = chain.request()
+                val requestBuilder = originalRequest.newBuilder()
+                    // Added to every request (including login)
+                    .header("X-Client-Type", "mobile")
+                    .header("X-Device-Token","mobile")
+
+                // Skip token attachment for login endpoint
+                val path = originalRequest.url.encodedPath
+                val excludedEndpoints = listOf("login"/*, "logout"*/)
+
+                if (excludedEndpoints.none { path.contains(it, ignoreCase = true) }) {
+                    val token = sharedPreferencesHelper.token
+                    if (!token.isNullOrBlank()) {
+                        requestBuilder.header("Authorization", "Bearer $token")
+                    }
+                }
+
+                chain.proceed(requestBuilder.build())
             }
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
+            .addInterceptor(loggingInterceptor) // Placed after so logged requests include X-Client-Type and Authorization
             .build()
     }
     

@@ -1,5 +1,6 @@
 package com.example.kohistanbookingapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,20 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.SearchableDropdownPopup
 import com.example.kohistanbookingapp.databinding.FragmentHomeBinding
 import com.example.kohistanbookingapp.models.response.CityData
-import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.viewmodel.ApiViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -53,15 +49,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun initUiAndListeners() {
-        apiViewModel.citiesData.value?.lastContent()?.let {cities->
-            setupSearchableDropdowns(cities)
+        apiViewModel.allDepartureCities.value?.lastContent()?.let { cities->
+            setupFromDropdowns(cities)
         }?:run {
-            apiViewModel.getAllCities()
+            apiViewModel.getAllDepartureCities()
         }
 
-        if ( apiViewModel.allRoutesData.value?.lastContent() == null){
-            apiViewModel.getAllRoutes()
-        }
+       /* apiViewModel.allDestinationCities.value?.lastContent()?.let { cities->
+            setupToDropdowns(cities)
+        }?:run {
+            apiViewModel.getAllDestinationCities()
+        }*/
 
         setupDatePicker()
 
@@ -97,16 +95,23 @@ class HomeFragment : Fragment() {
         }
 
         if (!isValid) return
-
-        Log.d("SearchBuses", "From: ${fromCity?.cityName} -> To: ${toCity?.cityName}")
-        apiViewModel.searchRoutes()
+        apiViewModel.setSelectedDate(binding.etTravelDate.text.toString())
+        Log.d("SearchBuses", "From: ${fromCity?.cityName} -> To: ${toCity?.cityName} -> ${apiViewModel.getSelectedDate()}")
+        val intent = Intent(requireActivity(), RoutesActivity::class.java)
+        startActivity(intent)
 
     }
 
     private fun observeViewModel() {
-        apiViewModel.citiesData.observe(viewLifecycleOwner) {
+        apiViewModel.allDepartureCities.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { cities ->
-                setupSearchableDropdowns(cities)
+                setupFromDropdowns(cities)
+            }
+        }
+
+        apiViewModel.allDestinationCities.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { cities ->
+                setupToDropdowns(cities)
             }
         }
 
@@ -128,21 +133,23 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun setupSearchableDropdowns(cities: List<CityData>) {
-
+    private fun setupFromDropdowns(cities: List<CityData>) {
         binding.actFrom.setOnClickListener {
             val availableFromCities = cities.filter { it.cityId != apiViewModel.selectedToCity.value?.cityId }
             SearchableDropdownPopup(context = requireContext(), anchorView = binding.tilFrom, cities = availableFromCities) { selectedCity ->
                 apiViewModel.setFromCity(selectedCity)
+                apiViewModel.getAllDestinationCities()
             }.show()
         }
+    }
 
-        binding.actTo.setOnClickListener {
-            val availableFromCities = cities.filter { it.cityId != apiViewModel.selectedFromCity.value?.cityId }
-            SearchableDropdownPopup(context = requireContext(), anchorView = binding.tilTo, cities = availableFromCities) { selectedCity ->
-                apiViewModel.setToCity(selectedCity)
-            }.show()
-        }
+    private fun setupToDropdowns(cities: List<CityData>) {
+         binding.actTo.setOnClickListener {
+             val availableFromCities = cities.filter { it.cityId != apiViewModel.selectedFromCity.value?.cityId }
+             SearchableDropdownPopup(context = requireContext(), anchorView = binding.tilTo, cities = availableFromCities) { selectedCity ->
+                 apiViewModel.setToCity(selectedCity)
+             }.show()
+         }
     }
 
     private fun setupDatePicker() {
@@ -168,7 +175,6 @@ class HomeFragment : Fragment() {
                 }
                 val formattedDate = utcFormat.format(Date(selectionMillis))
                 binding.etTravelDate.setText(formattedDate)
-                apiViewModel.setSelectedDate(formattedDate)
             }
 
             datePicker.show(parentFragmentManager, "TRAVEL_DATE_PICKER")

@@ -2,32 +2,39 @@ package com.example.kohistanbookingapp.api
 
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.CityData
+import com.example.kohistanbookingapp.models.response.LoginResponse
 import com.example.kohistanbookingapp.models.response.RouteData
-import com.example.kohistanbookingapp.models.response.UserDataModel
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     @FormUrlEncoded
-    @POST("token")
+    @POST("/api/auth/login")
     suspend fun loginUser(
-        @Field("username") username: String,
+        @Field("UserName") username: String,
         @Field("Password") password: String,
-        @Field("grant_type") grantType: String,
-        @Field("client_id") clientId: String,
-        @Field("client_secret") clientSecret: String,
-        @Field("notificationToken") notificationToken: String
-    ): Response<UserDataModel>
+        @Field("DeviceToken") grantType: String = "1223443543545",
+    ): Response<ApiResponse<LoginResponse>>
 
-    @GET("/api/City/GetAll?terminalId=1")
-    suspend fun getAllCities(): Response<ApiResponse<List<CityData>>>
+    @POST("/api/auth/logout")
+    suspend fun logout(): Response<ApiResponse<Unit?>>
 
 
-    @GET("/api/Route/GetAll?TerminalId=1")
-    suspend fun getAllRoutes(): Response<ApiResponse<List<RouteData>>>
+    @GET("/api/City/GetAllDepartureCities")
+    suspend fun getAllDepartureCities(): Response<ApiResponse<List<CityData>>>
+
+    @GET("/api/City/GetAllDestinationCitiesIncludingDropPoints")
+    suspend fun getAllDestinationCities():Response<ApiResponse<List<CityData>>>
+
+
+    @GET("/api/RouteTime/GetRouteTimeDetails")
+    suspend fun getRouteDetails(@Query("FromCityId") fromCityId: Int,
+                                @Query("ToCityId") toCityId: Int,
+                                @Query("Date") date: String): Response<ApiResponse<List<RouteData>>>
 
     
 }

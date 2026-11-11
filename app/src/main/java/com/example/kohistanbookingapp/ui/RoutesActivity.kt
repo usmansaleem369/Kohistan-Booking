@@ -1,13 +1,11 @@
 package com.example.kohistanbookingapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.RouteTimeAdapter
 import com.example.kohistanbookingapp.databinding.ActivityRoutesBinding
@@ -16,7 +14,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -45,16 +42,18 @@ class RoutesActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        Log.d("SearchBuses", " ${apiViewModel.getSelectedDate()}")
+        apiViewModel.getRouteDetails(apiViewModel.getSelectedDate())
     }
 
     private fun setupRecyclerView() {
         routeTimeAdapter = RouteTimeAdapter(
-            fromCity = apiViewModel.selectedFromCity.value?.cityName ?: "",
-            toCity = apiViewModel.selectedToCity.value?.cityName ?: ""
+           /* fromCity = apiViewModel.selectedFromCity.value?.cityName ?: "",
+            toCity = apiViewModel.selectedToCity.value?.cityName ?: ""*/
         ) { selectedRouteTime ->
             Toast.makeText(
                 this,
-                "Selected departure: ${selectedRouteTime.routeTime}",
+                "Selected departure: ${selectedRouteTime}",
                 Toast.LENGTH_SHORT
             ).show()
             // Navigate to seat selection screen passing selectedRouteTime.routeTimeId
@@ -70,21 +69,23 @@ class RoutesActivity : AppCompatActivity() {
             apiViewModel.selectedToCity.value?.cityName
         )
 
-        apiViewModel.filteredRoutes.value?.lastContent()?.let { routes ->
-            // Flattens timing collections from all matching routes
-            val allTimes = routes.flatMap { it.routeTimeCollection.orEmpty() }
-            if (allTimes.isEmpty()) {
-                binding.tvEmptyState.visibility = View.VISIBLE
-                binding.rvRouteTimes.visibility = View.GONE
-            } else {
-                binding.tvEmptyState.visibility = View.GONE
-                binding.rvRouteTimes.visibility = View.VISIBLE
-                routeTimeAdapter.submitList(allTimes)
-            }
+        apiViewModel.routeDetailResponse.observe(this) { event ->
+         event.getContentIfNotHandled()?.let {routes->
+             // Flattens timing collections from all matching routes
+             val allTimes = routes.flatMap {routes }
+             if (allTimes.isEmpty()) {
+                 binding.tvEmptyState.visibility = View.VISIBLE
+                 binding.rvRouteTimes.visibility = View.GONE
+             } else {
+                 binding.tvEmptyState.visibility = View.GONE
+                 binding.rvRouteTimes.visibility = View.VISIBLE
+                 routeTimeAdapter.submitList(allTimes)
+             }
+         }
         }
-        apiViewModel.selectedUtcDate.observe(this) { city ->
-            apiViewModel.searchRoutes()
-        }
+        /*apiViewModel.selectedUtcDate.observe(this) { city ->
+            apiViewModel.getRouteDetails()
+        }*/
 
     }
 
@@ -94,18 +95,7 @@ class RoutesActivity : AppCompatActivity() {
                 .setValidator(DateValidatorPointForward.now())
                 .build()
 
-            val selectedTravelDateMillis: Long? = apiViewModel.getSelectedDate()?.let {
-                try {
-                    // Note: The pattern matches "Wed,11 Nov 2026" exactly
-                    val format = SimpleDateFormat("EEE,dd MMM yyyy", Locale.ENGLISH).apply {
-                        timeZone =
-                            TimeZone.getTimeZone("UTC") // or TimeZone.getDefault() if local time is preferred
-                    }
-                    format.parse(it)?.time
-                } catch (e: Exception) {
-                    null
-                }
-            }
+            val selectedTravelDateMillis: Long = MaterialDatePicker.todayInUtcMilliseconds()
 
             val datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select Travel Date")
@@ -119,7 +109,7 @@ class RoutesActivity : AppCompatActivity() {
                     timeZone = TimeZone.getTimeZone("UTC")
                 }
                 val formattedDate = utcFormat.format(Date(selectionMillis))
-                apiViewModel.setSelectedDate(formattedDate)
+                apiViewModel.getRouteDetails(formattedDate)
             }
 
             datePicker.show(supportFragmentManager, "TRAVEL_DATE_PICKER")
