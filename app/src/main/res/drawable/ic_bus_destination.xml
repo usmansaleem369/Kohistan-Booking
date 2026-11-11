@@ -1,0 +1,17 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Location Pin Outline -->
+    <path
+        android:fillColor="#FFD4A017"
+        android:fillType="evenOdd"
+        android:pathData="M12,2 C7.58,2 4,5.58 4,10 C4,15.25 12,22 12,22 C12,22 20,15.25 20,10 C20,5.58 16.42,2 12,2 Z M12,15 C9.24,15 7,12.76 7,10 C7,7.24 9.24,5 12,5 C14.76,5 17,7.24 17,10 C17,12.76 14.76,15 12,15 Z" />
+
+    <!-- Incoming Arrival Arrow inside Pin -->
+    <path
+        android:fillColor="#FFD4A017"
+        android:pathData="M11,7.5 V10.5 H9 L12,13.5 L15,10.5 H13 V7.5 Z" />
+</vector>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/_12sdp"
+    app:cardElevation="@dimen/_6sdp"
+    app:strokeColor="@color/card_bg_warm"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp">
+
+        <!-- Search Input Field inside the dropdown -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPopupSearch"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_8sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_8sdp"
+            app:boxCornerRadiusTopStart="@dimen/_8sdp"
+            app:boxStrokeColor="@color/btn_gold"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:startIconDrawable="@android:drawable/ic_menu_search"
+            app:startIconTint="@color/btn_gold">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPopupSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search city"
+                android:fontFamily="@font/manrope_regular"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:paddingVertical="@dimen/_8sdp"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_8ssp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Cities List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPopupCities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            tools:listitem="@layout/item_dropdown_city_custom" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

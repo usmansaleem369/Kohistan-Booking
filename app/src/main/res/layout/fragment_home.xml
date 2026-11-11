@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingHorizontal="@dimen/_10sdp"
+    tools:context=".ui.HomeFragment">
+
+    <!-- Card Container for Route Selection -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvToFrom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:strokeColor="@color/btn_gold"
+        app:strokeWidth="1dp"
+        app:cardBackgroundColor="@color/card_bg_warm"
+        app:cardCornerRadius="@dimen/_16sdp"
+        app:contentPadding="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_10sdp">
+
+            <!-- From Dropdown -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilFrom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Departure From"
+                android:textColorHint="@color/btn_gold"
+                app:errorTextColor="@color/error_color"
+                app:boxStrokeColor="@color/btn_gold"
+                app:endIconTint="@color/btn_gold"
+                app:hintTextAppearance="@style/TextAppearance.App.TilHint.Collapsed"
+                app:hintTextColor="@color/btn_gold"
+                app:boxBackgroundColor="@color/white"
+                app:startIconDrawable="@drawable/ic_bus_departure"
+                app:startIconTint="@color/btn_gold">
+
+                <AutoCompleteTextView
+                    android:id="@+id/actFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="none"
+                    android:textColor="@color/text_color_on_light"
+                    android:textSize="@dimen/_8ssp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Swap Cities Button -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_4sdp">
+
+                <ImageView
+                    android:id="@+id/btnSwapLocations"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_circle_gold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/ic_swap"
+                    app:tint="@color/white" />
+            </FrameLayout>
+
+            <!-- To Dropdown -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilTo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Departure To"
+                android:textColorHint="@color/btn_gold"
+                app:boxStrokeColor="@color/btn_gold"
+                app:boxBackgroundColor="@color/white"
+                app:endIconTint="@color/btn_gold"
+                app:hintTextAppearance="@style/TextAppearance.App.TilHint.Collapsed"
+                app:hintTextColor="@color/btn_gold"
+                app:errorTextColor="@color/error_color"
+                app:startIconDrawable="@drawable/ic_bus_destination"
+                app:startIconTint="@color/btn_gold">
+
+                <AutoCompleteTextView
+                    android:id="@+id/actTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="none"
+                    android:textColor="@color/text_color_on_light"
+                    android:textSize="@dimen/_8ssp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Date Picker Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDate"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:hint="Travel Date"
+                android:textColorHint="@color/btn_gold"
+                app:boxBackgroundColor="@color/white"
+                app:boxStrokeColor="@color/btn_gold"
+                app:hintTextAppearance="@style/TextAppearance.App.TilHint.Collapsed"
+                app:hintTextColor="@color/btn_gold"
+                app:errorTextColor="@color/error_color"
+                app:layout_constraintTop_toBottomOf="@id/cvToFrom"
+                app:startIconDrawable="@drawable/ic_calendar"
+                app:startIconTint="@color/btn_gold">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTravelDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:textColor="@color/text_color_on_light"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="none"
+                    android:textSize="@dimen/_8ssp"
+                    app:boxStrokeColor="@color/btn_gold" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <!-- Search Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSearchBuses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:backgroundTint="@color/btn_gold"
+        android:fontFamily="@font/manrope_semibold"
+        android:paddingVertical="@dimen/_3sdp"
+        android:text="@string/search_buses"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintTop_toBottomOf="@id/cvToFrom" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

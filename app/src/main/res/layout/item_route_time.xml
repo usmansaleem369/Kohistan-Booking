@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_12sdp"
+    android:layout_marginVertical="@dimen/_6sdp"
+    android:background="@drawable/bg_rounded_soft_gold"
+    android:paddingVertical="@dimen/_12sdp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="@string/kohistan_express"
+        android:textColor="@color/text_color_on_light"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:background="@drawable/bg_rounded_soft_gold"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_2sdp"
+        android:text="@string/economical"
+        android:textColor="@color/text_color_on_light"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        app:layout_constraintEnd_toStartOf="@id/tvPrice"
+        app:layout_constraintTop_toTopOf="@id/tvTitle" />
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:fontFamily="@font/manrope_bold"
+        android:gravity="end"
+        android:text="@string/pkr_3_000"
+        android:textColor="@color/btn_gold"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitle" />
+
+    <!-- 2. Dashed Perforation Line -->
+
+
+    <TextView
+        android:id="@+id/tvFromCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="@string/faisalabad"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/lineBetweenCities"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <TextView
+        android:id="@+id/tvDepartureTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="10:30 AM"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_7ssp"
+        app:layout_constraintStart_toStartOf="@id/tvFromCity"
+        app:layout_constraintTop_toBottomOf="@id/lineBetweenCities" />
+
+
+
+    <View
+        android:id="@+id/lineBetweenCities"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:background="@drawable/bg_dashed_line"
+        android:layerType="software"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/ivBusDeparture"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/ic_bus_departure"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/btn_gold" />
+
+    <TextView
+        android:id="@+id/tvToCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="@string/lahore"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvFromCity"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvArrival"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="10:30 PM"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_7ssp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvDepartureTime"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:backgroundTint="@color/btn_gold"
+        android:fontFamily="@font/manrope_regular"
+        android:text="@string/confirm_booking"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDepartureTime" />
+
+
+    <!-- ==================== NOTCH CUTOUTS ==================== -->
+    <!-- Left Cutout: centered on card left edge and divider line -->
+    <View
+        android:id="@+id/notchLeft"
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+        android:layout_marginStart="-6dp"
+        android:background="@drawable/bg_ticket_notch"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <!-- Right Cutout: centered on card right edge and divider line -->
+    <View
+        android:id="@+id/notchRight"
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+        android:layout_marginEnd="-6dp"
+        android:background="@drawable/bg_ticket_notch"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

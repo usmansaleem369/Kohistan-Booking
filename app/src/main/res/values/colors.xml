@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+
+    <color name="splash_bg">#33F9BA3F</color>
+
+
+    <!-- Button Backgrounds -->
+    <color name="btn_navy">#0F2846</color>
+    <color name="btn_gold">#D4A017</color>
+
+    <color name="side_menu_bg">#D6D3AD44</color>
+    <color name="bottom_nav_bg">#DEB230</color>
+
+    <!-- Recommended Text Colors -->
+    <color name="text_on_navy">#FFFFFF</color>
+    <color name="text_on_gold">#0F2846</color>
+    <color name="text_color_on_light">#1F1A12</color>
+
+    <color name="card_bg_warm">#FFF9ED</color>
+
+    <color name="card_bg_warm2">#94E2DFDD</color>
+
+    <color name="error_color">#E61919</color>
+</resources>
