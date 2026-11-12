@@ -107,13 +107,13 @@ class HomeFragment : Fragment() {
 
     private fun observeViewModel() {
         apiViewModel.allDepartureCities.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { cities ->
+            it?.getContentIfNotHandled()?.let { cities ->
                 setupFromDropdowns(cities)
             }
         }
 
         apiViewModel.allDestinationCities.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { cities ->
+            it?.getContentIfNotHandled()?.let { cities ->
                 setupToDropdowns(cities)
             }
         }

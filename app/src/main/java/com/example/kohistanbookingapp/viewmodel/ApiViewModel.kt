@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.response.CityData
 import com.example.kohistanbookingapp.repository.ApiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,7 @@ class ApiViewModel @Inject constructor(
     val seatPatternResponse = apiRepository.seatPatternResponse
 
     val bookedSeatsResponse = apiRepository.bookedSeatsResponse
-
+    val createBookingResponse = apiRepository.createBookingResponse
     fun setFromCity(city: CityData?) = apiRepository.setSelectedFromCity(city)
     fun setToCity(city: CityData?) = apiRepository.setSelectedToCity(city)
     fun swapCities() = apiRepository.swapCities()
@@ -62,6 +63,12 @@ class ApiViewModel @Inject constructor(
     fun getBookedSeats() {
         viewModelScope.launch {
             apiRepository.getBookedSeats()
+        }
+    }
+
+    fun createBooking(request: CreateBookingRequest) {
+        viewModelScope.launch {
+            apiRepository.createBooking(request)
         }
     }
 

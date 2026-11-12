@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUiAndListeners() = with(binding) {
-
+        tvTime.text = AppUtils.getTimeGreeting()
         ivMenu.setOnClickListener {
             sideMenuContent.tvUserName.text = sharedPreferencesHelper.username ?: ""
             sideMenuContent.tvUserEmail.text = sharedPreferencesHelper.email ?: ""

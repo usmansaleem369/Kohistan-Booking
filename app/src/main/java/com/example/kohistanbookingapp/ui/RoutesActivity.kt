@@ -43,9 +43,8 @@ class RoutesActivity : AppCompatActivity() {
         binding = ActivityRoutesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupRecyclerView()
-        observeViewModel()
         initUiAndListeners()
+        observeViewModel()
     }
 
     private fun initUiAndListeners() {
@@ -55,18 +54,13 @@ class RoutesActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-    }
-
-    private fun setupRecyclerView() {
-        routeTimeAdapter = RouteTimeAdapter(
-           /* fromCity = apiViewModel.selectedFromCity.value?.cityName ?: "",
-            toCity = apiViewModel.selectedToCity.value?.cityName ?: ""*/
-        ) { selectedRouteTime ->
+        routeTimeAdapter = RouteTimeAdapter { selectedRouteTime ->
             sharedPreferencesHelper.selectedRouteData = selectedRouteTime
-           val intent = Intent(this, SelectSeatActivity::class.java)
+            val intent = Intent(this, SelectSeatActivity::class.java)
             startActivity(intent)
         }
         binding.rvRouteTimes.adapter = routeTimeAdapter
+
     }
 
     private fun observeViewModel() {

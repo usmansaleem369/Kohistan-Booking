@@ -1,5 +1,6 @@
 package com.example.kohistanbookingapp.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ import com.example.kohistanbookingapp.databinding.BottomSheetSelectGenderBinding
 import com.example.kohistanbookingapp.models.response.BookedSeatsData
 import com.example.kohistanbookingapp.models.response.SeatGender
 import com.example.kohistanbookingapp.models.response.SeatPatternRow
+import com.example.kohistanbookingapp.models.response.SelectedSeat
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
@@ -88,7 +90,9 @@ class SelectSeatActivity : AppCompatActivity() {
         binding.btnProceed.setOnClickListener {
             val chosenSeats = seatAdapter.getSelectedSeats()
             if (chosenSeats.isEmpty()) return@setOnClickListener
-            // TODO: Proceed to passenger details with chosenSeats
+            sharedPreferencesHelper.selectedSeats = seatAdapter.getSelectedSeats()
+            val intent = Intent(this, PassengerDetailsActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -99,19 +103,7 @@ class SelectSeatActivity : AppCompatActivity() {
                 showGenderSelectionBottomSheet(seatNumber)
             },
             onSelectionChanged = { selectedSeats ->
-                val count = selectedSeats.size
-                val totalFare = count * (sharedPreferencesHelper.selectedRouteData?.fare ?: 0.0)
-
-                binding.tvSelectedSeats.text = if (count > 0) {
-                    selectedSeats.sortedBy { it.seatNumber }.joinToString(", ") {
-                        val tag = if (it.assignedGender == SeatGender.FEMALE) "F" else "M"
-                        "${it.seatNumber}($tag)"
-                    }
-                } else {
-                    "None"
-                }
-                binding.tvTotalFare.text = "PKR ${currencyFormat.format(totalFare)}"
-                binding.btnProceed.isEnabled = count > 0
+                renderDataOnSeatSelection(selectedSeats)
             },
             onSeatError = { message ->
                 AppUtils.showCustomToast(message, layoutInflater, this)
@@ -131,6 +123,22 @@ class SelectSeatActivity : AppCompatActivity() {
                 seatAdapter.setContainerHeight(height)
             }
         }
+    }
+
+    fun renderDataOnSeatSelection(selectedSeats: List<SelectedSeat>) {
+        val count = selectedSeats.size
+        val totalFare = count * (sharedPreferencesHelper.selectedRouteData?.fare ?: 0.0)
+
+        binding.tvSelectedSeats.text = if (count > 0) {
+            selectedSeats.sortedBy { it.seatNumber }.joinToString(", ") {
+                val tag = if (it.assignedGender == SeatGender.FEMALE) "F" else "M"
+                "${it.seatNumber}($tag)"
+            }
+        } else {
+            "None"
+        }
+        binding.tvTotalFare.text = "PKR ${currencyFormat.format(totalFare)}"
+        binding.btnProceed.isEnabled = count > 0
     }
 
     private fun showGenderSelectionBottomSheet(seatNumber: Int) {
@@ -163,7 +171,11 @@ class SelectSeatActivity : AppCompatActivity() {
     private fun observeViewModel() {
         apiViewModel.seatPatternResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { seatPatternRows ->
-                cachedSeatPattern = seatPatternRows
+
+                val vehicleId = seatPatternRows.firstOrNull()?.vehicleId
+                cachedSeatPattern = seatPatternRows.filter {
+                    it.vehicleId == vehicleId
+                }
                // renderBusSeatsIfReady()
                 apiViewModel.getBookedSeats()
             }

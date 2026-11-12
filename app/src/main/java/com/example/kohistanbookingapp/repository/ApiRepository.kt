@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.api.ApiService
+import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.BookedSeatsData
 import com.example.kohistanbookingapp.models.response.CityData
+import com.example.kohistanbookingapp.models.response.CreateBookingData
 import com.example.kohistanbookingapp.models.response.RouteData
 import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.util.Event
@@ -39,11 +41,11 @@ class ApiRepository @Inject constructor(
 
 
     // ==================== Route & City Data ====================
-    private val _allDepartureCities = MutableLiveData<Event<List<CityData>>>()
-    val allDepartureCities: LiveData<Event<List<CityData>>> = _allDepartureCities
+    private val _allDepartureCities = MutableLiveData<Event<List<CityData>?>>()
+    val allDepartureCities: LiveData<Event<List<CityData>?>> = _allDepartureCities
 
-    private val _allDestinationCities = MutableLiveData<Event<List<CityData>>>()
-    val allDestinationCities: LiveData<Event<List<CityData>>> = _allDestinationCities
+    private val _allDestinationCities = MutableLiveData<Event<List<CityData>?>>()
+    val allDestinationCities: LiveData<Event<List<CityData>?>> = _allDestinationCities
 
     private val _routeDetailResponse = MutableLiveData<Event<List<RouteData>>>()
     val routeDetailResponse: LiveData<Event<List<RouteData>>> = _routeDetailResponse
@@ -53,6 +55,9 @@ class ApiRepository @Inject constructor(
 
     private val _bookedSeatsResponse = MutableLiveData<Event<BookedSeatsData>>()
     val bookedSeatsResponse: LiveData<Event<BookedSeatsData>> = _bookedSeatsResponse
+
+    private val _createBookingResponse = MutableLiveData<Event<CreateBookingData>>()
+    val createBookingResponse: LiveData<Event<CreateBookingData>> = _createBookingResponse
 
     // ==================== Getters & Setters ====================
 
@@ -249,9 +254,43 @@ class ApiRepository @Inject constructor(
         }
     }
 
+    suspend fun createBooking(request: CreateBookingRequest) {
+        val formattedRequest = if (request.departureDate.contains(",")) {
+            request.copy(departureDate = formatToIsoDate(request.departureDate))
+        } else {
+            request
+        }
+
+        isRequestInProgress = true
+        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+        try {
+            val response = apiService.createBooking(formattedRequest)
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+            response.handleResponse(
+                onSuccess = { res ->
+                    res.data?.let { bookingData ->
+                        _createBookingResponse.postValue(Event(bookingData))
+                    } ?: run {
+                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("Reservation details missing in response.")))
+                    }
+                },
+                onError = { error ->
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))
+                }
+            )
+        } catch (e: Exception) {
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e))))
+        } finally {
+            isRequestInProgress = false
+        }
+    }
+
     fun clearSession() {
         _selectedFromCity.postValue(null)
         _selectedToCity.postValue(null)
+        _allDestinationCities.postValue(null)
+        _allDepartureCities.postValue(null)
     }
 }
 

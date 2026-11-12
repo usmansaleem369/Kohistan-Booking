@@ -5,7 +5,7 @@
     android:id="@+id/motionLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rounded_corners_bg"
+    android:background="@drawable/bg_rounded_soft_gold"
     app:layoutDescription="@xml/motion_scene"
     tools:context=".ui.MainActivity">
 

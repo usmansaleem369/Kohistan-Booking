@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:background="@color/card_bg_warm"
         android:paddingHorizontal="@dimen/_12sdp"
         android:paddingVertical="@dimen/_12sdp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +93,7 @@
                 android:fontFamily="@font/manrope_regular"
                 android:text="Available"
                 android:textColor="@color/text_color_on_light"
-                android:textSize="@dimen/_9ssp" />
+                android:textSize="@dimen/_8ssp" />
 
             <!-- Selected -->
             <View
@@ -108,7 +109,7 @@
                 android:fontFamily="@font/manrope_regular"
                 android:text="Selected"
                 android:textColor="@color/text_color_on_light"
-                android:textSize="@dimen/_9ssp" />
+                android:textSize="@dimen/_8ssp" />
 
             <!-- Blocked / Reserved -->
             <View
@@ -123,7 +124,7 @@
                 android:fontFamily="@font/manrope_regular"
                 android:text="Blocked"
                 android:textColor="@color/text_color_on_light"
-                android:textSize="@dimen/_9ssp" />
+                android:textSize="@dimen/_8ssp" />
         </LinearLayout>
 
         <!-- Row 2: Male & Female Booked -->
@@ -148,7 +149,7 @@
                 android:fontFamily="@font/manrope_regular"
                 android:text="Booked (Male)"
                 android:textColor="@color/text_color_on_light"
-                android:textSize="@dimen/_9ssp" />
+                android:textSize="@dimen/_8ssp" />
 
             <!-- Booked Female -->
             <View
@@ -163,7 +164,7 @@
                 android:fontFamily="@font/manrope_regular"
                 android:text="Booked (Female)"
                 android:textColor="@color/text_color_on_light"
-                android:textSize="@dimen/_9ssp" />
+                android:textSize="@dimen/_8ssp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -175,14 +176,14 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/_24sdp"
         android:layout_marginVertical="@dimen/_12sdp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/card_bg_warm"
         app:cardCornerRadius="@dimen/_16sdp"
         app:cardElevation="2dp"
         app:layout_constraintBottom_toTopOf="@id/bottomCheckoutBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/legendContainer"
-        app:strokeColor="#E4E7EC"
+        app:strokeColor="@color/btn_gold"
         app:strokeWidth="1dp">
 
         <LinearLayout

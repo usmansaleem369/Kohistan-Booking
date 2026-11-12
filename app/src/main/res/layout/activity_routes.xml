@@ -6,13 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.RoutesActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_12ssp"
+        android:background="@color/card_bg_warm"
+        app:layout_constraintTop_toTopOf="parent">
     <ImageView
         android:layout_width="@dimen/_20sdp"
         android:layout_height="@dimen/_20sdp"
         android:src="@drawable/ic_back"
         android:id="@+id/btnBack"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginStart="@dimen/_5sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
     <TextView
@@ -37,16 +42,21 @@
         app:layout_constraintTop_toTopOf="@id/btnBack"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRouteTimes"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/_10sdp"
-        android:paddingVertical="@dimen/_8sdp"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_24sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clHeader"
         tools:listitem="@layout/item_route_time" />
 
     <TextView

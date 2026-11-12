@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.kohistanbookingapp.models.response.LoginResponse
 import com.example.kohistanbookingapp.models.response.RouteData
+import com.example.kohistanbookingapp.models.response.SelectedSeat
 import com.google.gson.Gson
 import javax.inject.Inject
 
@@ -26,6 +27,8 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
         private const val USER_DATA_JSON = "USER_DATA_JSON"
         private const val SELECTED_TRAVEL_DATE = "SELECTED_TRAVEL_DATE"
         private const val SELECTED_ROUTE_DATA = "SELECTED_ROUTE_DATA"
+
+        private const val KEY_SELECTED_SEATS = "selected_seats_list"
     }
 
     private val gson = Gson()
@@ -148,6 +151,24 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
             }
         }
 
+    var selectedSeats: List<SelectedSeat>
+        get() {
+            val json = sharedPreferences.getString(KEY_SELECTED_SEATS, null) ?: return emptyList()
+            return try {
+                val type = object : com.google.gson.reflect.TypeToken<List<SelectedSeat>>() {}.type
+                gson.fromJson(json, type) ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+        set(value) {
+            if (value.isEmpty()) {
+                sharedPreferences.edit().remove(KEY_SELECTED_SEATS).apply()
+            } else {
+                sharedPreferences.edit().putString(KEY_SELECTED_SEATS, gson.toJson(value)).apply()
+            }
+        }
+
     fun clearUserData() {
         sharedPreferences.edit {
             remove(TOKEN)
@@ -159,6 +180,15 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
             remove(DISPLAY_NAME)
             remove(EMAIL_KEY)
             remove(USER_DATA_JSON)
+            remove(KEY_SELECTED_SEATS)
+            remove(SELECTED_TRAVEL_DATE)
+            remove(SELECTED_ROUTE_DATA)
+        }
+    }
+
+    fun clearTicketSession(){
+        sharedPreferences.edit {
+            remove(KEY_SELECTED_SEATS)
             remove(SELECTED_TRAVEL_DATE)
             remove(SELECTED_ROUTE_DATA)
         }
