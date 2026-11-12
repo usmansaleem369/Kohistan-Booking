@@ -1,6 +1,8 @@
 package com.example.kohistanbookingapp.api
 
+import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.models.response.ApiResponse
+import com.example.kohistanbookingapp.models.response.BookedSeatsData
 import com.example.kohistanbookingapp.models.response.CityData
 import com.example.kohistanbookingapp.models.response.LoginResponse
 import com.example.kohistanbookingapp.models.response.RouteData
@@ -28,13 +30,27 @@ interface ApiService {
     suspend fun getAllDepartureCities(): Response<ApiResponse<List<CityData>>>
 
     @GET("/api/City/GetAllDestinationCitiesIncludingDropPoints")
-    suspend fun getAllDestinationCities():Response<ApiResponse<List<CityData>>>
+    suspend fun getAllDestinationCities(): Response<ApiResponse<List<CityData>>>
 
 
     @GET("/api/RouteTime/GetRouteTimeDetails")
-    suspend fun getRouteDetails(@Query("FromCityId") fromCityId: Int,
-                                @Query("ToCityId") toCityId: Int,
-                                @Query("Date") date: String): Response<ApiResponse<List<RouteData>>>
+    suspend fun getRouteDetails(
+        @Query("FromCityId") fromCityId: Int,
+        @Query("ToCityId") toCityId: Int,
+        @Query("Date") date: String
+    ): Response<ApiResponse<List<RouteData>>>
 
-    
+    @GET("/api/Seat/GetVehicleSeatPatternByVehicleTypeId?")
+    suspend fun getSeatPattern(@Query("vehicleTypeId") vehicleTypeId: Int): Response<ApiResponse<List<SeatPatternRow>>>
+
+    @GET("api/Booking/GetBookedSeats")
+    suspend fun getBookedSeats(
+        @Query("RouteId") routeId: Int,
+        @Query("RouteTimeId") routeTimeId: Long,
+        @Query("DepartureDate") departureDate: String, // "yyyy-MM-dd"
+        @Query("FromCityId") fromCityId: Int,
+        @Query("ToCityId") toCityId: Int
+    ): Response<ApiResponse<BookedSeatsData>>
+
+
 }

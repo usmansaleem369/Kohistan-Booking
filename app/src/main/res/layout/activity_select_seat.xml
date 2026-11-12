@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA"
+    tools:context=".ui.SelectSeatActivity">
+
+    <!-- ==================== HEADER BAR ==================== -->
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:paddingVertical="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_back" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRouteHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_bold"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_14ssp"
+                tools:text="Faisalabad → Gujranwala" />
+
+            <TextView
+                android:id="@+id/tvScheduleSubHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_regular"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_10ssp"
+                tools:text="11 Nov 2026 • 04:10 PM • Daewoo" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ==================== SEAT LEGEND ==================== -->
+    <LinearLayout
+        android:id="@+id/legendContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:paddingVertical="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer">
+
+        <!-- Row 1: Available, Selected, Blocked -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Available -->
+            <View
+                android:layout_width="@dimen/_13sdp"
+                android:layout_height="@dimen/_13sdp"
+                android:background="@drawable/bg_seat_available" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Available"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_9ssp" />
+
+            <!-- Selected -->
+            <View
+                android:layout_width="@dimen/_13sdp"
+                android:layout_height="@dimen/_13sdp"
+                android:background="@drawable/bg_seat_selected" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Selected"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_9ssp" />
+
+            <!-- Blocked / Reserved -->
+            <View
+                android:layout_width="@dimen/_13sdp"
+                android:layout_height="@dimen/_13sdp"
+                android:background="@drawable/bg_seat_booked" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Blocked"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <!-- Row 2: Male & Female Booked -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Booked Male -->
+            <View
+                android:layout_width="@dimen/_13sdp"
+                android:layout_height="@dimen/_13sdp"
+                android:background="@drawable/bg_seat_booked_male" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Booked (Male)"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_9ssp" />
+
+            <!-- Booked Female -->
+            <View
+                android:layout_width="@dimen/_13sdp"
+                android:layout_height="@dimen/_13sdp"
+                android:background="@drawable/bg_seat_booked_female" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Booked (Female)"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ==================== BUS CABIN FRAME ==================== -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/busCabinCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="@dimen/_16sdp"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomCheckoutBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/legendContainer"
+        app:strokeColor="#E4E7EC"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/_12sdp">
+
+            <!-- Front / Driver Indicator (Right-hand drive) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/_8sdp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/manrope_semibold"
+                    android:text="FRONT / DOOR"
+                    android:textColor="#98A2B3"
+                    android:textSize="@dimen/_10ssp" />
+
+                <ImageView
+                    android:id="@+id/ivDriver"
+                    android:layout_width="@dimen/_26sdp"
+                    android:layout_height="@dimen/_26sdp"
+                    android:background="@drawable/bg_rounded_soft_gold"
+                    android:padding="@dimen/_4sdp"
+                    android:src="@drawable/ic_steering_wheel"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:background="#EAECF0" />
+
+            <!-- 5-Column Seat Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBusSeats"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                tools:listitem="@layout/item_bus_seat" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/btn_gold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/busCabinCard"
+        app:layout_constraintEnd_toEndOf="@id/busCabinCard"
+        app:layout_constraintStart_toStartOf="@id/busCabinCard"
+        app:layout_constraintTop_toTopOf="@id/busCabinCard" />
+
+    <!-- ==================== BOTTOM CHECKOUT BAR ==================== -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomCheckoutBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/lblSelectedSeats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_regular"
+            android:text="Selected Seats"
+            android:textColor="#667085"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSelectedSeats"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:fontFamily="@font/manrope_bold"
+            android:text="None"
+            android:textColor="@color/btn_navy"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toStartOf="@id/btnProceed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblSelectedSeats" />
+
+        <TextView
+            android:id="@+id/tvTotalFare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:fontFamily="@font/manrope_bold"
+            android:text="PKR 0"
+            android:textColor="@color/btn_gold"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSelectedSeats" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnProceed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/btn_gold"
+            android:enabled="false"
+            android:fontFamily="@font/manrope_semibold"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:text="Proceed"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_12ssp"
+            app:cornerRadius="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

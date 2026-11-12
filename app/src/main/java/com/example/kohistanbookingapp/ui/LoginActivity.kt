@@ -10,6 +10,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.ActivityLoginBinding
+import com.example.kohistanbookingapp.util.AppLoader
+import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -86,14 +88,14 @@ class LoginActivity : AppCompatActivity() {
             event.getContentIfNotHandled()?.let { status ->
                 when (status) {
                     is ApiRequestStatus.Loading -> {
-                        setLoadingState(true)
+                        AppLoader.instance.showLoader(this)
                     }
                     is ApiRequestStatus.Idle -> {
-                        setLoadingState(false)
+                        AppLoader.instance.hideLoader()
                     }
                     is ApiRequestStatus.Error -> {
-                        setLoadingState(false)
-                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
+                        AppLoader.instance.hideLoader()
+                        AppUtils.showCustomToast(status.message,layoutInflater,this)
                     }
                 }
             }
@@ -108,10 +110,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun setLoadingState(isLoading: Boolean) {
-        binding.btnLogin.isEnabled = !isLoading
-        binding.btnLogin.text = if (isLoading) "Signing in..." else "Sign In"
-    }
 
     private fun navigateToHome() {
         startActivity(Intent(this, MainActivity::class.java))

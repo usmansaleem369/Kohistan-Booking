@@ -72,4 +72,7 @@
     <string name="faisalabad">Faisalabad</string>
     <string name="lahore">Lahore</string>
     <string name="confirm_booking">Confirm Booking</string>
+    <string name="to_from">%1$s → %2$s</string>
+    <string name="choose_who_will_be_occupying_this_seat">Choose who will be occupying this seat</string>
+    <string name="seat_passenger_gender">Seat %1$d — Passenger Gender</string>
 </resources>

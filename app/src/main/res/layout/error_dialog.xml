@@ -27,7 +27,7 @@
         android:padding="@dimen/_5sdp"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/_10ssp" />
+        android:textSize="@dimen/_12ssp" />
 
 
     <com.google.android.material.button.MaterialButton

@@ -25,8 +25,8 @@ class AuthRepository@Inject constructor(
     private val _loginResponse = MutableLiveData<Event<LoginResponse>>()
     val loginResponse: LiveData<Event<LoginResponse>> = _loginResponse
 
-    private val _logoutResponse = MutableLiveData<Event<Unit?>>()
-    val logoutResponse: LiveData<Event<Unit?>> = _logoutResponse
+    private val _logoutResponse = MutableLiveData<Event<ApiResponse<Unit?>>>()
+    val logoutResponse: LiveData<Event<ApiResponse<Unit?>>> = _logoutResponse
     suspend fun login(username: String,password: String) {
         isRequestInProgress = true
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
@@ -64,12 +64,8 @@ class AuthRepository@Inject constructor(
             _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
             response.handleResponse(
                 onSuccess = { res ->
-                    res.data?.let { response ->
-                        sharedPreferences.clearUserData()
-                        _logoutResponse.postValue(Event(response))
-                    } ?: run {
-                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("No cities found.")))
-                    }
+                    sharedPreferences.clearUserData()
+                    _logoutResponse.postValue(Event(res))
                 },
                 onError = { error ->
                     _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))

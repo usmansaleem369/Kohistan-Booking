@@ -48,7 +48,7 @@
 
     <!-- Collapsed state (the small floating title at the top border) -->
     <style name="TextAppearance.App.TilHint.Collapsed" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textSize">@dimen/_6ssp</item>
+        <item name="android:textSize">@dimen/_8ssp</item>
         <item name="android:fontFamily">@font/manrope_regular</item>
         <item name="android:textColor">@color/btn_gold</item>
         <item name="fontFamily">@font/manrope_regular</item>

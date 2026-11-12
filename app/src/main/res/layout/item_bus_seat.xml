@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_32sdp"
+    android:paddingHorizontal="@dimen/_4sdp"
+    android:paddingVertical="@dimen/_2sdp">
+
+    <TextView
+        android:id="@+id/tvSeatNumber"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_seat_available"
+        android:fontFamily="@font/manrope_semibold"
+        android:gravity="center"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_10ssp"
+        tools:text="4" />
+
+</FrameLayout>

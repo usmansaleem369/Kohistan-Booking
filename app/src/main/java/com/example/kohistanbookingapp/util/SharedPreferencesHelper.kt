@@ -3,6 +3,7 @@ package com.example.kohistanbookingapp.util
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.kohistanbookingapp.models.response.LoginResponse
+import com.example.kohistanbookingapp.models.response.RouteData
 import com.google.gson.Gson
 import javax.inject.Inject
 
@@ -23,6 +24,8 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
         private const val MEMBER_ID = "MEMBER_ID"
         private const val MEMBERSHIP_CARD_NO = "MEMBERSHIP_CARD_NO"
         private const val USER_DATA_JSON = "USER_DATA_JSON"
+        private const val SELECTED_TRAVEL_DATE = "SELECTED_TRAVEL_DATE"
+        private const val SELECTED_ROUTE_DATA = "SELECTED_ROUTE_DATA"
     }
 
     private val gson = Gson()
@@ -114,6 +117,37 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
     val isLoggedIn: Boolean
         get() = !token.isNullOrBlank()
 
+    var selectedTravelDate: String?
+        get() = sharedPreferences.getString(SELECTED_TRAVEL_DATE, null)
+        set(value) {
+            sharedPreferences.edit {
+                if (value.isNullOrBlank()) {
+                    remove(SELECTED_TRAVEL_DATE)
+                } else {
+                    putString(SELECTED_TRAVEL_DATE, value)
+                }
+            }
+        }
+
+    var selectedRouteData: RouteData?
+        get() {
+            val json = sharedPreferences.getString(SELECTED_ROUTE_DATA, null) ?: return null
+            return try {
+                gson.fromJson(json, RouteData::class.java)
+            } catch (e: Exception) {
+                null
+            }
+        }
+        set(value) {
+            sharedPreferences.edit {
+                if (value == null) {
+                    remove(SELECTED_ROUTE_DATA)
+                } else {
+                    putString(SELECTED_ROUTE_DATA, gson.toJson(value))
+                }
+            }
+        }
+
     fun clearUserData() {
         sharedPreferences.edit {
             remove(TOKEN)
@@ -125,6 +159,8 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
             remove(DISPLAY_NAME)
             remove(EMAIL_KEY)
             remove(USER_DATA_JSON)
+            remove(SELECTED_TRAVEL_DATE)
+            remove(SELECTED_ROUTE_DATA)
         }
     }
 }

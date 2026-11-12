@@ -12,6 +12,7 @@ import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.SearchableDropdownPopup
 import com.example.kohistanbookingapp.databinding.FragmentHomeBinding
 import com.example.kohistanbookingapp.models.response.CityData
+import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.ApiViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -21,10 +22,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -55,11 +58,11 @@ class HomeFragment : Fragment() {
             apiViewModel.getAllDepartureCities()
         }
 
-       /* apiViewModel.allDestinationCities.value?.lastContent()?.let { cities->
+        apiViewModel.allDestinationCities.value?.lastContent()?.let { cities->
             setupToDropdowns(cities)
         }?:run {
             apiViewModel.getAllDestinationCities()
-        }*/
+        }
 
         setupDatePicker()
 
@@ -95,8 +98,8 @@ class HomeFragment : Fragment() {
         }
 
         if (!isValid) return
-        apiViewModel.setSelectedDate(binding.etTravelDate.text.toString())
-        Log.d("SearchBuses", "From: ${fromCity?.cityName} -> To: ${toCity?.cityName} -> ${apiViewModel.getSelectedDate()}")
+        sharedPreferencesHelper.selectedTravelDate = binding.etTravelDate.text.toString()
+        Log.d("SearchBuses", "From: ${fromCity?.cityName} -> To: ${toCity?.cityName} -> ${sharedPreferencesHelper.selectedTravelDate}")
         val intent = Intent(requireActivity(), RoutesActivity::class.java)
         startActivity(intent)
 
@@ -175,6 +178,7 @@ class HomeFragment : Fragment() {
                 }
                 val formattedDate = utcFormat.format(Date(selectionMillis))
                 binding.etTravelDate.setText(formattedDate)
+                sharedPreferencesHelper.selectedTravelDate = formattedDate
             }
 
             datePicker.show(parentFragmentManager, "TRAVEL_DATE_PICKER")

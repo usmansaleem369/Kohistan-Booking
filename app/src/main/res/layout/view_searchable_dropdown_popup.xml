@@ -42,7 +42,7 @@
                 android:inputType="text"
                 android:paddingVertical="@dimen/_8sdp"
                 android:textColor="@color/text_color_on_light"
-                android:textSize="@dimen/_8ssp" />
+                android:textSize="@dimen/_10ssp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

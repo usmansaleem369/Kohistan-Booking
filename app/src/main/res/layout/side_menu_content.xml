@@ -32,7 +32,7 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/white"
         android:fontFamily="@font/manrope_regular"
-        android:textSize="@dimen/_6ssp" />
+        android:textSize="@dimen/_8ssp" />
 
     <TextView
         android:id="@+id/tvUserEmail"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:fontFamily="@font/manrope_regular"
-        android:textSize="@dimen/_6ssp" />
+        android:textSize="@dimen/_8ssp" />
 
     <!-- Menu Buttons -->
     <com.google.android.material.button.MaterialButton
@@ -55,7 +55,7 @@
         android:text="@string/home"
         android:textAllCaps="false"
         android:textColor="@color/side_menu_nav_selector"
-        android:textSize="@dimen/_8ssp"
+        android:textSize="@dimen/_10ssp"
         android:fontFamily="@font/manrope_regular"
         app:cornerRadius="@dimen/_10sdp"
         app:icon="@drawable/ic_home"
@@ -77,7 +77,7 @@
         android:fontFamily="@font/manrope_regular"
         android:textAllCaps="false"
         android:textColor="@color/side_menu_nav_selector"
-        android:textSize="@dimen/_8ssp"
+        android:textSize="@dimen/_10ssp"
         app:cornerRadius="@dimen/_10sdp"
         app:icon="@drawable/ic_profile"
         app:iconGravity="textStart"
@@ -97,7 +97,7 @@
         android:text="@string/bookings"
         android:textAllCaps="false"
         android:textColor="@color/side_menu_nav_selector"
-        android:textSize="@dimen/_8ssp"
+        android:textSize="@dimen/_10ssp"
         app:cornerRadius="@dimen/_10sdp"
         app:icon="@drawable/ic_tickets"
         app:iconGravity="textStart"
@@ -118,7 +118,7 @@
         android:textAllCaps="false"
         android:fontFamily="@font/manrope_regular"
         android:textColor="@color/side_menu_nav_selector"
-        android:textSize="@dimen/_8ssp"
+        android:textSize="@dimen/_10ssp"
         app:cornerRadius="@dimen/_10sdp"
         app:icon="@drawable/ic_settings"
         app:iconGravity="textStart"
@@ -139,7 +139,7 @@
         android:text="@string/privacy_amp_terms"
         android:textAllCaps="false"
         android:textColor="@color/side_menu_nav_selector"
-        android:textSize="@dimen/_8ssp"
+        android:textSize="@dimen/_10ssp"
         app:cornerRadius="@dimen/_10sdp"
         app:icon="@drawable/ic_privacy"
         app:iconGravity="textStart"
@@ -160,7 +160,7 @@
         android:text="@string/logout"
         android:textAllCaps="false"
         android:textColor="@color/side_menu_nav_selector"
-        android:textSize="@dimen/_8ssp"
+        android:textSize="@dimen/_10ssp"
         app:cornerRadius="@dimen/_10sdp"
         app:icon="@drawable/ic_logout"
         app:iconGravity="textStart"

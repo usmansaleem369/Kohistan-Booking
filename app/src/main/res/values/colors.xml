@@ -22,4 +22,11 @@
     <color name="card_bg_warm2">#94E2DFDD</color>
 
     <color name="error_color">#E61919</color>
+    <color name="red_textcolor">#D9381E</color>
+
+    <color name="seat_booked">#E0E0E0</color>
+    <color name="seat_booked_female">#FFD6E7</color>
+    <color name="seat_booked_male">#D6E4FF</color>
+
+    <color name="seat_selected_female">#D43878</color>
 </resources>
