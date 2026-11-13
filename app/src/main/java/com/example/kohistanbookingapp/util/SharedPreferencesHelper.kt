@@ -2,6 +2,7 @@ package com.example.kohistanbookingapp.util
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.example.kohistanbookingapp.models.local.UserProfile
 import com.example.kohistanbookingapp.models.response.LoginResponse
 import com.example.kohistanbookingapp.models.response.RouteData
 import com.example.kohistanbookingapp.models.response.SelectedSeat
@@ -29,6 +30,8 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
         private const val SELECTED_ROUTE_DATA = "SELECTED_ROUTE_DATA"
 
         private const val KEY_SELECTED_SEATS = "selected_seats_list"
+
+        private const val KEY_USER_PROFILE = "user_profile_data"
     }
 
     private val gson = Gson()
@@ -166,6 +169,23 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
                 sharedPreferences.edit().remove(KEY_SELECTED_SEATS).apply()
             } else {
                 sharedPreferences.edit().putString(KEY_SELECTED_SEATS, gson.toJson(value)).apply()
+            }
+        }
+
+    var userProfile: UserProfile?
+        get() {
+            val json = sharedPreferences.getString(KEY_USER_PROFILE, null) ?: return null
+            return try {
+                gson.fromJson(json, UserProfile::class.java)
+            } catch (e: Exception) {
+                null
+            }
+        }
+        set(value) {
+            if (value == null) {
+                sharedPreferences.edit().remove(KEY_USER_PROFILE).apply()
+            } else {
+                sharedPreferences.edit().putString(KEY_USER_PROFILE, gson.toJson(value)).apply()
             }
         }
 

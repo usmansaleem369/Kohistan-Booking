@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F6F9"
+    tools:context=".ui.RegistrationActivity">
+
+    <!-- Top Navy Header -->
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/card_bg_warm2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/_14sdp"
+        android:paddingVertical="@dimen/_14sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/_3sdp"
+            android:src="@drawable/ic_back"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_bold"
+                android:text="@string/create_profile"
+                android:textColor="@color/btn_navy"
+                android:textSize="@dimen/_14ssp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="@string/save_your_details_for_faster_ticket_bookings"
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Scrollable Form Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:paddingTop="@dimen/_12sdp"
+        android:paddingBottom="@dimen/_20sdp"
+        app:layout_constraintBottom_toTopOf="@id/bottomActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:orientation="vertical">
+
+            <!-- Card 1: Personal Details -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="0dp"
+                app:strokeColor="#EAECF0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_14sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_bold"
+                        android:text="@string/personal_details"
+                        android:textColor="@color/btn_navy"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="@string/used_to_auto_fill_passenger_details_and_e_tickets"
+                        android:textColor="#667085"
+                        android:textSize="@dimen/_9ssp" />
+
+                    <!-- Title Selection -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/title"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rbMr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_16sdp"
+                            android:buttonTint="@color/btn_navy"
+                            android:checked="true"
+                            android:fontFamily="@font/manrope_medium"
+                            android:text="@string/mr"
+                            android:textColor="@color/text_color_on_light"
+                            android:textSize="@dimen/_10ssp" />
+
+                        <RadioButton
+                            android:id="@+id/rbMrs"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_16sdp"
+                            android:buttonTint="@color/btn_navy"
+                            android:fontFamily="@font/manrope_medium"
+                            android:text="@string/mrs"
+                            android:textColor="@color/text_color_on_light"
+                            android:textSize="@dimen/_10ssp" />
+
+                        <RadioButton
+                            android:id="@+id/rbMiss"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/btn_navy"
+                            android:fontFamily="@font/manrope_medium"
+                            android:text="@string/miss"
+                            android:textColor="@color/text_color_on_light"
+                            android:textSize="@dimen/_10ssp" />
+                    </RadioGroup>
+
+                    <!-- Full Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/full_name"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etFullName"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="@string/enter_your_full_name"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName|textCapWords"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="@color/text_color_on_light"
+                        android:textColorHint="#98A2B3"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <!-- CNIC Number -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/cnic_number"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etCnic"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field"
+                        android:digits="0123456789-"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="@string/_00000_1234567_8"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="15"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="@color/text_color_on_light"
+                        android:textColorHint="#98A2B3"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <!-- Gender -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/gender"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgGender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rbMale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_20sdp"
+                            android:buttonTint="@color/btn_navy"
+                            android:checked="true"
+                            android:fontFamily="@font/manrope_medium"
+                            android:text="@string/male"
+                            android:textColor="@color/text_color_on_light"
+                            android:textSize="@dimen/_10ssp" />
+
+                        <RadioButton
+                            android:id="@+id/rbFemale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/btn_navy"
+                            android:fontFamily="@font/manrope_medium"
+                            android:text="@string/female"
+                            android:textColor="@color/text_color_on_light"
+                            android:textSize="@dimen/_10ssp" />
+                    </RadioGroup>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 2: Contact & Account Credentials -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="0dp"
+                app:strokeColor="#EAECF0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_14sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_bold"
+                        android:text="@string/contact_amp_account"
+                        android:textColor="@color/btn_navy"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <!-- Mobile Number -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/mobile_number"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="@string/_03xx_xxxxxxx"
+                        android:imeOptions="actionNext"
+                        android:inputType="phone"
+                        android:maxLength="12"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="@color/text_color_on_light"
+                        android:textColorHint="#98A2B3"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <!-- Email Address -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/email_address"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="@string/example_email_com"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="@color/text_color_on_light"
+                        android:textColorHint="#98A2B3"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <!-- City -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/city"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="@string/e_g_faisalabad"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="@color/text_color_on_light"
+                        android:textColorHint="#98A2B3"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <!-- Password -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="@string/password"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="@string/minimum_6_characters"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="@color/text_color_on_light"
+                        android:textColorHint="#98A2B3"
+                        android:textSize="@dimen/_10ssp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Sticky Register Bar -->
+    <LinearLayout
+        android:id="@+id/bottomActionBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_14sdp"
+        android:paddingVertical="@dimen/_12sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRegisterProfile"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:background="@drawable/bg_seat_selected"
+            android:fontFamily="@font/manrope_bold"
+            android:text="@string/save_amp_register"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_11ssp" />
+
+        <TextView
+            android:id="@+id/tvAlreadyHaveAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/manrope_semibold"
+            android:text="@string/already_registered_sign_in"
+            android:textColor="@color/btn_navy"
+            android:textSize="@dimen/_10ssp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

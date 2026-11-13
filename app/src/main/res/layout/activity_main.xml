@@ -38,11 +38,10 @@
                 android:id="@+id/cvToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginHorizontal="@dimen/_3sdp"
                 app:cardBackgroundColor="@color/card_bg_warm"
                 app:strokeColor="@color/btn_gold"
                 app:strokeWidth="1dp"
+                app:cardCornerRadius="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -72,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_color_on_light"
-                        android:text="Usman Saleem"
+                        tools:text="Usman Saleem"
                         android:fontFamily="@font/manrope_regular"
                         android:layout_marginStart="@dimen/_5sdp"
                         app:layout_constraintTop_toTopOf="@id/ivProfile"
@@ -86,25 +85,6 @@
                         android:src="@drawable/ic_notification"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/ivMenu"/>
-                    <TextView
-                        android:id="@+id/tvTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/ivMenu"
-                        android:text="Good Afternoon"
-                        android:textSize="@dimen/_10ssp"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:fontFamily="@font/manrope_regular"
-                        android:textColor="@color/text_color_on_light"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/tvTime"
-                        android:text="@string/let_s_book_your_next_trip"
-                        android:textSize="@dimen/_14ssp"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:fontFamily="@font/manrope_extrabold"
-                        android:textColor="@color/text_color_on_light"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

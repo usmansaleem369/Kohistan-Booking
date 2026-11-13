@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_14sdp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_bold"
+        android:text="Passenger Information"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_12ssp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Ticket &amp; boarding SMS will be sent to these details"
+        android:textColor="@color/text_color_on_light"
+        android:textSize="@dimen/_9ssp" />
+
+    <!-- Passenger Title (Mr / Mrs / Miss) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="Title *"
+        android:textColor="@color/text_color_on_light"
+        android:textSize="@dimen/_10ssp" />
+
+    <RadioGroup
+        android:id="@+id/rgTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbMr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:buttonTint="@color/btn_navy"
+            android:checked="true"
+            android:fontFamily="@font/manrope_medium"
+            android:text="Mr"
+            android:textColor="@color/text_color_on_light"
+            android:textSize="@dimen/_10ssp" />
+
+        <RadioButton
+            android:id="@+id/rbMrs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:buttonTint="@color/btn_navy"
+            android:fontFamily="@font/manrope_medium"
+            android:text="Mrs"
+            android:textColor="@color/text_color_on_light"
+            android:textSize="@dimen/_10ssp" />
+
+        <RadioButton
+            android:id="@+id/rbMiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/btn_navy"
+            android:fontFamily="@font/manrope_medium"
+            android:text="Miss"
+            android:textColor="@color/text_color_on_light"
+            android:textSize="@dimen/_10ssp" />
+    </RadioGroup>
+
+    <!-- Full Name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="Full Name *"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_10ssp" />
+
+    <EditText
+        android:id="@+id/etPassengerName"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/bg_input_field"
+        android:fontFamily="@font/manrope_regular"
+        android:hint="Enter passenger full name"
+        android:imeOptions="actionNext"
+        android:inputType="textPersonName|textCapWords"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/text_color_on_light"
+        android:textColorHint="@color/btn_gold"
+        android:textSize="@dimen/_10ssp" />
+
+    <!-- CNIC Number -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="CNIC Number *"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_10ssp" />
+
+    <EditText
+        android:id="@+id/etPassengerCnic"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/bg_input_field"
+        android:digits="0123456789-"
+        android:fontFamily="@font/manrope_regular"
+        android:hint="00000-1234567-1"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="15"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/text_color_on_light"
+        android:textColorHint="@color/btn_gold"
+        android:textSize="@dimen/_10ssp" />
+
+    <!-- Phone Number -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="Mobile Number *"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_10ssp" />
+
+    <EditText
+        android:id="@+id/etPassengerPhone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/bg_input_field"
+        android:fontFamily="@font/manrope_regular"
+        android:hint="03XX-XXXXXXX"
+        android:imeOptions="actionNext"
+        android:inputType="phone"
+        android:maxLength="12"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/text_color_on_light"
+        android:textColorHint="@color/btn_gold"
+        android:textSize="@dimen/_10ssp" />
+
+    <!-- Email Address -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="Email Address"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_10ssp" />
+
+    <EditText
+        android:id="@+id/etPassengerEmail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/bg_input_field"
+        android:fontFamily="@font/manrope_regular"
+        android:hint="example@email.com (Optional)"
+        android:imeOptions="actionDone"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/text_color_on_light"
+        android:textColorHint="@color/btn_gold"
+        android:textSize="@dimen/_10ssp" />
+
+</LinearLayout>

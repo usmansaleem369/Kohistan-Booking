@@ -7,7 +7,47 @@
     android:background="@color/white"
     android:paddingHorizontal="@dimen/_10sdp"
     tools:context=".ui.HomeFragment">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginHorizontal="@dimen/_3sdp"
+        app:cardBackgroundColor="@color/card_bg_warm"
+        app:strokeColor="@color/btn_gold"
+        app:strokeWidth="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_10sdp">
+
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Good Afternoon"
+                android:textSize="@dimen/_10ssp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:textColor="@color/text_color_on_light"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvTime"
+                android:text="@string/let_s_book_your_next_trip"
+                android:textSize="@dimen/_14ssp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/manrope_extrabold"
+                android:textColor="@color/text_color_on_light"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
     <!-- Card Container for Route Selection -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvToFrom"
@@ -19,7 +59,7 @@
         app:cardBackgroundColor="@color/card_bg_warm"
         app:cardCornerRadius="@dimen/_16sdp"
         app:contentPadding="@dimen/_10sdp"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/cvToolbar">
 
         <LinearLayout
             android:layout_width="match_parent"

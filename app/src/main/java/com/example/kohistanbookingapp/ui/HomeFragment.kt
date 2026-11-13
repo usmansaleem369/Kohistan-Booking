@@ -12,6 +12,7 @@ import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.SearchableDropdownPopup
 import com.example.kohistanbookingapp.databinding.FragmentHomeBinding
 import com.example.kohistanbookingapp.models.response.CityData
+import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.ApiViewModel
 import com.google.android.material.datepicker.CalendarConstraints
@@ -52,6 +53,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun initUiAndListeners() {
+        binding.tvTime.text = AppUtils.getTimeGreeting()
+
         apiViewModel.allDepartureCities.value?.lastContent()?.let { cities->
             setupFromDropdowns(cities)
         }?:run {

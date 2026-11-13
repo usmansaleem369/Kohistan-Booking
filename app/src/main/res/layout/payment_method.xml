@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_14sdp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_bold"
+        android:text="Payment Method"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_12ssp" />
+
+    <LinearLayout
+        android:id="@+id/layoutJazzCashOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@drawable/bg_jazzcash_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/_12sdp">
+
+        <!-- JazzCash Emblem Badge -->
+        <TextView
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:background="@drawable/bg_btn_jazzcash"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="JC"
+            android:textColor="#FFD100"
+            android:textSize="@dimen/_12ssp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_bold"
+                android:text="JazzCash Mobile Account"
+                android:textColor="#101828"
+                android:textSize="@dimen/_11ssp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Instant confirmation via MPIN / OTP"
+                android:textColor="#667085"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <RadioButton
+            android:id="@+id/rbJazzCash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="#C8102E"
+            android:checked="true"
+            android:clickable="false" />
+    </LinearLayout>
+
+    <!-- Optional separate JazzCash Wallet Number -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="JazzCash Account Number *"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_10ssp" />
+
+    <EditText
+        android:id="@+id/etJazzCashAccount"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/bg_input_field"
+        android:fontFamily="@font/manrope_regular"
+        android:hint="03XX-XXXXXXX"
+        android:inputType="phone"
+        android:maxLength="12"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/text_color_on_light"
+        android:textColorHint="@color/btn_gold"
+        android:textSize="@dimen/_10ssp" />
+</LinearLayout>

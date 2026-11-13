@@ -21,8 +21,8 @@ data class CreateBookingRequest(
     @SerializedName("DepartureDate")
     val departureDate: String, // "yyyy-MM-dd"
 
-    @SerializedName("SeatNumbers")
-    val seatNumbers: List<Int>,
+    @SerializedName("Seats")
+    val seats: List<BookingSeatItem>,
 
     @SerializedName("Title")
     val title: String, // "Mr", "Mrs", "Miss"
@@ -38,4 +38,12 @@ data class CreateBookingRequest(
 
     @SerializedName("Email")
     val email: String? = null
+)
+
+data class BookingSeatItem(
+    @SerializedName("SeatNo")
+    val seatNo: Int,
+
+    @SerializedName("Gender")
+    val gender: String // "Male" or "Female"
 )

@@ -47,16 +47,12 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnGuestCheckout.setOnClickListener {
-           // navigateToHome()
-        }
-
         binding.tvForgotPassword.setOnClickListener {
             Toast.makeText(this, "Forgot password clicked", Toast.LENGTH_SHORT).show()
         }
 
         binding.tvSignUp.setOnClickListener {
-            // startActivity(Intent(this, RegisterActivity::class.java))
+             startActivity(Intent(this, RegistrationActivity::class.java))
         }
     }
 

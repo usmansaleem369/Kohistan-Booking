@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:fontFamily="@font/manrope_bold"
-                android:text="Welcome Back"
+                android:text="@string/welcome_back"
                 android:textColor="@color/btn_navy"
                 android:textSize="@dimen/_18ssp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_4sdp"
                 android:fontFamily="@font/manrope_regular"
-                android:text="Sign in to manage your bookings and trips"
+                android:text="@string/sign_in_to_manage_your_bookings_and_trips"
                 android:textColor="#757575"
                 android:textSize="@dimen/_12ssp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_28sdp"
-                android:hint="Mobile Number / Email"
+                android:hint="@string/mobile_number_email"
                 android:textColorHint="@color/btn_gold"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
@@ -105,7 +105,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_12sdp"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:textColorHint="@color/btn_gold"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
@@ -143,7 +143,7 @@
                 android:layout_marginTop="@dimen/_8sdp"
                 android:fontFamily="@font/manrope_semibold"
                 android:padding="@dimen/_4sdp"
-                android:text="Forgot Password?"
+                android:text="@string/forgot_password"
                 android:textColor="@color/btn_navy"
                 android:textSize="@dimen/_10ssp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -159,7 +159,7 @@
                 android:fontFamily="@font/manrope_semibold"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:text="Sign In"
+                android:text="@string/sign_in"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12ssp"
@@ -169,65 +169,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvForgotPassword" />
 
-            <!-- Or Continue With Divider -->
-            <View
-                android:id="@+id/vDividerLeft"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:background="#E0E0E0"
-                app:layout_constraintBottom_toBottomOf="@id/tvOrLabel"
-                app:layout_constraintEnd_toStartOf="@id/tvOrLabel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvOrLabel" />
-
-            <TextView
-                android:id="@+id/tvOrLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_24sdp"
-                android:fontFamily="@font/manrope_regular"
-                android:text="or continue as"
-                android:textColor="#9E9E9E"
-                android:textSize="@dimen/_10ssp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnLogin" />
-
-            <View
-                android:id="@+id/vDividerRight"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:background="#E0E0E0"
-                app:layout_constraintBottom_toBottomOf="@id/tvOrLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvOrLabel"
-                app:layout_constraintTop_toTopOf="@id/tvOrLabel" />
-
-            <!-- Guest Checkout Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGuestCheckout"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:fontFamily="@font/manrope_semibold"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:visibility="gone"
-                android:text="Continue as Guest"
-                android:textAllCaps="false"
-                android:textColor="@color/btn_navy"
-                android:textSize="@dimen/_12ssp"
-                app:cornerRadius="@dimen/_10sdp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvOrLabel"
-                app:strokeColor="@color/btn_navy"
-                app:strokeWidth="1dp" />
-
-            <!-- Bottom Registration Link -->
             <LinearLayout
                 android:id="@+id/llRegisterPrompt"
                 android:layout_width="wrap_content"
@@ -238,14 +179,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnGuestCheckout"
+                app:layout_constraintTop_toBottomOf="@id/btnLogin"
                 app:layout_constraintVertical_bias="1.0">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="Don't have an account? "
+                    android:text="@string/don_t_have_an_account"
                     android:textColor="#757575"
                     android:textSize="@dimen/_12ssp" />
 
@@ -255,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_bold"
                     android:padding="@dimen/_2sdp"
-                    android:text="Register"
+                    android:text="@string/register"
                     android:textColor="@color/btn_gold"
                     android:textSize="@dimen/_12ssp" />
             </LinearLayout>
