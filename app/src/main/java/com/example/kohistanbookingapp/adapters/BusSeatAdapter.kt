@@ -74,7 +74,7 @@ class BusSeatAdapter(
     fun confirmSeatSelection(seatNumber: Int, chosenGender: SeatGender) {
         val pos = seatCells.indexOfFirst { it.seatNumber == seatNumber }
         if (pos == -1) return
-        val cell = seatCells[pos]
+        val selectedSeat = seatCells[pos]
 
         // 1. Seat 4 is strictly Female-only (adjacent to Hostess seat 3)
         if (seatNumber == HOSTESS_ADJACENT_SEAT && chosenGender != SeatGender.FEMALE) {
@@ -86,7 +86,7 @@ class BusSeatAdapter(
         val lockedGender = if (seatNumber == HOSTESS_ADJACENT_SEAT) {
             SeatGender.FEMALE
         } else {
-            getRequiredGenderFromBookedNeighbors(cell)
+            getRequiredGenderFromBookedNeighbors(selectedSeat)
         }
 
         if (lockedGender != null && lockedGender != chosenGender) {
@@ -109,7 +109,7 @@ class BusSeatAdapter(
             requiredGender = lockedGender,
             assignedGender = chosenGender
         )
-        seatCells[pos] = cell.copy(status = SeatStatus.SELECTED, gender = chosenGender)
+        seatCells[pos] = selectedSeat.copy(status = SeatStatus.SELECTED, gender = chosenGender)
 
         notifyItemChanged(pos)
         onSelectionChanged(selectedSeatsMap.values.toList())
@@ -117,10 +117,10 @@ class BusSeatAdapter(
 
     fun getSelectedSeats(): List<SelectedSeat> = selectedSeatsMap.values.toList()
 
-    private fun getRequiredGenderFromBookedNeighbors(cell: SeatCell): SeatGender? {
-        val rowStart = cell.rowIndex * 5
-        val leftIndex = if (cell.colIndex > 0) rowStart + (cell.colIndex - 1) else -1
-        val rightIndex = if (cell.colIndex < 4) rowStart + (cell.colIndex + 1) else -1
+    private fun getRequiredGenderFromBookedNeighbors(selectedSeat: SeatCell): SeatGender? {
+        val rowStart = selectedSeat.rowIndex * 5
+        val leftIndex = if (selectedSeat.colIndex > 0) rowStart + (selectedSeat.colIndex - 1) else -1
+        val rightIndex = if (selectedSeat.colIndex < 4) rowStart + (selectedSeat.colIndex + 1) else -1
 
         val neighbors = listOfNotNull(
             seatCells.getOrNull(leftIndex),
