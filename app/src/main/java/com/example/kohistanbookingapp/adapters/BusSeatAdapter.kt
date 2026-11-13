@@ -23,18 +23,34 @@ class BusSeatAdapter(
 ) : RecyclerView.Adapter<BusSeatAdapter.SeatViewHolder>() {
 
     companion object {
+        private const val COLS = 5
         private const val HOSTESS_ADJACENT_SEAT = 4
     }
 
-    private val seatCells = mutableListOf<SeatCell>()
+    private val seatGrid = mutableListOf<MutableList<SeatCell>>()
     private val selectedSeatsMap = linkedMapOf<Int, SelectedSeat>()
-    private var rowCount: Int = 0
     private var containerHeightPx: Int = 0
+
+    private fun getCellAt(position: Int): SeatCell =
+        seatGrid[position / COLS][position % COLS]
+
+    private fun updateCellAt(position: Int, updated: SeatCell) {
+        seatGrid[position / COLS][position % COLS] = updated
+    }
+
+    private fun findPositionBySeatNumber(seatNumber: Int): Int {
+        seatGrid.forEachIndexed { r, row ->
+            row.forEachIndexed { c, cell ->
+                if (cell.seatNumber == seatNumber) return r * COLS + c
+            }
+        }
+        return -1
+    }
 
     fun setContainerHeight(heightPx: Int) {
         if (heightPx > 0 && containerHeightPx != heightPx) {
             containerHeightPx = heightPx
-            if (seatCells.isNotEmpty()) notifyDataSetChanged()
+            if (seatGrid.isNotEmpty()) notifyDataSetChanged()
         }
     }
 
@@ -43,38 +59,37 @@ class BusSeatAdapter(
         maleBookedSeats: Set<Int> = emptySet(),
         femaleBookedSeats: Set<Int> = emptySet()
     ) {
-        rowCount = rows.size
         selectedSeatsMap.clear()
-        seatCells.clear()
+        seatGrid.clear()
 
         rows.forEachIndexed { rowIndex, row ->
             val columns = listOf(row.c1, row.c2, row.c3, row.c4, row.c5)
-            columns.forEachIndexed { colIndex, seatNum ->
+            val rowCells = columns.mapIndexed { colIndex, seatNum ->
                 val (status, gender) = when {
                     seatNum <= 0 -> SeatStatus.AISLE to SeatGender.NONE
                     femaleBookedSeats.contains(seatNum) -> SeatStatus.BOOKED_FEMALE to SeatGender.FEMALE
                     maleBookedSeats.contains(seatNum) -> SeatStatus.BOOKED_MALE to SeatGender.MALE
                     else -> SeatStatus.AVAILABLE to SeatGender.NONE
                 }
-                seatCells.add(
-                    SeatCell(
-                        seatNumber = seatNum,
-                        rowIndex = rowIndex,
-                        colIndex = colIndex,
-                        status = status,
-                        gender = gender
-                    )
+                SeatCell(
+                    seatNumber = seatNum,
+                    rowIndex = rowIndex,
+                    colIndex = colIndex,
+                    status = status,
+                    gender = gender
                 )
-            }
+            }.toMutableList()
+            seatGrid.add(rowCells)
         }
+
         notifyDataSetChanged()
         onSelectionChanged(emptyList())
     }
 
     fun confirmSeatSelection(seatNumber: Int, chosenGender: SeatGender) {
-        val pos = seatCells.indexOfFirst { it.seatNumber == seatNumber }
+        val pos = findPositionBySeatNumber(seatNumber)
         if (pos == -1) return
-        val selectedSeat = seatCells[pos]
+        val selectedSeat = getCellAt(pos)
 
         // 1. Seat 4 is strictly Female-only (adjacent to Hostess seat 3)
         if (seatNumber == HOSTESS_ADJACENT_SEAT && chosenGender != SeatGender.FEMALE) {
@@ -109,7 +124,7 @@ class BusSeatAdapter(
             requiredGender = lockedGender,
             assignedGender = chosenGender
         )
-        seatCells[pos] = selectedSeat.copy(status = SeatStatus.SELECTED, gender = chosenGender)
+        updateCellAt(pos, selectedSeat.copy(status = SeatStatus.SELECTED, gender = chosenGender))
 
         notifyItemChanged(pos)
         onSelectionChanged(selectedSeatsMap.values.toList())
@@ -118,13 +133,11 @@ class BusSeatAdapter(
     fun getSelectedSeats(): List<SelectedSeat> = selectedSeatsMap.values.toList()
 
     private fun getRequiredGenderFromBookedNeighbors(selectedSeat: SeatCell): SeatGender? {
-        val rowStart = selectedSeat.rowIndex * 5
-        val leftIndex = if (selectedSeat.colIndex > 0) rowStart + (selectedSeat.colIndex - 1) else -1
-        val rightIndex = if (selectedSeat.colIndex < 4) rowStart + (selectedSeat.colIndex + 1) else -1
+        val row = seatGrid.getOrNull(selectedSeat.rowIndex) ?: return null
 
         val neighbors = listOfNotNull(
-            seatCells.getOrNull(leftIndex),
-            seatCells.getOrNull(rightIndex)
+            row.getOrNull(selectedSeat.colIndex - 1),
+            row.getOrNull(selectedSeat.colIndex + 1)
         ).filter { it.seatNumber > 0 }
 
         val hasBookedFemale = neighbors.any { it.status == SeatStatus.BOOKED_FEMALE }
@@ -148,18 +161,18 @@ class BusSeatAdapter(
     }
 
     override fun onBindViewHolder(holder: SeatViewHolder, position: Int) {
-        if (containerHeightPx > 0 && rowCount > 0) {
-            val rowHeight = containerHeightPx / rowCount
+        if (containerHeightPx > 0 && seatGrid.isNotEmpty()) {
+            val rowHeight = containerHeightPx / seatGrid.size
             val params = holder.itemView.layoutParams
             if (params.height != rowHeight) {
                 params.height = rowHeight
                 holder.itemView.layoutParams = params
             }
         }
-        holder.bind(seatCells[position])
+        holder.bind(getCellAt(position))
     }
 
-    override fun getItemCount(): Int = seatCells.size
+    override fun getItemCount(): Int = seatGrid.size * COLS
 
     inner class SeatViewHolder(
         private val binding: ItemBusSeatBinding
@@ -169,7 +182,7 @@ class BusSeatAdapter(
             binding.tvSeatNumber.setOnClickListener {
                 val pos = bindingAdapterPosition
                 if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-                val cell = seatCells[pos]
+                val cell = getCellAt(pos)
 
                 if (cell.status == SeatStatus.AISLE ||
                     cell.status == SeatStatus.BOOKED_MALE ||
@@ -181,7 +194,7 @@ class BusSeatAdapter(
                 // Deselect if already selected
                 if (selectedSeatsMap.containsKey(cell.seatNumber)) {
                     selectedSeatsMap.remove(cell.seatNumber)
-                    seatCells[pos] = cell.copy(status = SeatStatus.AVAILABLE, gender = SeatGender.NONE)
+                    updateCellAt(pos, cell.copy(status = SeatStatus.AVAILABLE, gender = SeatGender.NONE))
                     notifyItemChanged(pos)
                     onSelectionChanged(selectedSeatsMap.values.toList())
                     return@setOnClickListener
