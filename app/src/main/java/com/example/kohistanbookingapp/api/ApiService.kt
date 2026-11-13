@@ -23,6 +23,7 @@ interface ApiService {
         @Field("UserName") username: String,
         @Field("Password") password: String,
         @Field("DeviceToken") grantType: String = "1223443543545",
+        @Field("UserType") userType: String = "Member"
     ): Response<ApiResponse<LoginResponse>>
 
     @POST("/api/auth/logout")

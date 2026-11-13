@@ -121,7 +121,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
             }
 
         totalAmount = selectedSeats.size * (route?.fare ?: 0.0)
-        binding.tvTotalPayable.text = "PKR ${currencyFormat.format(totalAmount)}"
+        binding.tvTotalPayable.text = getString(R.string.pkr, currencyFormat.format(totalAmount))
     }
 
     private fun autoSelectDefaultTitle() {
