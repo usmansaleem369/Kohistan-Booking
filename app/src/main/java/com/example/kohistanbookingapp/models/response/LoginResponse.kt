@@ -7,7 +7,7 @@ data class LoginResponse(
     val accessToken: String?,
 
     @SerializedName("RefreshToken")
-    val refreshToken: String?,
+    val refreshToken: String,
 
     @SerializedName("AccessTokenExpiresAt")
     val accessTokenExpiresAt: String?,

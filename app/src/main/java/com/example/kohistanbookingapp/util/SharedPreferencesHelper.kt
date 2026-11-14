@@ -32,8 +32,8 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
         get() = sharedPreferences.getString(TOKEN, null)
         set(value) = sharedPreferences.edit { putString(TOKEN, value) }
 
-    var refreshToken: String?
-        get() = sharedPreferences.getString(REFRESH_TOKEN, "")
+    var refreshToken: String
+        get() = sharedPreferences.getString(REFRESH_TOKEN, "")?:""
         set(value) = sharedPreferences.edit { putString(REFRESH_TOKEN, value) }
 
     var accessTokenExpiresAt: String?

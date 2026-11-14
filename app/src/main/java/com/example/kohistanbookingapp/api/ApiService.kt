@@ -2,6 +2,7 @@ package com.example.kohistanbookingapp.api
 
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.request.CreateProfileRequest
+import com.example.kohistanbookingapp.models.request.RefreshTokenRequest
 import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
 import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.models.response.ApiResponse
@@ -28,6 +29,11 @@ interface ApiService {
         @Field("Password") password: String,
         @Field("DeviceToken") grantType: String = "1223443543545",
         @Field("UserType") userType: String = "Member"
+    ): Response<ApiResponse<LoginResponse>>
+
+    @POST("/api/auth/refresh-token")
+    suspend fun refreshToken(
+        @Body request: RefreshTokenRequest
     ): Response<ApiResponse<LoginResponse>>
 
     @POST("/api/auth/logout")

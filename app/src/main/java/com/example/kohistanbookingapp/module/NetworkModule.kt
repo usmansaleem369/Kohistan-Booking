@@ -3,6 +3,7 @@ package com.example.kohistanbookingapp.module
 import android.util.Log
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.api.ApiService
+import com.example.kohistanbookingapp.util.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
-    fun provideOkHttpClient(sharedPreferencesHelper: SharedPreferencesHelper): OkHttpClient {
+    fun provideOkHttpClient(sharedPreferencesHelper: SharedPreferencesHelper, tokenAuthenticator: TokenAuthenticator): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor { message ->
             Log.d("OkHttp", message)
         }.apply {
@@ -28,6 +29,8 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .authenticator(tokenAuthenticator)
+            .addInterceptor(loggingInterceptor) // Placed after so logged requests include X-Client-Type and Authorization
             .addInterceptor { chain ->
                 val originalRequest = chain.request()
                 val requestBuilder = originalRequest.newBuilder()
@@ -47,9 +50,7 @@ object NetworkModule {
                 }
 
                 chain.proceed(requestBuilder.build())
-            }
-            .addInterceptor(loggingInterceptor) // Placed after so logged requests include X-Client-Type and Authorization
-            .build()
+            }.build()
     }
     
     @Provides
