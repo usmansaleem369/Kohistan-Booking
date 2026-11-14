@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.RouteTimeAdapter
 import com.example.kohistanbookingapp.api.ApiRequestStatus
@@ -43,7 +45,11 @@ class RoutesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRoutesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
         initUiAndListeners()
         observeViewModel()
     }

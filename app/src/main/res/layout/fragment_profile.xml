@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F6F9"
+    android:background="@color/white"
     tools:context=".ui.ProfileFragment">
 
     <!-- Scrollable Profile Form -->
@@ -16,7 +16,7 @@
         android:paddingHorizontal="@dimen/_12sdp"
         android:paddingTop="@dimen/_12sdp"
         android:paddingBottom="@dimen/_20sdp"
-        app:layout_constraintBottom_toTopOf="@id/bottomSaveBar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -328,6 +328,7 @@
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp"
+                android:layout_marginBottom="@dimen/_70sdp"
                 app:strokeColor="#EAECF0"
                 app:strokeWidth="1dp">
 
@@ -446,36 +447,22 @@
                         android:textColorHint="#98A2B3"
                         android:textSize="@dimen/_10ssp"
                         tools:text="House 9, Street 4, Faisalabad" />
-
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnUpdateProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/bg_seat_selected"
+                        android:fontFamily="@font/manrope_bold"
+                        android:text="Save Changes"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_11ssp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Sticky Save Button -->
-    <LinearLayout
-        android:id="@+id/bottomSaveBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:elevation="8dp"
-        android:paddingHorizontal="@dimen/_14sdp"
-        android:paddingVertical="@dimen/_12sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnUpdateProfile"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_42sdp"
-            android:background="@drawable/bg_seat_selected"
-            android:fontFamily="@font/manrope_bold"
-            android:text="Save Changes"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/_11ssp" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

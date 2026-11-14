@@ -13,7 +13,7 @@ data class LoginResponse(
     val accessTokenExpiresAt: String?,
 
     @SerializedName("MemberId")
-    val memberId: Long?,
+    val memberId: Int,
 
     @SerializedName("MembershipCardNo")
     val membershipCardNo: String?,

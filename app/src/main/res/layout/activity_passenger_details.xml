@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F6F9"
+    android:background="@color/white"
     tools:context=".ui.PassengerDetailsActivity">
 
     <LinearLayout
         android:id="@+id/headerContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/card_bg_warm2"
+        android:background="@color/card_bg_warm"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/_14sdp"
@@ -169,7 +169,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPayWithJazzCash"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_42sdp"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_btn_jazzcash"
             android:fontFamily="@font/manrope_bold"
             android:paddingHorizontal="@dimen/_18sdp"

@@ -36,6 +36,9 @@ class AuthRepository @Inject constructor(
 
     private val _updateProfileResponse = MutableLiveData<Event<ProfileData>>()
     val updateProfileResponse: LiveData<Event<ProfileData>> = _updateProfileResponse
+
+    private val _getProfileResponse = MutableLiveData<Event<ProfileData>>()
+    val getProfileResponse: LiveData<Event<ProfileData>> = _updateProfileResponse
     suspend fun login(username: String, password: String) {
         isRequestInProgress = true
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
@@ -124,6 +127,31 @@ class AuthRepository @Inject constructor(
                     res.data?.let {profileData ->
                         sharedPreferences.userProfile = profileData
                         _updateProfileResponse.postValue(Event(profileData))
+                    }
+                },
+                onError = { error ->
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))
+                }
+            )
+        } catch (e: Exception) {
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e))))
+        } finally {
+            isRequestInProgress = false
+        }
+    }
+
+    suspend fun getProfile(memberId: Int) {
+        isRequestInProgress = true
+        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+        try {
+            val response = apiService.getProfile(memberId)
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+            response.handleResponse(
+                onSuccess = { res ->
+                    res.data?.let {profileData ->
+                        sharedPreferences.userProfile = profileData
+                        _getProfileResponse.postValue(Event(profileData))
                     }
                 },
                 onError = { error ->

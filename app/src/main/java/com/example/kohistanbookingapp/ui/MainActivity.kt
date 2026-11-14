@@ -90,20 +90,17 @@ class MainActivity : AppCompatActivity() {
                 handleApiStatus(status)
             }
         }
-        /*apiViewModel.routeDetailResponse.observe(this) { event ->
-            event.getContentIfNotHandled()?.let { routes ->
-                if (routes.isEmpty()) {
-                    AppUtils.showCustomToast(
-                        "No bus found for selected route",
-                        layoutInflater,
-                        this@MainActivity
-                    )
-                } else {
-                    val intent = Intent(this, RoutesActivity::class.java)
-                    startActivity(intent)
-                }
+        authViewModel.getProfileResponse.observe(this){event ->
+            event.getContentIfNotHandled()?.let {
+                binding.tvDisplayName.text = getString(
+                    R.string.full_name_data,
+                    it.firstName,
+                    it.lastName
+                ).trim()
+
+                binding.sideMenuContent.tvUserName.text = it.userName
             }
-        }*/
+        }
 
         authViewModel.logoutResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
@@ -144,7 +141,7 @@ class MainActivity : AppCompatActivity() {
     private fun initUiAndListeners() = with(binding) {
 
         ivMenu.setOnClickListener {
-            sideMenuContent.tvUserName.text = sharedPreferencesHelper.username ?: ""
+            sideMenuContent.tvUserName.text = sharedPreferencesHelper.getUserSession()?.userName ?: ""
             sideMenuContent.tvUserEmail.text = sharedPreferencesHelper.email ?: ""
             if (motionLayout.progress == 0f) {
                 motionLayout.transitionToEnd()
@@ -159,6 +156,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupMenuClicks()
+
+        if (sharedPreferencesHelper.userProfile == null) {
+            authViewModel.getProfile(sharedPreferencesHelper.getUserSession()?.memberId ?: -1)
+        }
 
     }
 
@@ -275,6 +276,8 @@ class MainActivity : AppCompatActivity() {
                 it.firstName,
                 it.lastName
             ).trim()
+            binding.sideMenuContent.tvUserName.text = it.userName
+            binding.sideMenuContent.tvUserEmail.text = it.email
         }
         if (::binding.isInitialized &&
             AppUtils.isLocationPermissionGranted(this)

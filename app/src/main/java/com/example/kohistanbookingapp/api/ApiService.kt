@@ -75,4 +75,9 @@ interface ApiService {
         @Body request: UpdateProfileRequest
     ): Response<ApiResponse<ProfileData>>
 
+    @GET("/api/Profile/GetProfile")
+    suspend fun getProfile(
+        @Query("memberId") memberId: Int
+    ): Response<ApiResponse<ProfileData>>
+
 }
