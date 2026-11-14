@@ -88,4 +88,7 @@ dependencies {
 
     //Circular image view
     implementation(libs.circularImageView)
+
+    //Swipe Refresh
+    implementation(libs.androidx.swiperefreshlayout)
 }

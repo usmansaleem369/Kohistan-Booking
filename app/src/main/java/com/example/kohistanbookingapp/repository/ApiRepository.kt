@@ -8,6 +8,7 @@ import com.example.kohistanbookingapp.api.ApiService
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.BookedSeatsData
+import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
 import com.example.kohistanbookingapp.models.response.CityData
 import com.example.kohistanbookingapp.models.response.CreateBookingData
 import com.example.kohistanbookingapp.models.response.RouteData
@@ -58,6 +59,9 @@ class ApiRepository @Inject constructor(
 
     private val _createBookingResponse = MutableLiveData<Event<CreateBookingData>>()
     val createBookingResponse: LiveData<Event<CreateBookingData>> = _createBookingResponse
+
+    private val _bookingHistoryResponse = MutableLiveData<Event<BookingHistoryResponse>>()
+    val bookingHistoryResponse: LiveData<Event<BookingHistoryResponse>> = _bookingHistoryResponse
 
     // ==================== Getters & Setters ====================
 
@@ -274,6 +278,28 @@ class ApiRepository @Inject constructor(
                     } ?: run {
                         _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("Reservation details missing in response.")))
                     }
+                },
+                onError = { error ->
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))
+                }
+            )
+        } catch (e: Exception) {
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e))))
+        } finally {
+            isRequestInProgress = false
+        }
+    }
+
+    suspend fun getBookingHistory(memberId: Int, pageNumber: Int = 1, pageSize: Int = 10) {
+        isRequestInProgress = true
+        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+        try {
+            val response = apiService.getBookingHistory(memberId = memberId,pageNumber = pageNumber, pageSize = pageSize)
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+            response.handleResponse(
+                onSuccess = { res ->
+                    _bookingHistoryResponse.postValue(Event(res))
                 },
                 onError = { error ->
                     _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="@dimen/_12sdp"
+    app:cardElevation="0dp"
+    app:strokeColor="#EAECF0"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_14sdp">
+
+        <!-- Top Row: Reservation ID & TimeType / Ticket Badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvReservationId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textColor="@color/btn_navy"
+                    android:textSize="@dimen/_10ssp"
+                    tools:text="ID #2611131014655" />
+
+                <TextView
+                    android:id="@+id/tvBookedAt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_1sdp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:textColor="#98A2B3"
+                    android:textSize="@dimen/_8ssp"
+                    tools:text="Booked on 13 Nov 2026, 10:14 AM" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTimeType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_soft_gold"
+                android:fontFamily="@font/manrope_semibold"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:textColor="@color/btn_navy"
+                android:textSize="@dimen/_8ssp"
+                tools:text="Regular" />
+        </LinearLayout>
+
+        <!-- Route Row: FromCity -> RouteCode -> ToCity -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- From -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="FROM"
+                    android:textColor="#98A2B3"
+                    android:textSize="@dimen/_7ssp" />
+
+                <TextView
+                    android:id="@+id/tvFromCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/manrope_bold"
+                    android:maxLines="1"
+                    android:textColor="@color/btn_navy"
+                    android:textSize="@dimen/_12ssp"
+                    tools:text="Faisalabad" />
+            </LinearLayout>
+
+            <!-- Center Route Tag -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvRouteName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#F2F4F7"
+                    android:fontFamily="@font/manrope_semibold"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_2sdp"
+                    android:textColor="#475467"
+                    android:textSize="@dimen/_8ssp"
+                    tools:text="FSD-GRW" />
+
+                <TextView
+                    android:id="@+id/tvDropPoint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:textColor="#667085"
+                    android:textSize="@dimen/_8ssp"
+                    tools:text="Drop: GRW" />
+            </LinearLayout>
+
+            <!-- To -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="TO"
+                    android:textColor="#98A2B3"
+                    android:textSize="@dimen/_7ssp" />
+
+                <TextView
+                    android:id="@+id/tvToCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/manrope_bold"
+                    android:maxLines="1"
+                    android:textColor="@color/btn_navy"
+                    android:textSize="@dimen/_12ssp"
+                    tools:text="Gujranwala" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Departure Date, Time & Seats Info Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="#F8FAFC"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_8sdp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="Departure"
+                    android:textColor="#667085"
+                    android:textSize="@dimen/_8ssp" />
+
+                <TextView
+                    android:id="@+id/tvDepartureDateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/manrope_semibold"
+                    android:textColor="#101828"
+                    android:textSize="@dimen/_9ssp"
+                    tools:text="13 Nov 2026 • 09:10 PM" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvSeatCountLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:textColor="#667085"
+                    android:textSize="@dimen/_8ssp"
+                    tools:text="Seats (2)" />
+
+                <TextView
+                    android:id="@+id/tvSeatNumbers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textColor="@color/btn_navy"
+                    android:textSize="@dimen/_9ssp"
+                    tools:text="24 (F), 25 (M)" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:background="#EAECF0" />
+
+        <!-- Footer: Passenger Name & Total Fare -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvPassengerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_semibold"
+                    android:textColor="#344054"
+                    android:textSize="@dimen/_10ssp"
+                    tools:text="Amina" />
+
+                <TextView
+                    android:id="@+id/tvContactNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:textColor="#667085"
+                    android:textSize="@dimen/_8ssp"
+                    tools:text="0300-1234567" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="Total Fare"
+                    android:textColor="#667085"
+                    android:textSize="@dimen/_8ssp" />
+
+                <TextView
+                    android:id="@+id/tvTotalFare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textColor="@color/btn_navy"
+                    android:textSize="@dimen/_12ssp"
+                    tools:text="Rs. 2,100" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

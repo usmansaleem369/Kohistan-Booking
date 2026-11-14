@@ -9,6 +9,7 @@ import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
 import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.BookedSeatsData
+import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
 import com.example.kohistanbookingapp.models.response.CityData
 import com.example.kohistanbookingapp.models.response.CreateBookingData
 import com.example.kohistanbookingapp.models.response.LoginResponse
@@ -97,5 +98,12 @@ interface ApiService {
     suspend fun resetPassword(
         @Body request: ResetPasswordRequest
     ): Response<ApiResponse<Unit>>
+
+    @GET("api/Booking/GetBookingHistory") // Match your exact route path
+    suspend fun getBookingHistory(
+        @Query("memberId") memberId: Int,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<BookingHistoryResponse>
 
 }
