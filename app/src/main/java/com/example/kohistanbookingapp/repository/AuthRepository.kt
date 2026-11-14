@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.api.ApiService
 import com.example.kohistanbookingapp.models.request.CreateProfileRequest
+import com.example.kohistanbookingapp.models.request.ForgotPasswordRequest
+import com.example.kohistanbookingapp.models.request.ResetPasswordRequest
 import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.LoginResponse
@@ -39,6 +41,12 @@ class AuthRepository @Inject constructor(
 
     private val _getProfileResponse = MutableLiveData<Event<ProfileData>>()
     val getProfileResponse: LiveData<Event<ProfileData>> = _updateProfileResponse
+
+    private val _forgotPasswordResponse = MutableLiveData<Event<ApiResponse<Unit>>>()
+    val forgotPasswordResponse: LiveData<Event<ApiResponse<Unit>>> = _forgotPasswordResponse
+
+    private val _resetPasswordResponse = MutableLiveData<Event<ApiResponse<Unit>>>()
+    val resetPasswordResponse: LiveData<Event<ApiResponse<Unit>>> = _resetPasswordResponse
     suspend fun login(username: String, password: String) {
         isRequestInProgress = true
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
@@ -164,5 +172,50 @@ class AuthRepository @Inject constructor(
             isRequestInProgress = false
         }
     }
+
+    suspend fun forgotPassword(forgotPasswordRequest: ForgotPasswordRequest) {
+        isRequestInProgress = true
+        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+        try {
+            val response = apiService.forgotPassword(forgotPasswordRequest)
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+            response.handleResponse(
+                onSuccess = { res ->
+                    _forgotPasswordResponse.postValue(Event(res))
+                },
+                onError = { error ->
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))
+                }
+            )
+        } catch (e: Exception) {
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e))))
+        } finally {
+            isRequestInProgress = false
+        }
+    }
+
+    suspend fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
+        isRequestInProgress = true
+        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+        try {
+            val response = apiService.resetPassword(resetPasswordRequest)
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+            response.handleResponse(
+                onSuccess = { res ->
+                    _forgotPasswordResponse.postValue(Event(res))
+                },
+                onError = { error ->
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))
+                }
+            )
+        } catch (e: Exception) {
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e))))
+        } finally {
+            isRequestInProgress = false
+        }
+    }
+
 
 }

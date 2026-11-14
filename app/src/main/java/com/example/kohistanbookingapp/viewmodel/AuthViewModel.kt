@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kohistanbookingapp.models.request.CreateProfileRequest
+import com.example.kohistanbookingapp.models.request.ForgotPasswordRequest
+import com.example.kohistanbookingapp.models.request.ResetPasswordRequest
 import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
 import com.example.kohistanbookingapp.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +28,10 @@ class AuthViewModel @Inject constructor(
     val updateProfileResponse = authRepository.updateProfileResponse
 
     val getProfileResponse = authRepository.getProfileResponse
+
+    val forgotPasswordResponse = authRepository.forgotPasswordResponse
+
+    val resetPasswordResponse = authRepository.resetPasswordResponse
     fun login(username: String,password: String){
         viewModelScope.launch {
             authRepository.login(username,password)
@@ -53,6 +59,18 @@ class AuthViewModel @Inject constructor(
     fun getProfile(memberId:Int){
         viewModelScope.launch {
             authRepository.getProfile(memberId)
+        }
+    }
+
+    fun forgotPassword(forgotPasswordRequest: ForgotPasswordRequest){
+        viewModelScope.launch {
+            authRepository.forgotPassword(forgotPasswordRequest)
+        }
+    }
+
+    fun resetPassword(resetPasswordRequest: ResetPasswordRequest){
+        viewModelScope.launch {
+            authRepository.resetPassword(resetPasswordRequest)
         }
     }
 

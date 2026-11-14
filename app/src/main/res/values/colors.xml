@@ -29,4 +29,5 @@
     <color name="seat_booked_male">#D6E4FF</color>
 
     <color name="seat_selected_female">#D43878</color>
+    <color name="cb_lighter">#C0F0E9E7</color>
 </resources>

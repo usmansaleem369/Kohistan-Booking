@@ -48,11 +48,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.tvForgotPassword.setOnClickListener {
-            Toast.makeText(this, "Forgot password clicked", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
         binding.tvSignUp.setOnClickListener {
-             startActivity(Intent(this, RegistrationActivity::class.java))
+            startActivity(Intent(this, RegistrationActivity::class.java))
+            finish()
         }
     }
 
@@ -86,18 +87,19 @@ class LoginActivity : AppCompatActivity() {
                     is ApiRequestStatus.Loading -> {
                         AppLoader.instance.showLoader(this)
                     }
+
                     is ApiRequestStatus.Idle -> {
                         AppLoader.instance.hideLoader()
                     }
+
                     is ApiRequestStatus.Error -> {
                         AppLoader.instance.hideLoader()
-                        AppUtils.showCustomToast(status.message,layoutInflater,this)
+                        AppUtils.showCustomToast(status.message, layoutInflater, this)
                     }
                 }
             }
         }
 
-        // If your ViewModel exposes a login success LiveData:
         authViewModel.loginResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()

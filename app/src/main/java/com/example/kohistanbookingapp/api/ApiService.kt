@@ -2,7 +2,9 @@ package com.example.kohistanbookingapp.api
 
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.request.CreateProfileRequest
+import com.example.kohistanbookingapp.models.request.ForgotPasswordRequest
 import com.example.kohistanbookingapp.models.request.RefreshTokenRequest
+import com.example.kohistanbookingapp.models.request.ResetPasswordRequest
 import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
 import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.models.response.ApiResponse
@@ -85,5 +87,15 @@ interface ApiService {
     suspend fun getProfile(
         @Query("memberId") memberId: Int
     ): Response<ApiResponse<ProfileData>>
+
+    @POST("/api/auth/forgot-password")
+    suspend fun forgotPassword(
+        @Body request: ForgotPasswordRequest
+    ): Response<ApiResponse<Unit>>
+
+    @POST("/api/auth/reset-password")
+    suspend fun resetPassword(
+        @Body request: ResetPasswordRequest
+    ): Response<ApiResponse<Unit>>
 
 }
