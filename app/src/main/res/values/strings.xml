@@ -77,7 +77,6 @@
     <string name="seat_passenger_gender">Seat %1$d — Passenger Gender</string>
     <string name="welcome_back">Welcome Back</string>
     <string name="sign_in_to_manage_your_bookings_and_trips">Sign in to manage your bookings and trips</string>
-    <string name="mobile_number_email">Mobile Number / Email</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="sign_in">Sign In</string>
@@ -109,4 +108,27 @@
     <string name="save_amp_register"><![CDATA[Save & Register]]></string>
     <string name="already_registered_sign_in">Already registered? Sign In</string>
     <string name="pkr">PKR %1$s</string>
+    <string name="full_name_data">%1$s %2$s</string>
+    <string name="username">Username</string>
+
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_last_updated">Last Updated: November 2026</string>
+    <string name="privacy_intro_title">Your Privacy Matters</string>
+    <string name="privacy_intro_body">Kohistan Booking App is committed to protecting your personal information and ensuring a safe, transparent bus ticket booking experience across Pakistan.</string>
+
+    <string name="privacy_section_1_title">1. Information We Collect</string>
+    <string name="privacy_section_1_body">• Personal &amp; Identity Details: Full name, CNIC number, date of birth, gender, and nationality required for passenger verification and e-ticket issuance.\n• Contact Information: Mobile number, email address, and residential address for booking confirmations, SMS/email alerts, and customer support.\n• Travel &amp; Loyalty Data: Selected routes, seat preferences, booking history, membership card number, and Road/Status Miles.\n• Device &amp; App Diagnostics: Basic device identifiers and crash logs to keep the app reliable and secure.</string>
+
+    <string name="privacy_section_2_title">2. How We Use Your Information</string>
+    <string name="privacy_section_2_body">• Process bus seat reservations, generate e-tickets, and verify passenger identity at terminals.\n• Enforce bus seating guidelines (including dedicated family and female-adjacent seating rules).\n• Credit and track loyalty points (Road Miles and Status Miles) on your Kohistan Membership Card.\n• Send real-time schedule updates, departure reminders, and booking receipts.</string>
+
+    <string name="privacy_section_3_title">3. Data Sharing &amp; Security</string>
+    <string name="privacy_section_3_body">• We do not sell or rent your personal data to third parties.\n• Information is shared only with authorized Kohistan Bus Service terminal staff and verified payment gateways strictly to complete your booking.\n• All communication between the app and our servers is encrypted over HTTPS, and sensitive credentials are protected using industry-standard security practices.</string>
+
+    <string name="privacy_section_4_title">4. Your Rights &amp; Account Control</string>
+    <string name="privacy_section_4_body">• You can view and update your mobile number, address, and gender anytime from the Profile section.\n• Verified identity fields (such as CNIC and registered email) are locked to prevent unauthorized ticket tampering. To request corrections or account deletion, contact our support team.</string>
+
+    <string name="privacy_section_5_title">5. Contact Us</string>
+    <string name="privacy_section_5_body">For privacy inquiries or data requests, reach out to Kohistan Bus Service Customer Support:\n• Email: support@kohistanbus.com\n• Helpline: 041-111-555-777</string>
+    <string name="back">Back</string>
 </resources>

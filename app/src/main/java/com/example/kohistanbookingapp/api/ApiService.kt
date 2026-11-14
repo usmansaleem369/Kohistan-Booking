@@ -1,12 +1,15 @@
 package com.example.kohistanbookingapp.api
 
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
+import com.example.kohistanbookingapp.models.request.CreateProfileRequest
+import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
 import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.BookedSeatsData
 import com.example.kohistanbookingapp.models.response.CityData
 import com.example.kohistanbookingapp.models.response.CreateBookingData
 import com.example.kohistanbookingapp.models.response.LoginResponse
+import com.example.kohistanbookingapp.models.response.ProfileData
 import com.example.kohistanbookingapp.models.response.RouteData
 import retrofit2.Response
 import retrofit2.http.Body
@@ -14,6 +17,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface ApiService {
@@ -60,5 +64,15 @@ interface ApiService {
     suspend fun createBooking(
         @Body request: CreateBookingRequest
     ): Response<ApiResponse<CreateBookingData>>
+
+    @POST("api/Profile/CreateProfile")
+    suspend fun createProfile(
+        @Body request: CreateProfileRequest
+    ): Response<ApiResponse<ProfileData>>
+
+    @PUT("api/Profile/UpdateProfile")
+    suspend fun updateProfile(
+        @Body request: UpdateProfileRequest
+    ): Response<ApiResponse<ProfileData>>
 
 }

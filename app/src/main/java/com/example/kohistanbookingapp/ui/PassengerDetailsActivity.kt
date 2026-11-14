@@ -82,19 +82,23 @@ class PassengerDetailsActivity : AppCompatActivity() {
         }
 
         binding.llPassengerDetails.apply {
-            when (profile.title) {
-                "Mrs" -> rbMrs.isChecked = true
-                "Miss" -> rbMiss.isChecked = true
-                else -> rbMr.isChecked = true
+            if (profile.gender.equals("Female", ignoreCase = true)) {
+                rbMiss.isChecked = true
+            } else {
+                rbMr.isChecked = true
             }
-
-            etPassengerName.setText(profile.fullName)
+            etPassengerName.setText(
+                getString(
+                    R.string.full_name_data,
+                    profile.firstName,
+                    profile.lastName
+                ).trim())
             etPassengerCnic.setText(profile.cnic)
-            etPassengerPhone.setText(profile.phoneNo)
+            etPassengerPhone.setText(profile.cellNo)
             etPassengerEmail.setText(profile.email.orEmpty())
         }
 
-        binding.llPaymentMethod.etJazzCashAccount.setText(profile.phoneNo)
+        binding.llPaymentMethod.etJazzCashAccount.setText(profile.cellNo)
     }
 
     private fun showBookedTicketDetails() {

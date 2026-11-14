@@ -28,6 +28,7 @@ class BusSeatAdapter(
     }
 
     private val seatGrid = mutableListOf<MutableList<SeatCell>>()
+    private val seatPositionMap = HashMap<Int, Int>()
     private val selectedSeatsMap = linkedMapOf<Int, SelectedSeat>()
     private var containerHeightPx: Int = 0
 
@@ -38,19 +39,15 @@ class BusSeatAdapter(
         seatGrid[position / COLS][position % COLS] = updated
     }
 
-    private fun findPositionBySeatNumber(seatNumber: Int): Int {
-        seatGrid.forEachIndexed { r, row ->
-            row.forEachIndexed { c, cell ->
-                if (cell.seatNumber == seatNumber) return r * COLS + c
-            }
-        }
-        return -1
-    }
+    private fun findPositionBySeatNumber(seatNumber: Int): Int =
+        seatPositionMap[seatNumber] ?: -1
 
     fun setContainerHeight(heightPx: Int) {
         if (heightPx > 0 && containerHeightPx != heightPx) {
             containerHeightPx = heightPx
-            if (seatGrid.isNotEmpty()) notifyDataSetChanged()
+            if (seatGrid.isNotEmpty()) {
+                notifyItemRangeChanged(0, itemCount)
+            }
         }
     }
 
@@ -61,10 +58,15 @@ class BusSeatAdapter(
     ) {
         selectedSeatsMap.clear()
         seatGrid.clear()
+        seatPositionMap.clear()
 
         rows.forEachIndexed { rowIndex, row ->
             val columns = listOf(row.c1, row.c2, row.c3, row.c4, row.c5)
             val rowCells = columns.mapIndexed { colIndex, seatNum ->
+                if (seatNum > 0) {
+                    seatPositionMap[seatNum] = rowIndex * COLS + colIndex
+                }
+
                 val (status, gender) = when {
                     seatNum <= 0 -> SeatStatus.AISLE to SeatGender.NONE
                     femaleBookedSeats.contains(seatNum) -> SeatStatus.BOOKED_FEMALE to SeatGender.FEMALE
@@ -246,7 +248,7 @@ class BusSeatAdapter(
                 SeatStatus.SELECTED -> {
                     binding.tvSeatNumber.visibility = View.VISIBLE
                     binding.tvSeatNumber.isEnabled = true
-                    binding.tvSeatNumber.text = "${cell.seatNumber}"
+                    binding.tvSeatNumber.text = cell.seatNumber.toString()
                     val bgRes = if (cell.gender == SeatGender.FEMALE) {
                         R.drawable.bg_seat_selected_female
                     } else {

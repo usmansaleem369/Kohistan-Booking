@@ -13,6 +13,7 @@ import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.ActivityRoutesBinding
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.setupTravelDatePicker
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.ApiViewModel
 import com.google.android.material.datepicker.CalendarConstraints
@@ -113,40 +114,12 @@ class RoutesActivity : AppCompatActivity() {
 
 
     private fun setupDatePicker() {
-        binding.btnCalendar.setOnClickListener {
-
-            val utcTimeZone = TimeZone.getTimeZone("UTC")
-            val dateFormat = SimpleDateFormat(
-                "EEE, dd MMM yyyy",
-                Locale.ENGLISH
-            ).apply {
-                timeZone = utcTimeZone
-            }
-
-            val selectedDate = sharedPreferencesHelper.selectedTravelDate
-
-            val selectedTravelDateMillis = runCatching {
-                dateFormat.parse(selectedDate?:"")?.time
-            }.getOrNull() ?: MaterialDatePicker.todayInUtcMilliseconds()
-
-            val constraints = CalendarConstraints.Builder()
-                .setValidator(DateValidatorPointForward.now())
-                .build()
-
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Travel Date")
-                .setTheme(R.style.ThemeOverlay_App_DatePicker_Gold)
-                .setSelection(selectedTravelDateMillis)
-                .setCalendarConstraints(constraints)
-                .build()
-
-            datePicker.addOnPositiveButtonClickListener { selectionMillis ->
-                val formattedDate = dateFormat.format(Date(selectionMillis))
-                apiViewModel.getRouteDetails(formattedDate)
-                sharedPreferencesHelper.selectedTravelDate = formattedDate
-            }
-
-            datePicker.show(supportFragmentManager, "TRAVEL_DATE_PICKER")
+        setupTravelDatePicker(
+            binding.btnCalendar,
+            sharedPreferencesHelper = sharedPreferencesHelper,
+            title = "Select Travel Date"
+        ) { formattedDate ->
+            apiViewModel.getRouteDetails(formattedDate)
         }
     }
 

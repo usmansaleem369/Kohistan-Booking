@@ -7,8 +7,6 @@
     android:background="#F4F6F9"
     tools:context=".ui.ProfileFragment">
 
-    <!-- Top Navy Profile Banner -->
-
     <!-- Scrollable Profile Form -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
@@ -29,7 +27,7 @@
             android:clipChildren="false"
             android:orientation="vertical">
 
-            <!-- Card 1: Account Email (Read-Only) -->
+            <!-- Card 1: Read-Only Account & Identity Information -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,9 +54,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/manrope_bold"
-                            android:text="Registered Email"
+                            android:text="Account Identity"
                             android:textColor="@color/btn_navy"
-                            android:textSize="@dimen/_11ssp" />
+                            android:textSize="@dimen/_12ssp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -72,11 +70,107 @@
                             android:textSize="@dimen/_8ssp" />
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Identity and email details are locked to your account"
+                        android:textColor="#98A2B3"
+                        android:textSize="@dimen/_8ssp" />
+
+                    <!-- First Name & Last Name (Read-Only) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/manrope_semibold"
+                                android:text="First Name"
+                                android:textColor="#344054"
+                                android:textSize="@dimen/_10ssp" />
+
+                            <EditText
+                                android:id="@+id/etFirstName"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_marginTop="@dimen/_4sdp"
+                                android:background="@drawable/bg_input_field_readonly"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/manrope_medium"
+                                android:inputType="none"
+                                android:paddingHorizontal="@dimen/_12sdp"
+                                android:textColor="#667085"
+                                android:textSize="@dimen/_10ssp"
+                                tools:text="Ali" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/manrope_semibold"
+                                android:text="Last Name"
+                                android:textColor="#344054"
+                                android:textSize="@dimen/_10ssp" />
+
+                            <EditText
+                                android:id="@+id/etLastName"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_marginTop="@dimen/_4sdp"
+                                android:background="@drawable/bg_input_field_readonly"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/manrope_medium"
+                                android:inputType="none"
+                                android:paddingHorizontal="@dimen/_12sdp"
+                                android:textColor="#667085"
+                                android:textSize="@dimen/_10ssp"
+                                tools:text="Khan" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Username (Read-Only) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="Username"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
                     <EditText
-                        android:id="@+id/etProfileEmail"
+                        android:id="@+id/etUserName"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:background="@drawable/bg_input_field_readonly"
                         android:clickable="false"
                         android:cursorVisible="false"
@@ -88,20 +182,145 @@
                         android:paddingHorizontal="@dimen/_12sdp"
                         android:textColor="#667085"
                         android:textSize="@dimen/_10ssp"
-                        tools:text="usman@example.com" />
+                        tools:text="ali" />
 
+                    <!-- Email Address (Read-Only) -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="Email Address"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etProfileEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
                         android:layout_marginTop="@dimen/_4sdp"
-                        android:fontFamily="@font/manrope_regular"
-                        android:text="Email address is linked to your account and cannot be changed."
-                        android:textColor="#98A2B3"
-                        android:textSize="@dimen/_8ssp" />
+                        android:background="@drawable/bg_input_field_readonly"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/manrope_medium"
+                        android:inputType="none"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="#667085"
+                        android:textSize="@dimen/_10ssp"
+                        tools:text="ali.khan@example.com" />
+
+                    <!-- CNIC Number (Read-Only) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="CNIC Number"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etProfileCnic"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field_readonly"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/manrope_medium"
+                        android:inputType="none"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="#667085"
+                        android:textSize="@dimen/_10ssp"
+                        tools:text="33100-1234567-1" />
+
+                    <!-- Date of Birth & Nationality (Read-Only) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/manrope_semibold"
+                                android:text="Date of Birth"
+                                android:textColor="#344054"
+                                android:textSize="@dimen/_10ssp" />
+
+                            <EditText
+                                android:id="@+id/etProfileDob"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_marginTop="@dimen/_4sdp"
+                                android:background="@drawable/bg_input_field_readonly"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/manrope_medium"
+                                android:inputType="none"
+                                android:paddingHorizontal="@dimen/_12sdp"
+                                android:textColor="#667085"
+                                android:textSize="@dimen/_10ssp"
+                                tools:text="1998-03-15" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/manrope_semibold"
+                                android:text="Nationality"
+                                android:textColor="#344054"
+                                android:textSize="@dimen/_10ssp" />
+
+                            <EditText
+                                android:id="@+id/etNationality"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_marginTop="@dimen/_4sdp"
+                                android:background="@drawable/bg_input_field_readonly"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/manrope_medium"
+                                android:inputType="none"
+                                android:paddingHorizontal="@dimen/_12sdp"
+                                android:textColor="#667085"
+                                android:textSize="@dimen/_10ssp"
+                                tools:text="Pakistani" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 2: Editable Personal Details -->
+            <!-- Card 2: Editable Contact & Personal Fields -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +341,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_bold"
-                        android:text="Personal Information"
+                        android:text="Editable Details"
                         android:textColor="@color/btn_navy"
                         android:textSize="@dimen/_12ssp" />
 
@@ -131,98 +350,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/manrope_regular"
-                        android:text="Update your passenger profile details below"
+                        android:text="You can update your mobile number, gender, and address"
                         android:textColor="#667085"
                         android:textSize="@dimen/_9ssp" />
 
-                    <!-- Title Selection -->
+                    <!-- Mobile Number (CellNo) -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Title *"
-                        android:textColor="#344054"
-                        android:textSize="@dimen/_10ssp" />
-
-                    <RadioGroup
-                        android:id="@+id/rgTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/rbMr"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/_16sdp"
-                            android:buttonTint="@color/btn_navy"
-                            android:checked="true"
-                            android:fontFamily="@font/manrope_medium"
-                            android:text="Mr"
-                            android:textColor="@color/text_color_on_light"
-                            android:textSize="@dimen/_10ssp" />
-
-                        <RadioButton
-                            android:id="@+id/rbMrs"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/_16sdp"
-                            android:buttonTint="@color/btn_navy"
-                            android:fontFamily="@font/manrope_medium"
-                            android:text="Mrs"
-                            android:textColor="@color/text_color_on_light"
-                            android:textSize="@dimen/_10ssp" />
-
-                        <RadioButton
-                            android:id="@+id/rbMiss"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:buttonTint="@color/btn_navy"
-                            android:fontFamily="@font/manrope_medium"
-                            android:text="Miss"
-                            android:textColor="@color/text_color_on_light"
-                            android:textSize="@dimen/_10ssp" />
-                    </RadioGroup>
-
-                    <!-- Full Name -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:fontFamily="@font/manrope_semibold"
-                        android:text="Full Name *"
+                        android:text="Mobile Number (Cell No) *"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
                     <EditText
-                        android:id="@+id/etProfileName"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:background="@drawable/bg_input_field"
-                        android:fontFamily="@font/manrope_regular"
-                        android:hint="Enter your full name"
-                        android:imeOptions="actionNext"
-                        android:inputType="textPersonName|textCapWords"
-                        android:paddingHorizontal="@dimen/_12sdp"
-                        android:textColor="@color/text_color_on_light"
-                        android:textColorHint="#98A2B3"
-                        android:textSize="@dimen/_10ssp" />
-
-                    <!-- Mobile Number -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:fontFamily="@font/manrope_semibold"
-                        android:text="Mobile Number *"
-                        android:textColor="#344054"
-                        android:textSize="@dimen/_10ssp" />
-
-                    <EditText
-                        android:id="@+id/etProfilePhone"
+                        android:id="@+id/etCellNo"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40sdp"
                         android:layout_marginTop="@dimen/_4sdp"
@@ -235,34 +378,8 @@
                         android:paddingHorizontal="@dimen/_12sdp"
                         android:textColor="@color/text_color_on_light"
                         android:textColorHint="#98A2B3"
-                        android:textSize="@dimen/_10ssp" />
-
-                    <!-- CNIC Number -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:fontFamily="@font/manrope_semibold"
-                        android:text="CNIC Number *"
-                        android:textColor="#344054"
-                        android:textSize="@dimen/_10ssp" />
-
-                    <EditText
-                        android:id="@+id/etProfileCnic"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40sdp"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:background="@drawable/bg_input_field"
-                        android:digits="0123456789-"
-                        android:fontFamily="@font/manrope_regular"
-                        android:hint="33100-1234567-1"
-                        android:imeOptions="actionDone"
-                        android:inputType="number"
-                        android:maxLength="15"
-                        android:paddingHorizontal="@dimen/_12sdp"
-                        android:textColor="@color/text_color_on_light"
-                        android:textColorHint="#98A2B3"
-                        android:textSize="@dimen/_10ssp" />
+                        android:textSize="@dimen/_10ssp"
+                        tools:text="03111234567" />
 
                     <!-- Gender -->
                     <TextView
@@ -303,6 +420,32 @@
                             android:textColor="@color/text_color_on_light"
                             android:textSize="@dimen/_10ssp" />
                     </RadioGroup>
+
+                    <!-- Address -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:text="Address *"
+                        android:textColor="#344054"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <EditText
+                        android:id="@+id/etAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_input_field"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="House 9, Street 4, Faisalabad"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPostalAddress|textCapSentences"
+                        android:paddingHorizontal="@dimen/_12sdp"
+                        android:textColor="@color/text_color_on_light"
+                        android:textColorHint="#98A2B3"
+                        android:textSize="@dimen/_10ssp"
+                        tools:text="House 9, Street 4, Faisalabad" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

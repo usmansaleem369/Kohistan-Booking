@@ -2,8 +2,8 @@ package com.example.kohistanbookingapp.util
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.example.kohistanbookingapp.models.local.UserProfile
 import com.example.kohistanbookingapp.models.response.LoginResponse
+import com.example.kohistanbookingapp.models.response.ProfileData
 import com.example.kohistanbookingapp.models.response.RouteData
 import com.example.kohistanbookingapp.models.response.SelectedSeat
 import com.google.gson.Gson
@@ -166,26 +166,26 @@ class SharedPreferencesHelper @Inject constructor(private val sharedPreferences:
         }
         set(value) {
             if (value.isEmpty()) {
-                sharedPreferences.edit().remove(KEY_SELECTED_SEATS).apply()
+                sharedPreferences.edit { remove(KEY_SELECTED_SEATS) }
             } else {
-                sharedPreferences.edit().putString(KEY_SELECTED_SEATS, gson.toJson(value)).apply()
+                sharedPreferences.edit { putString(KEY_SELECTED_SEATS, gson.toJson(value)) }
             }
         }
 
-    var userProfile: UserProfile?
+    var userProfile: ProfileData?
         get() {
             val json = sharedPreferences.getString(KEY_USER_PROFILE, null) ?: return null
             return try {
-                gson.fromJson(json, UserProfile::class.java)
+                gson.fromJson(json, ProfileData::class.java)
             } catch (e: Exception) {
                 null
             }
         }
         set(value) {
             if (value == null) {
-                sharedPreferences.edit().remove(KEY_USER_PROFILE).apply()
+                sharedPreferences.edit { remove(KEY_USER_PROFILE) }
             } else {
-                sharedPreferences.edit().putString(KEY_USER_PROFILE, gson.toJson(value)).apply()
+                sharedPreferences.edit { putString(KEY_USER_PROFILE, gson.toJson(value)) }
             }
         }
 

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.ActivityMainBinding
 import com.example.kohistanbookingapp.util.AppLoader
@@ -222,7 +223,9 @@ class MainActivity : AppCompatActivity() {
             NavTab.BOOKINGS -> loadFragment(BookingsFragment())
             NavTab.PROFILE -> loadFragment(ProfileFragment())
             NavTab.SETTINGS -> {}
-            NavTab.PRIVACY -> {}
+            NavTab.PRIVACY -> {
+                startActivity(Intent(this, PrivacyActivity::class.java))
+            }
             NavTab.LOGOUT -> {
                 authViewModel.logout()
             }
@@ -266,6 +269,13 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        sharedPreferencesHelper.userProfile?.let {
+            binding.tvDisplayName.text = getString(
+                R.string.full_name_data,
+                it.firstName,
+                it.lastName
+            ).trim()
+        }
         if (::binding.isInitialized &&
             AppUtils.isLocationPermissionGranted(this)
         ) {

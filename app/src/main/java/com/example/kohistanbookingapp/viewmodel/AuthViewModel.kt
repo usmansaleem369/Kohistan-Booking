@@ -3,6 +3,8 @@ package com.example.kohistanbookingapp.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kohistanbookingapp.models.request.CreateProfileRequest
+import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
 import com.example.kohistanbookingapp.repository.ApiRepository
 import com.example.kohistanbookingapp.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +23,8 @@ class AuthViewModel @Inject constructor(
 
     val logoutResponse = authRepository.logoutResponse
 
+    val createProfileResponse = authRepository.createProfileResponse
+    val updateProfileResponse = authRepository.updateProfileResponse
     fun login(username: String,password: String){
         viewModelScope.launch {
             authRepository.login(username,password)
@@ -30,6 +34,18 @@ class AuthViewModel @Inject constructor(
     fun logout(){
         viewModelScope.launch {
             authRepository.logout()
+        }
+    }
+
+    fun createProfile(createProfileRequest: CreateProfileRequest){
+        viewModelScope.launch {
+            authRepository.createProfile(createProfileRequest)
+        }
+    }
+
+    fun updateProfile(updateProfileRequest: UpdateProfileRequest){
+        viewModelScope.launch {
+            authRepository.updateProfile(updateProfileRequest)
         }
     }
 

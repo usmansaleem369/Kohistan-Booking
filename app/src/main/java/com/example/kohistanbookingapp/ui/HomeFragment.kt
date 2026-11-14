@@ -13,6 +13,7 @@ import com.example.kohistanbookingapp.adapters.SearchableDropdownPopup
 import com.example.kohistanbookingapp.databinding.FragmentHomeBinding
 import com.example.kohistanbookingapp.models.response.CityData
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.setupTravelDatePicker
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.ApiViewModel
 import com.google.android.material.datepicker.CalendarConstraints
@@ -159,36 +160,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupDatePicker() {
-        val displayFormat = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
-        binding.etTravelDate.setText(displayFormat.format(Date()))
-
-        val openPickerListener = View.OnClickListener {
-            val constraints = CalendarConstraints.Builder()
-                .setValidator(DateValidatorPointForward.now())
-                .build()
-
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Travel Date")
-                .setTheme(R.style.ThemeOverlay_App_DatePicker_Gold) // <-- Applied here
-                .setSelection(selectedTravelDateMillis)
-                .setCalendarConstraints(constraints)
-                .build()
-
-            datePicker.addOnPositiveButtonClickListener { selectionMillis ->
-                selectedTravelDateMillis = selectionMillis
-                val utcFormat = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault()).apply {
-                    timeZone = TimeZone.getTimeZone("UTC")
-                }
-                val formattedDate = utcFormat.format(Date(selectionMillis))
-                binding.etTravelDate.setText(formattedDate)
-                sharedPreferencesHelper.selectedTravelDate = formattedDate
-            }
-
-            datePicker.show(parentFragmentManager, "TRAVEL_DATE_PICKER")
-        }
-
-        binding.etTravelDate.setOnClickListener(openPickerListener)
-        binding.tilDate.setStartIconOnClickListener(openPickerListener)
+        setupTravelDatePicker(
+            editText = binding.etTravelDate,
+            textInputLayout = binding.tilDate,
+            title = "Select Travel Date",
+            sharedPreferencesHelper = sharedPreferencesHelper
+        )
     }
 
     override fun onDestroyView() {

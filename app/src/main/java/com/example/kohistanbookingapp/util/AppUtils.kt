@@ -23,15 +23,22 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.Build
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputLayout
 
 object AppUtils {
 
@@ -53,6 +60,7 @@ object AppUtils {
         toast.show()
     }
 
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -86,6 +94,7 @@ object AppUtils {
         errorDialog.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun parseDateTimeToDate(inputDateTime: String): Date? {
         val trimmed = inputDateTime.trim()
         if (trimmed.isEmpty()) return null
@@ -230,4 +239,119 @@ object AppUtils {
         })
     }
 
+
+
+    private fun createUtcDateFormat(pattern: String = TRAVEL_DATE_PATTERN): SimpleDateFormat =
+        SimpleDateFormat(pattern, Locale.ENGLISH).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+
+    fun attachTravelDatePicker(
+        fragmentManager: FragmentManager,
+        triggerViews: List<View>,
+        title: String = "Select Travel Date",
+        dateFormatPattern: String = TRAVEL_DATE_PATTERN,
+        allowPastDates: Boolean = false,
+        tag: String = "TRAVEL_DATE_PICKER",
+        currentDateProvider: () -> String? = { null },
+        onDateSelected: (selectionMillis: Long, formattedDate: String) -> Unit
+    ) {
+        val openPickerListener = View.OnClickListener {
+            if (fragmentManager.findFragmentByTag(tag) != null) return@OnClickListener
+
+            val utcFormat = createUtcDateFormat(dateFormatPattern)
+            val initialMillis = runCatching {
+                currentDateProvider()?.let { utcFormat.parse(it)?.time }
+            }.getOrNull() ?: MaterialDatePicker.todayInUtcMilliseconds()
+
+            val builder = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(title)
+                .setTheme(R.style.ThemeOverlay_App_DatePicker_Gold)
+                .setSelection(initialMillis)
+
+            if (!allowPastDates) {
+                val constraints = CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointForward.now())
+                    .build()
+                builder.setCalendarConstraints(constraints)
+            }
+
+            val datePicker = builder.build()
+
+            datePicker.addOnPositiveButtonClickListener { selectionMillis ->
+                val formattedDate = utcFormat.format(Date(selectionMillis))
+                onDateSelected(selectionMillis, formattedDate)
+            }
+
+            datePicker.show(fragmentManager, tag)
+        }
+
+        triggerViews.forEach { it.setOnClickListener(openPickerListener) }
+    }
+
+    /** Activity convenience extension (works with btnCalendar, EditText, etc.) */
+    fun FragmentActivity.setupTravelDatePicker(
+        vararg triggerViews: View,
+        sharedPreferencesHelper: SharedPreferencesHelper,
+        title: String = "Select Travel Date",
+        onDateSelected: (formattedDate: String) -> Unit
+    ) {
+        attachTravelDatePicker(
+            fragmentManager = supportFragmentManager,
+            triggerViews = triggerViews.toList(),
+            title = title,
+            currentDateProvider = { sharedPreferencesHelper.selectedTravelDate }
+        ) { _, formattedDate ->
+            sharedPreferencesHelper.selectedTravelDate = formattedDate
+            onDateSelected(formattedDate)
+        }
+    }
+
+    fun Fragment.setupTravelDatePicker(
+        editText: EditText,
+        textInputLayout: TextInputLayout? = null,
+        sharedPreferencesHelper: SharedPreferencesHelper,
+        title: String = "Select Travel Date",
+        onDateSelected: ((formattedDate: String) -> Unit)? = null
+    ) {
+        val initialText = sharedPreferencesHelper.selectedTravelDate
+            ?: createUtcDateFormat().format(Date(MaterialDatePicker.todayInUtcMilliseconds()))
+        editText.setText(initialText)
+
+        attachTravelDatePicker(
+            fragmentManager = parentFragmentManager,
+            triggerViews = listOf(editText),
+            title = title,
+            currentDateProvider = { sharedPreferencesHelper.selectedTravelDate }
+        ) { _, formattedDate ->
+            editText.setText(formattedDate)
+            editText.error = null
+            sharedPreferencesHelper.selectedTravelDate = formattedDate
+            onDateSelected?.invoke(formattedDate)
+        }
+
+        textInputLayout?.setStartIconOnClickListener { editText.performClick() }
+    }
+
+    fun FragmentActivity.setupDobDatePicker(
+        editText: EditText,
+        title: String = "Select Date of Birth",
+        onDateSelected: ((formattedDob: String) -> Unit)? = null
+    ) {
+        attachTravelDatePicker(
+            fragmentManager = supportFragmentManager,
+            triggerViews = listOf(editText),
+            title = title,
+            dateFormatPattern = "yyyy-MM-dd",
+            allowPastDates = true,
+            tag = "DOB_DATE_PICKER",
+            currentDateProvider = { editText.text.toString().trim().ifEmpty { "1998-01-01" } }
+        ) { _, formattedDob ->
+            editText.setText(formattedDob)
+            editText.error = null
+            onDateSelected?.invoke(formattedDob)
+        }
+    }
 }
+
+

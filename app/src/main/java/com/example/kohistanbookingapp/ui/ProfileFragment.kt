@@ -1,18 +1,19 @@
 package com.example.kohistanbookingapp.ui
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
-import com.example.kohistanbookingapp.R
+import androidx.fragment.app.viewModels
+import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.FragmentProfileBinding
-import com.example.kohistanbookingapp.models.local.UserProfile
+import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
+import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
+import com.example.kohistanbookingapp.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -24,6 +25,7 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,27 +38,32 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupInputHelpers()
         bindProfileData()
         setupListeners()
+        observeViewModel()
+    }
+
+    private fun setupInputHelpers() {
+        binding.etCellNo.clearErrorOnTextChange()
+        binding.etAddress.clearErrorOnTextChange()
     }
 
     private fun bindProfileData() {
         val profile = sharedPreferencesHelper.userProfile ?: return
-        // Read-only email field
-        binding.etProfileEmail.setText(profile.email.orEmpty())
 
-        // Editable fields
-        binding.etProfileName.setText(profile.fullName)
-        binding.etProfilePhone.setText(profile.phoneNo)
-        binding.etProfileCnic.setText(profile.cnic)
+        // Read-Only Identity & Email Fields
+        binding.etFirstName.setText(profile.firstName)
+        binding.etLastName.setText(profile.lastName)
+        binding.etUserName.setText(profile.userName)
+        binding.etProfileEmail.setText(profile.email)
+        binding.etProfileCnic.setText(formatCnic(profile.cnic))
+        binding.etProfileDob.setText(profile.dob.substringBefore("T"))
+        binding.etNationality.setText(profile.nationality.ifEmpty { "Pakistani" })
 
-        when (profile.title) {
-            "Mrs" -> binding.rbMrs.isChecked = true
-            "Miss" -> binding.rbMiss.isChecked = true
-            else -> binding.rbMr.isChecked = true
-        }
+        // Editable Fields
+        binding.etCellNo.setText(profile.cellNo.replace("-", ""))
+        binding.etAddress.setText(profile.address)
 
         if (profile.gender.equals("Female", ignoreCase = true)) {
             binding.rbFemale.isChecked = true
@@ -65,133 +72,83 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun setupInputHelpers() {
-        // Auto-format CNIC as 33100-1234567-1
-        binding.etProfileCnic.addTextChangedListener(object : TextWatcher {
-            private var isFormatting = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if (isFormatting || s == null) return
-                isFormatting = true
-                val digits = s.toString().replace("-", "")
-                val formatted = buildString {
-                    digits.forEachIndexed { index, c ->
-                        if (index == 5 || index == 12) append('-')
-                        append(c)
-                    }
-                }
-                s.replace(0, s.length, formatted)
-                isFormatting = false
-            }
-        })
-
-        // Keep Title & Gender aligned when user switches Title
-        binding.rgTitle.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.rbMr -> binding.rbMale.isChecked = true
-                R.id.rbMrs, R.id.rbMiss -> binding.rbFemale.isChecked = true
-            }
-        }
-
-        binding.etProfileName.clearErrorOnTextChange()
-        binding.etProfilePhone.clearErrorOnTextChange()
-        binding.etProfileCnic.clearErrorOnTextChange()
+    private fun formatCnic(raw: String): String {
+        val digits = raw.replace("-", "")
+        if (digits.length != 13) return raw
+        return "${digits.substring(0, 5)}-${digits.substring(5, 12)}-${digits.substring(12)}"
     }
 
     private fun setupListeners() {
         binding.btnUpdateProfile.setOnClickListener {
             if (validateInputs()) {
-                saveUpdatedProfile()
+                submitUpdateProfile()
             }
         }
     }
 
     private fun validateInputs(): Boolean {
-        clearFieldErrors()
+        binding.etCellNo.error = null
+        binding.etAddress.error = null
 
-        val name = binding.etProfileName.text.toString().trim()
-        val phone = binding.etProfilePhone.text.toString().replace("-", "").trim()
-        val cnicDigits = binding.etProfileCnic.text.toString().replace("-", "").trim()
+        val cellNo = binding.etCellNo.text.toString().replace("-", "").trim()
+        val address = binding.etAddress.text.toString().trim()
 
-        if (name.length < 3) {
-            binding.etProfileName.error = "Please enter your full name (at least 3 characters)"
-            binding.etProfileName.requestFocus()
+        if (!cellNo.matches(Regex("^03\\d{9}$"))) {
+            binding.etCellNo.error = "Enter a valid Pakistani mobile number (03XXXXXXXXX)"
+            binding.etCellNo.requestFocus()
             return false
         }
 
-        if (!phone.matches(Regex("^03\\d{9}$"))) {
-            binding.etProfilePhone.error = "Enter a valid Pakistani mobile number (03XXXXXXXXX)"
-            binding.etProfilePhone.requestFocus()
-            return false
-        }
-
-        if (cnicDigits.length != 13) {
-            binding.etProfileCnic.error = "Please enter a valid 13-digit CNIC number"
-            binding.etProfileCnic.requestFocus()
+        if (address.length < 5) {
+            binding.etAddress.error = "Please enter your complete address"
+            binding.etAddress.requestFocus()
             return false
         }
 
         return true
     }
 
-    private fun clearFieldErrors() {
-        binding.etProfileName.error = null
-        binding.etProfilePhone.error = null
-        binding.etProfileCnic.error = null
-    }
+    private fun getSelectedGender(): String =
+        if (binding.rbFemale.isChecked) "Female" else "Male"
 
-    private fun saveUpdatedProfile() {
-        val existingProfile = sharedPreferencesHelper.userProfile
-        val updatedName = binding.etProfileName.text.toString().trim()
-        val updatedPhone = binding.etProfilePhone.text.toString().replace("-", "").trim()
-        val updatedCnic = binding.etProfileCnic.text.toString().replace("-", "").trim()
-        val updatedTitle = when (binding.rgTitle.checkedRadioButtonId) {
-            R.id.rbMrs -> "Mrs"
-            R.id.rbMiss -> "Miss"
-            else -> "Mr"
-        }
-        val updatedGender = if (binding.rbFemale.isChecked) "Female" else "Male"
+    private fun submitUpdateProfile() {
+        val profile = sharedPreferencesHelper.userProfile ?: return
+        val cleanCellNo = binding.etCellNo.text.toString().replace("-", "").trim()
 
-        // Preserve existing immutable email & city
-        val updatedProfile = UserProfile(
-            title = updatedTitle,
-            fullName = updatedName,
-            cnic = updatedCnic,
-            gender = updatedGender,
-            phoneNo = updatedPhone,
-            email = existingProfile?.email.orEmpty(),
-            city = existingProfile?.city
+        val request = UpdateProfileRequest(
+            memberId = profile.memberId,
+            cellNo = cleanCellNo,
+            email = profile.email,
+            address = binding.etAddress.text.toString().trim(),
+            gender = getSelectedGender()
         )
 
-        sharedPreferencesHelper.userProfile = updatedProfile
-
-        // Refresh top banner immediately
-
-        AppUtils.showCustomToast(
-            "Profile updated successfully!",
-            layoutInflater,
-            requireContext()
-        )
+        authViewModel.updateProfile(request)
     }
 
-    private fun extractInitials(name: String): String {
-        val parts = name.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
-        return when {
-            parts.size >= 2 -> "${parts[0].first()}${parts[1].first()}".uppercase()
-            parts.size == 1 -> parts[0].take(2).uppercase()
-            else -> "U"
-        }
-    }
-
-    private fun EditText.clearErrorOnTextChange() {
-        addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (error != null) error = null
+    private fun observeViewModel() {
+        authViewModel.updateProfileResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                AppUtils.showCustomToast(
+                    "Profile updated successfully!",
+                    layoutInflater,
+                    requireContext()
+                )
             }
-            override fun afterTextChanged(s: Editable?) {}
-        })
+        }
+
+        authViewModel.apiRequestStatus.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { status ->
+                when (status) {
+                    is ApiRequestStatus.Loading -> AppLoader.instance.showLoader(requireContext())
+                    is ApiRequestStatus.Idle -> AppLoader.instance.hideLoader()
+                    is ApiRequestStatus.Error -> {
+                        AppLoader.instance.hideLoader()
+                        AppUtils.showCustomToast(status.message, layoutInflater, requireContext())
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

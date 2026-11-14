@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
         var isValid = true
 
         if (identifier.isEmpty()) {
-            binding.tilIdentifier.error = "Please enter email or phone"
+            binding.tilIdentifier.error = "Please enter username"
             isValid = false
         } else {
             binding.tilIdentifier.error = null
