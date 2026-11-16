@@ -33,14 +33,14 @@ class BookingHistoryAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: BookingHistoryItem) {
-            binding.tvReservationId.text = "ID #${item.reservationId}"
+            binding.tvReservationId.text = "Booking ID #${item.reservationId}"
             binding.tvBookedAt.text = "Booked on ${formatBookedAt(item.bookedAt)}"
             binding.tvTimeType.text = item.timeType
 
             binding.tvFromCity.text = item.fromCity
             binding.tvToCity.text = item.toCity
-            binding.tvRouteName.text = item.routeName
-            binding.tvDropPoint.text = "Drop: ${item.dropPoint}"
+            //binding.tvRouteName.text = item.routeName
+           // binding.tvDropPoint.text = "Drop: ${item.dropPoint}"
 
             val formattedDate = formatDepartureDate(item.departureDate)
             val formattedTime = formatDepartureTime(item.departureTime)

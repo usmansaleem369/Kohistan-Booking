@@ -101,8 +101,9 @@ interface ApiService {
 
     @GET("api/Booking/GetBookingHistory") // Match your exact route path
     suspend fun getBookingHistory(
-        @Query("memberId") memberId: Int,
-        @Query("pageNumber") pageNumber: Int,
+        //@Query("memberId") memberId: Int,
+        @Query("Cnic") cnic: String,
+        @Query("PageNo") pageNumber: Int,
         @Query("pageSize") pageSize: Int
     ): Response<BookingHistoryResponse>
 

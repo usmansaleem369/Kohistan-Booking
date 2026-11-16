@@ -34,6 +34,9 @@ class BookingsFragment : Fragment() {
     private val memberId: Int
         get() = sharedPreferencesHelper.userProfile?.memberId ?: 0
 
+    private val cnic: String
+        get() = sharedPreferencesHelper.userProfile?.cnic ?: ""
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,7 +54,7 @@ class BookingsFragment : Fragment() {
         observeViewModel()
 
         if (memberId != 0) {
-            apiViewModel.loadInitialBookingsIfNeeded(memberId)
+            apiViewModel.loadInitialBookingsIfNeeded(memberId,cnic)
         }
     }
 
@@ -77,7 +80,7 @@ class BookingsFragment : Fragment() {
                     val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
 
                     if (lastVisibleItem >= totalItemCount - 2) {
-                        apiViewModel.loadNextBookingsPage(memberId)
+                        apiViewModel.loadNextBookingsPage(memberId,cnic)
                     }
                 }
             })
@@ -88,7 +91,7 @@ class BookingsFragment : Fragment() {
         binding.swipeRefreshBookings.setColorSchemeResources(R.color.btn_navy)
         binding.swipeRefreshBookings.setOnRefreshListener {
             if (memberId != 0) {
-                apiViewModel.getBookingHistory(memberId = memberId, pageNumber = 1, isRefresh = true)
+                apiViewModel.getBookingHistory(memberId = memberId, pageNumber = 1, isRefresh = true,cnic)
             } else {
                 binding.swipeRefreshBookings.isRefreshing = false
             }
@@ -104,13 +107,13 @@ class BookingsFragment : Fragment() {
         }
 
         apiViewModel.totalRecords.observe(viewLifecycleOwner) { total ->
-            if (total > 0) {
+            /*if (total > 0) {
                 binding.tvTotalBookingsBadge.visibility = View.VISIBLE
                 binding.tvTotalBookingsBadge.text =
                     if (total == 1) "1 Booking" else "$total Bookings"
             } else {
                 binding.tvTotalBookingsBadge.visibility = View.GONE
-            }
+            }*/
         }
 
         apiViewModel.isLoadingMore.observe(viewLifecycleOwner) { loadingMore ->

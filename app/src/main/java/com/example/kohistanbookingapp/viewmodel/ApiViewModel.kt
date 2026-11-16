@@ -87,24 +87,25 @@ class ApiViewModel @Inject constructor(
         }
     }
 
-    fun loadInitialBookingsIfNeeded(memberId: Int) {
+    fun loadInitialBookingsIfNeeded(memberId: Int,cnic: String) {
         if (currentPage == 0) {
-            getBookingHistory(memberId = memberId, pageNumber = 1, isRefresh = true)
+            getBookingHistory(memberId = memberId, pageNumber = 1, isRefresh = true, cnic = cnic)
         }
     }
 
-    fun loadNextBookingsPage(memberId: Int) {
+    fun loadNextBookingsPage(memberId: Int,cnic: String) {
         if (_isLoadingMore.value == true || currentPage >= totalPages) return
         _isLoadingMore.value = true
-        getBookingHistory(memberId = memberId, pageNumber = currentPage + 1, isRefresh = false)
+        getBookingHistory(cnic = cnic, memberId = memberId, pageNumber = currentPage + 1, isRefresh = false)
     }
 
-    fun getBookingHistory(memberId: Int, pageNumber: Int = 1, isRefresh: Boolean = pageNumber == 1) {
+    fun getBookingHistory(memberId: Int, pageNumber: Int = 1, isRefresh: Boolean = pageNumber == 1,cnic: String) {
         if (!isRefresh) {
             _isLoadingMore.value = true
         }
         viewModelScope.launch {
             apiRepository.getBookingHistory(
+                cnic = cnic,
                 memberId = memberId,
                 pageNumber = pageNumber,
                 pageSize = pageSize
