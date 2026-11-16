@@ -105,4 +105,6 @@
     <string name="your_completed_bus_journeys_will_appear_here">Your completed bus journeys will appear here.</string>
     <string name="no_cancelled_bookings">No Cancelled Bookings</string>
     <string name="any_cancelled_reservations_will_appear_here">Any cancelled reservations will appear here.</string>
+    <string name="cancel_ticket">Cancel Ticket?</string>
+    <string name="cancel_reservation_detail">Are you sure you want to cancel reservation #%1$s\n(%2$s to %3$s, Seat %4$s)?\nThis action cannot be undone.</string>
 </resources>

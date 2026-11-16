@@ -127,7 +127,7 @@ class SelectSeatActivity : AppCompatActivity() {
 
     fun renderDataOnSeatSelection(selectedSeats: List<SelectedSeat>) {
         val count = selectedSeats.size
-        val totalFare = count * (sharedPreferencesHelper.selectedRouteData?.fare ?: 0.0)
+        val totalFare = count * (sharedPreferencesHelper.selectedRouteData?.getEffectiveFare() ?: 0.0)
 
         binding.tvSelectedSeats.text = if (count > 0) {
             selectedSeats.sortedBy { it.seatNumber }.joinToString(", ") {

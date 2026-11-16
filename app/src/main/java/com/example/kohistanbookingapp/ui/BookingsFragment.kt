@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.BookingHistoryAdapter
 import com.example.kohistanbookingapp.api.ApiRequestStatus
+import com.example.kohistanbookingapp.databinding.DialogConfirmCancelBinding
 import com.example.kohistanbookingapp.databinding.FragmentBookingsBinding
 import com.example.kohistanbookingapp.models.local.BookingFilter
+import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
@@ -37,8 +39,6 @@ class BookingsFragment : Fragment() {
     private val memberId: Int
         get() = sharedPreferencesHelper.userProfile?.memberId ?: 0
 
-    private val cnic: String
-        get() = sharedPreferencesHelper.userProfile?.cnic ?: ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,14 +56,14 @@ class BookingsFragment : Fragment() {
         observeViewModel()
 
         if (memberId != 0) {
-            apiViewModel.loadInitialBookingsIfNeeded(memberId, cnic)
+            apiViewModel.loadInitialBookingsIfNeeded(memberId)
         }
     }
 
 
     private fun updateTabStyles(selectedFilter: BookingFilter) {
         val tabs = listOf(
-            binding.tabActive to BookingFilter.ACTIVE,
+            binding.tabActive to BookingFilter.UPCOMING,
             binding.tabPast to BookingFilter.PAST,
             binding.tabCancelled to BookingFilter.CANCELLED
         )
@@ -75,25 +75,30 @@ class BookingsFragment : Fragment() {
                 tabView.setTextColor(Color.WHITE)
                 tabView.typeface = ResourcesCompat.getFont(requireContext(), R.font.manrope_bold)
             } else {
-                //tabView.setBackgroundColor(Color.TRANSPARENT)
                 tabView.setBackgroundResource(R.drawable.bg_filter_unselected)
                 tabView.setTextColor(0xFF667085.toInt())
-                tabView.typeface = ResourcesCompat.getFont(requireContext(), R.font.manrope_semibold)
+                tabView.typeface =
+                    ResourcesCompat.getFont(requireContext(), R.font.manrope_semibold)
             }
         }
 
         when (selectedFilter) {
-            BookingFilter.ACTIVE -> {
+            BookingFilter.UPCOMING -> {
                 binding.tvEmptyTitle.text = getString(R.string.no_active_bookings)
-                binding.tvEmptySubtitle.text = getString(R.string.your_upcoming_and_active_bus_ticket_bookings_will_appear_here)
+                binding.tvEmptySubtitle.text =
+                    getString(R.string.your_upcoming_and_active_bus_ticket_bookings_will_appear_here)
             }
+
             BookingFilter.PAST -> {
                 binding.tvEmptyTitle.text = getString(R.string.no_past_bookings)
-                binding.tvEmptySubtitle.text = getString(R.string.your_completed_bus_journeys_will_appear_here)
+                binding.tvEmptySubtitle.text =
+                    getString(R.string.your_completed_bus_journeys_will_appear_here)
             }
+
             BookingFilter.CANCELLED -> {
                 binding.tvEmptyTitle.text = getString(R.string.no_cancelled_bookings)
-                binding.tvEmptySubtitle.text = getString(R.string.any_cancelled_reservations_will_appear_here)
+                binding.tvEmptySubtitle.text =
+                    getString(R.string.any_cancelled_reservations_will_appear_here)
             }
         }
     }
@@ -104,7 +109,6 @@ class BookingsFragment : Fragment() {
             if (memberId != 0) {
                 apiViewModel.getBookingHistory(
                     memberId = memberId,
-                    cnic = cnic,
                     pageNumber = 1,
                     isRefresh = true
                 )
@@ -114,21 +118,17 @@ class BookingsFragment : Fragment() {
         }
 
         binding.tabActive.setOnClickListener {
-            apiViewModel.selectFilter(BookingFilter.ACTIVE, memberId, cnic)
+            apiViewModel.selectFilter(BookingFilter.UPCOMING, memberId)
         }
         binding.tabPast.setOnClickListener {
-            apiViewModel.selectFilter(BookingFilter.PAST, memberId, cnic)
+            apiViewModel.selectFilter(BookingFilter.PAST, memberId)
         }
         binding.tabCancelled.setOnClickListener {
-            apiViewModel.selectFilter(BookingFilter.CANCELLED, memberId, cnic)
+            apiViewModel.selectFilter(BookingFilter.CANCELLED, memberId)
         }
 
         bookingAdapter = BookingHistoryAdapter { bookingItem ->
-            AppUtils.showCustomToast(
-                "Reservation #${bookingItem.reservationId}",
-                layoutInflater,
-                requireContext()
-            )
+            showCancelConfirmationDialog(bookingItem)
         }
 
         val linearLayoutManager = LinearLayoutManager(requireContext())
@@ -144,11 +144,49 @@ class BookingsFragment : Fragment() {
                     val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
 
                     if (lastVisibleItem >= totalItemCount - 2) {
-                        apiViewModel.loadNextBookingsPage(memberId, cnic)
+                        apiViewModel.loadNextBookingsPage(memberId)
                     }
                 }
             })
         }
+    }
+
+    private fun showCancelConfirmationDialog(item: BookingHistoryItem) {
+        val dialogBinding = DialogConfirmCancelBinding.inflate(layoutInflater)
+
+        val dialog = android.app.Dialog(requireContext()).apply {
+            setContentView(dialogBinding.root)
+            setCancelable(true)
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val seatNumbers = item.seats.joinToString(", ") { it.seatNo.toString() }
+        dialogBinding.tvDialogTitle.text = getString(R.string.cancel_ticket)
+        dialogBinding.tvDialogMessage.text =
+            getString(
+                R.string.cancel_reservation_detail,
+                item.reservationId,
+                item.fromCity,
+                item.toCity,
+                seatNumbers
+            )
+
+        dialogBinding.btnKeepTicket.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnConfirmCancel.setOnClickListener {
+            dialog.dismiss()
+            apiViewModel.cancelBooking(
+                bookingItem = item
+            )
+        }
+
+        dialog.show()
     }
 
     private fun observeViewModel() {
@@ -171,6 +209,13 @@ class BookingsFragment : Fragment() {
             event.getContentIfNotHandled()?.let { response ->
                 binding.swipeRefreshBookings.isRefreshing = false
                 apiViewModel.onBookingHistoryFetched(response)
+            }
+        }
+
+        apiViewModel.cancelBookingResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                AppUtils.showCustomToast(response.message.ifEmpty { "Ticket cancelled successfully" }, layoutInflater, requireContext())
+                apiViewModel.removeCancelledBookingFromList()
             }
         }
 

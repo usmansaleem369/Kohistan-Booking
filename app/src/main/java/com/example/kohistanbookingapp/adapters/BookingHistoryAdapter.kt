@@ -1,6 +1,7 @@
 package com.example.kohistanbookingapp.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,9 +13,17 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class BookingHistoryAdapter(
-    private val onItemClick: (BookingHistoryItem) -> Unit
+    private val onCancelClick: (BookingHistoryItem) -> Unit
 ) : ListAdapter<BookingHistoryItem, BookingHistoryAdapter.BookingViewHolder>(DiffCallback) {
 
+    private var canCancelTickets: Boolean = true
+
+    fun setCanCancelTickets(canCancel: Boolean) {
+        if (canCancelTickets != canCancel) {
+            canCancelTickets = canCancel
+            notifyDataSetChanged()
+        }
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
         val binding = ItemBookingHistoryBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -57,7 +66,10 @@ class BookingHistoryAdapter(
             binding.tvContactNo.text = item.contactNo
             binding.tvTotalFare.text = formatCurrency(item.totalFare)
 
-            binding.root.setOnClickListener { onItemClick(item) }
+           // binding.root.setOnClickListener { onItemClick(item) }
+
+            binding.btnCancelTicket.visibility = if (canCancelTickets) View.VISIBLE else View.GONE
+            binding.btnCancelTicket.setOnClickListener { onCancelClick(item) }
         }
 
         private fun formatDepartureDate(raw: String): String {

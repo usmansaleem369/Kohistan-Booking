@@ -38,18 +38,22 @@ class ApiViewModel @Inject constructor(
     private val _bookingsList = MutableLiveData<List<BookingHistoryItem>>(emptyList())
     val bookingsList: LiveData<List<BookingHistoryItem>> = _bookingsList
 
+    val cancelBookingResponse = apiRepository.cancelBookingResponse
+
     private val _totalRecords = MutableLiveData(0)
     val totalRecords: LiveData<Int> = _totalRecords
 
     private val _isLoadingMore = MutableLiveData(false)
     val isLoadingMore: LiveData<Boolean> = _isLoadingMore
 
-    private val _selectedFilter = MutableLiveData(BookingFilter.ACTIVE)
+    private val _selectedFilter = MutableLiveData(BookingFilter.UPCOMING)
     val selectedFilter: LiveData<BookingFilter> = _selectedFilter
 
     private var currentPage = 0
     private var totalPages = 1
     private val pageSize = 10
+
+    var pendingCancelTransactionId: Long = -1
 
     fun setFromCity(city: CityData?) = apiRepository.setSelectedFromCity(city)
     fun setToCity(city: CityData?) = apiRepository.setSelectedToCity(city)
@@ -91,19 +95,19 @@ class ApiViewModel @Inject constructor(
         }
     }
 
-    fun loadInitialBookingsIfNeeded(memberId: Int,cnic: String) {
+    fun loadInitialBookingsIfNeeded(memberId: Int) {
         if (currentPage == 0) {
-            getBookingHistory(memberId = memberId, pageNumber = 1, isRefresh = true, cnic = cnic)
+            getBookingHistory(memberId = memberId, pageNumber = 1, isRefresh = true)
         }
     }
 
-    fun loadNextBookingsPage(memberId: Int,cnic: String) {
+    fun loadNextBookingsPage(memberId: Int) {
         if (_isLoadingMore.value == true || currentPage >= totalPages) return
         _isLoadingMore.value = true
-        getBookingHistory(cnic = cnic, memberId = memberId, pageNumber = currentPage + 1, isRefresh = false)
+        getBookingHistory( memberId = memberId, pageNumber = currentPage + 1, isRefresh = false)
     }
 
-    fun selectFilter(filter: BookingFilter, memberId: Int, cnic: String) {
+    fun selectFilter(filter: BookingFilter, memberId: Int) {
         if (_selectedFilter.value == filter) return
         _selectedFilter.value = filter
         currentPage = 0
@@ -112,18 +116,17 @@ class ApiViewModel @Inject constructor(
         _isLoadingMore.value = false
 
         if (memberId != 0) {
-            getBookingHistory(memberId = memberId, cnic = cnic, pageNumber = 1, isRefresh = true)
+            getBookingHistory(memberId = memberId, pageNumber = 1, isRefresh = true)
         }
     }
 
-    fun getBookingHistory(memberId: Int, pageNumber: Int = 1, isRefresh: Boolean = pageNumber == 1,cnic: String) {
+    fun getBookingHistory(memberId: Int, pageNumber: Int = 1, isRefresh: Boolean = pageNumber == 1) {
         if (!isRefresh) {
             _isLoadingMore.value = true
         }
-        val currentFilter = _selectedFilter.value?.label ?: BookingFilter.ACTIVE.label
+        val currentFilter = _selectedFilter.value?.label ?: BookingFilter.UPCOMING.label
         viewModelScope.launch {
             apiRepository.getBookingHistory(
-                cnic = cnic,
                 memberId = memberId,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -150,10 +153,26 @@ class ApiViewModel @Inject constructor(
         _isLoadingMore.value = false
     }
 
+    fun cancelBooking(bookingItem: BookingHistoryItem) {
+        pendingCancelTransactionId = bookingItem.transactionId
+        viewModelScope.launch {
+            apiRepository.cancelBooking(
+                transactionId = pendingCancelTransactionId
+            )
+
+        }
+    }
+
+    fun removeCancelledBookingFromList() {
+        val updated = _bookingsList.value.orEmpty().filterNot { it.transactionId == pendingCancelTransactionId }
+        _bookingsList.value = updated
+        _totalRecords.value = (_totalRecords.value ?: 1).minus(1).coerceAtLeast(0)
+    }
+
     fun clearSession() {
         currentPage = 0
         totalPages = 1
-        _selectedFilter.value = BookingFilter.ACTIVE
+        _selectedFilter.value = BookingFilter.UPCOMING
         _bookingsList.value = emptyList()
         _totalRecords.value = 0
         _isLoadingMore.value = false

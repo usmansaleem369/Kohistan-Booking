@@ -101,11 +101,15 @@ interface ApiService {
 
     @GET("api/Booking/GetBookingHistory") // Match your exact route path
     suspend fun getBookingHistory(
-        //@Query("memberId") memberId: Int,
-        @Query("Cnic") cnic: String,
+        @Query("MemberId") memberId: Int,
         @Query("PageNo") pageNumber: Int,
         @Query("pageSize") pageSize: Int,
-        @Query("status") status: String,
+        @Query("TripStatus") status: String,
     ): Response<BookingHistoryResponse>
+
+    @POST("/api/Booking/CancelReservation") // Match your exact backend cancel endpoint
+    suspend fun cancelBooking(
+        @Query("transactionId") transactionId: Long
+    ): Response<ApiResponse<Unit>>
 
 }

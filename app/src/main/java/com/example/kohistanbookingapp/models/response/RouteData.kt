@@ -45,6 +45,24 @@ data class RouteData(
     @SerializedName("Fare")
     val fare: Double? = null,
 
+    @SerializedName("FinalFare")
+    val finalFare: Double? = null,
+
+    @SerializedName("PromotionId")
+    val promotionId: Int? = null,
+
+    @SerializedName("PromotionName")
+    val promotionName: String? = null,
+
+    @SerializedName("PromotionDescription")
+    val promotionDescription: String? = null,
+
+    @SerializedName("DiscountPercentage")
+    val discountPercentage: Double? = null,
+
+    @SerializedName("DiscountAmount")
+    val discountAmount: Double? = null,
+
     @SerializedName("SeatCapacity")
     val seatCapacity: Int? = null,
 
@@ -54,6 +72,19 @@ data class RouteData(
     @SerializedName("RemainingSeats")
     val remainingSeats: Int? = null
 ) {
+    /**
+     * Returns the payable per-seat fare (falls back to original fare if FinalFare is null).
+     */
+    fun getEffectiveFare(): Double = finalFare ?: fare ?: 0.0
+
+    /**
+     * True when a promotion/discount is active on this trip.
+     */
+    fun hasPromotion(): Boolean =
+        (promotionId != null && promotionId > 0) ||
+                ((discountAmount ?: 0.0) > 0.0) ||
+                (finalFare != null && fare != null && finalFare < fare)
+
     /**
      * Parses CSV DisableSeats (e.g. "1,2,3,4,5,6,7,8") into a Set<Int> for BusSeatAdapter.
      */

@@ -36,12 +36,30 @@
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         tools:text="11 Nov 2026" />
 
+    <!-- Optional Promo Pill under Booking Date (e.g., "Winter offer • 50% OFF") -->
+    <TextView
+        android:id="@+id/tvPromoBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/rounded_thin_on_cv"
+        android:fontFamily="@font/manrope_semibold"
+        android:paddingHorizontal="@dimen/_6sdp"
+        android:paddingVertical="@dimen/_1sdp"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_7ssp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvBookingDate"
+        tools:text="Winter offer • 50% OFF"
+        tools:visibility="visible" />
+
     <TextView
         android:id="@+id/tvType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:background="@drawable/bg_rounded_soft_gold"
+        android:background="@drawable/rounded_thin_on_cv"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
         android:paddingHorizontal="@dimen/_8sdp"
@@ -49,35 +67,64 @@
         android:textColor="@color/text_color_on_light"
         android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toBottomOf="@id/tvTitle"
-        app:layout_constraintEnd_toStartOf="@id/tvPrice"
+        app:layout_constraintEnd_toStartOf="@id/llPriceContainer"
         app:layout_constraintTop_toTopOf="@id/tvTitle"
         tools:text="@string/economical" />
 
-    <TextView
-        android:id="@+id/tvPrice"
+    <!-- Stacked Price Container: Old Fare Above, Discounted Fare in Gold Below -->
+    <LinearLayout
+        android:id="@+id/llPriceContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:fontFamily="@font/manrope_bold"
         android:gravity="end"
-        android:textColor="@color/btn_gold"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvTitle"
-        tools:text="@string/pkr_3_000" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvOriginalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_medium"
+            android:gravity="end"
+            android:textColor="@color/text_color_on_light"
+            android:textSize="@dimen/_9ssp"
+            android:visibility="gone"
+            tools:text="PKR 2,000"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="end"
+            android:textColor="@color/btn_gold"
+            android:textSize="@dimen/_14ssp"
+            tools:text="PKR 1,000" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvRemainingSeats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
         android:fontFamily="@font/manrope_semibold"
         android:gravity="end"
         android:textColor="@color/red_textcolor"
         android:textSize="@dimen/_8ssp"
-        app:layout_constraintBaseline_toBaselineOf="@id/tvBookingDate"
-        app:layout_constraintEnd_toEndOf="@id/tvPrice"
+        app:layout_constraintEnd_toEndOf="@id/llPriceContainer"
+        app:layout_constraintTop_toBottomOf="@id/llPriceContainer"
         tools:text="37 seats left" />
+
+    <!-- Barrier so FromCity always stays safely below both left & right top stubs -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierTopStub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="tvBookingDate,tvPromoBadge,tvRemainingSeats" />
 
     <!-- ==================== ROUTE & PERFORATION LINE ==================== -->
     <TextView
@@ -91,7 +138,7 @@
         android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toTopOf="@id/lineBetweenCities"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvBookingDate"
+        app:layout_constraintTop_toBottomOf="@id/barrierTopStub"
         tools:text="@string/faisalabad" />
 
     <TextView
@@ -162,8 +209,8 @@
         android:backgroundTint="@color/btn_gold"
         android:fontFamily="@font/manrope_regular"
         android:text="@string/confirm_booking"
-        android:textSize="@dimen/_10ssp"
         android:textColor="@color/cardview_light_background"
+        android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

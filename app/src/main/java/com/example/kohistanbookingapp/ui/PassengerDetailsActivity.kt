@@ -124,7 +124,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
                 "${it.seatNumber}($tag)"
             }
 
-        totalAmount = selectedSeats.size * (route?.fare ?: 0.0)
+        totalAmount = selectedSeats.size * (route?.getEffectiveFare() ?: 0.0)
         binding.tvTotalPayable.text = getString(R.string.pkr, currencyFormat.format(totalAmount))
     }
 

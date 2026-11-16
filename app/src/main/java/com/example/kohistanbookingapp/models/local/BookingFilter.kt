@@ -1,7 +1,7 @@
 package com.example.kohistanbookingapp.models.local
 
 enum class BookingFilter(val label: String) {
-    ACTIVE("Active"),
+    UPCOMING("Upcoming"),
     PAST("Past"),
     CANCELLED("Cancelled")
 }

@@ -261,6 +261,22 @@
                     tools:text="Rs. 2,100" />
             </LinearLayout>
         </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelTicket"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/manrope_semibold"
+            android:text="Cancel Ticket"
+            android:textAllCaps="false"
+            android:textColor="@color/red_textcolor"
+            android:textSize="@dimen/_10ssp"
+            android:visibility="gone"
+            app:cornerRadius="@dimen/_8sdp"
+            app:strokeColor="@color/red_textcolor"
+            app:strokeWidth="1dp"
+            tools:visibility="visible" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

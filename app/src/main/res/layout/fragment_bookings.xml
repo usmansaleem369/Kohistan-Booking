@@ -29,8 +29,9 @@
             <TextView
                 android:id="@+id/tabActive"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/_32sdp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingVertical="@dimen/_10sdp"
                 android:background="@drawable/bg_seat_selected"
                 android:fontFamily="@font/manrope_bold"
                 android:gravity="center"
@@ -41,9 +42,10 @@
             <TextView
                 android:id="@+id/tabPast"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/_32sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_3sdp"
                 android:layout_weight="1"
+                android:paddingVertical="@dimen/_10sdp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/manrope_semibold"
                 android:gravity="center"
@@ -54,8 +56,9 @@
             <TextView
                 android:id="@+id/tabCancelled"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/_32sdp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingVertical="@dimen/_10sdp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/manrope_semibold"
                 android:gravity="center"
