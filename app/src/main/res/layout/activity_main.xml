@@ -58,34 +58,57 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/ivProfile"
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/ic_profile"
+                   <androidx.constraintlayout.widget.ConstraintLayout
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:id="@+id/clUserDetails"
+                       android:visibility="gone"
+                       app:layout_constraintTop_toTopOf="parent"
+                       app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ivMenu"
-                        app:layout_constraintTop_toTopOf="@id/ivMenu"
-                        android:layout_marginStart="@dimen/_10sdp"/>
+                       app:layout_constraintEnd_toEndOf="parent">
+                       <de.hdodenhof.circleimageview.CircleImageView
+                           android:id="@+id/ivProfile"
+                           android:layout_width="@dimen/_18sdp"
+                           android:layout_height="@dimen/_18sdp"
+                           android:src="@drawable/ic_profile"
+                          app:layout_constraintStart_toStartOf="parent"
+                           app:layout_constraintTop_toTopOf="parent"
+                           android:layout_marginStart="@dimen/_10sdp"/>
+                       <TextView
+                           android:id="@+id/tvDisplayName"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:textColor="@color/text_color_on_light"
+                           tools:text="Usman Saleem"
+                           android:fontFamily="@font/manrope_regular"
+                           android:layout_marginStart="@dimen/_5sdp"
+                           app:layout_constraintTop_toTopOf="@id/ivProfile"
+                           app:layout_constraintBottom_toBottomOf="@id/ivProfile"
+                           android:textSize="@dimen/_10ssp"
+                           app:layout_constraintStart_toEndOf="@id/ivProfile"/>
+
+                       <ImageView
+                           android:layout_width="@dimen/_18sdp"
+                           android:layout_height="@dimen/_18sdp"
+                           android:src="@drawable/ic_notification"
+                           app:layout_constraintEnd_toEndOf="parent"
+                           app:layout_constraintTop_toTopOf="parent"/>
+                   </androidx.constraintlayout.widget.ConstraintLayout>
+
                     <TextView
-                        android:id="@+id/tvDisplayName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_color_on_light"
-                        tools:text="Usman Saleem"
-                        android:fontFamily="@font/manrope_regular"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        app:layout_constraintTop_toTopOf="@id/ivProfile"
-                        app:layout_constraintBottom_toBottomOf="@id/ivProfile"
-                        android:textSize="@dimen/_10ssp"
-                        app:layout_constraintStart_toEndOf="@id/ivProfile"/>
-
-                    <ImageView
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/ic_notification"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintTop_toTopOf="@id/ivMenu"
+                        app:layout_constraintBottom_toBottomOf="@id/ivMenu"
+                        app:layout_constraintStart_toEndOf="@id/ivMenu"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/ivMenu"/>
-
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:fontFamily="@font/manrope_bold"
+                        android:textSize="@dimen/_12ssp"
+                        android:visibility="gone"
+                        android:textColor="@color/text_color_on_light"
+                        android:id="@+id/tvTitle"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>

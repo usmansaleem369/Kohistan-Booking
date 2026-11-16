@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -220,9 +221,22 @@ class MainActivity : AppCompatActivity() {
 
         // Switch Fragment
         when (tab) {
-            NavTab.HOME -> loadFragment(HomeFragment())
-            NavTab.BOOKINGS -> loadFragment(BookingsFragment())
-            NavTab.PROFILE -> loadFragment(ProfileFragment())
+            NavTab.HOME -> {
+                loadFragment(HomeFragment())
+                binding.clUserDetails.visibility = View.VISIBLE
+                binding.tvTitle.visibility = View.GONE
+            }
+            NavTab.BOOKINGS -> {
+                loadFragment(BookingsFragment())
+                binding.clUserDetails.visibility = View.GONE
+                binding.tvTitle.visibility = View.VISIBLE
+                binding.tvTitle.setText(getString(R.string.bookings))
+            }
+            NavTab.PROFILE -> {
+                loadFragment(ProfileFragment())
+                binding.clUserDetails.visibility = View.VISIBLE
+                binding.tvTitle.visibility = View.GONE
+            }
             NavTab.SETTINGS -> {}
             NavTab.PRIVACY -> {
                 startActivity(Intent(this, PrivacyActivity::class.java))
