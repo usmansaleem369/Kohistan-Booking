@@ -99,7 +99,7 @@ class BookingsFragment : Fragment() {
     }
 
     private fun initUiAndListeners() {
-        binding.swipeRefreshBookings.setColorSchemeResources(R.color.btn_navy)
+        binding.swipeRefreshBookings.setProgressViewOffset(false, -1000, -1000)
         binding.swipeRefreshBookings.setOnRefreshListener {
             if (memberId != 0) {
                 apiViewModel.getBookingHistory(
