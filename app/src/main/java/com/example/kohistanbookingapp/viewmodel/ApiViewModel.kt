@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.kohistanbookingapp.models.local.BookingFilter
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
@@ -42,6 +43,9 @@ class ApiViewModel @Inject constructor(
 
     private val _isLoadingMore = MutableLiveData(false)
     val isLoadingMore: LiveData<Boolean> = _isLoadingMore
+
+    private val _selectedFilter = MutableLiveData(BookingFilter.ACTIVE)
+    val selectedFilter: LiveData<BookingFilter> = _selectedFilter
 
     private var currentPage = 0
     private var totalPages = 1
@@ -99,16 +103,31 @@ class ApiViewModel @Inject constructor(
         getBookingHistory(cnic = cnic, memberId = memberId, pageNumber = currentPage + 1, isRefresh = false)
     }
 
+    fun selectFilter(filter: BookingFilter, memberId: Int, cnic: String) {
+        if (_selectedFilter.value == filter) return
+        _selectedFilter.value = filter
+        currentPage = 0
+        totalPages = 1
+        _bookingsList.value = emptyList()
+        _isLoadingMore.value = false
+
+        if (memberId != 0) {
+            getBookingHistory(memberId = memberId, cnic = cnic, pageNumber = 1, isRefresh = true)
+        }
+    }
+
     fun getBookingHistory(memberId: Int, pageNumber: Int = 1, isRefresh: Boolean = pageNumber == 1,cnic: String) {
         if (!isRefresh) {
             _isLoadingMore.value = true
         }
+        val currentFilter = _selectedFilter.value?.label ?: BookingFilter.ACTIVE.label
         viewModelScope.launch {
             apiRepository.getBookingHistory(
                 cnic = cnic,
                 memberId = memberId,
                 pageNumber = pageNumber,
-                pageSize = pageSize
+                pageSize = pageSize,
+                status = currentFilter
             )
         }
     }
@@ -134,6 +153,7 @@ class ApiViewModel @Inject constructor(
     fun clearSession() {
         currentPage = 0
         totalPages = 1
+        _selectedFilter.value = BookingFilter.ACTIVE
         _bookingsList.value = emptyList()
         _totalRecords.value = 0
         _isLoadingMore.value = false

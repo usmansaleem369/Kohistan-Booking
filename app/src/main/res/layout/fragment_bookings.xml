@@ -7,7 +7,63 @@
     android:background="@color/white"
     tools:context=".ui.BookingsFragment">
 
-    <!-- Summary Header Bar -->
+    <!-- Top Filter Tabs: Active | Past | Cancelled -->
+    <LinearLayout
+        android:id="@+id/filterBarContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:padding="@dimen/_3sdp">
+
+            <TextView
+                android:id="@+id/tabActive"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_seat_selected"
+                android:fontFamily="@font/manrope_bold"
+                android:gravity="center"
+                android:text="Active"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_10ssp" />
+
+            <TextView
+                android:id="@+id/tabPast"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_marginHorizontal="@dimen/_3sdp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/manrope_semibold"
+                android:gravity="center"
+                android:text="Past"
+                android:textColor="#667085"
+                android:textSize="@dimen/_10ssp" />
+
+            <TextView
+                android:id="@+id/tabCancelled"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/manrope_semibold"
+                android:gravity="center"
+                android:text="Cancelled"
+                android:textColor="#667085"
+                android:textSize="@dimen/_10ssp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:id="@+id/dividerTop"
@@ -16,7 +72,7 @@
         android:background="#EAECF0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/filterBarContainer" />
 
     <!-- Pull-to-Refresh + Bookings List -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -54,20 +110,22 @@
         app:layout_constraintTop_toBottomOf="@id/dividerTop">
 
         <TextView
+            android:id="@+id/tvEmptyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/manrope_bold"
-            android:text="No Bookings Found"
+            android:text="@string/no_active_bookings"
             android:textColor="@color/btn_navy"
             android:textSize="@dimen/_13ssp" />
 
         <TextView
+            android:id="@+id/tvEmptySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
-            android:text="Your confirmed and past bus ticket bookings will appear here."
+            android:text="@string/your_upcoming_and_active_bus_ticket_bookings_will_appear_here"
             android:textColor="#667085"
             android:textSize="@dimen/_10ssp" />
     </LinearLayout>

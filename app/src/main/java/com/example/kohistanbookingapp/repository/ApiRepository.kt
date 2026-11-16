@@ -290,12 +290,12 @@ class ApiRepository @Inject constructor(
         }
     }
 
-    suspend fun getBookingHistory(memberId: Int, pageNumber: Int = 1, pageSize: Int = 10,cnic: String) {
+    suspend fun getBookingHistory(memberId: Int, pageNumber: Int = 1, pageSize: Int = 10,cnic: String,status: String,) {
         isRequestInProgress = true
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
 
         try {
-            val response = apiService.getBookingHistory(/*memberId = memberId,*/cnic= cnic,pageNumber = pageNumber, pageSize = pageSize)
+            val response = apiService.getBookingHistory(/*memberId = memberId,*/cnic= cnic,pageNumber = pageNumber, pageSize = pageSize, status = status)
             _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
             response.handleResponse(
                 onSuccess = { res ->

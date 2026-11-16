@@ -104,7 +104,8 @@ interface ApiService {
         //@Query("memberId") memberId: Int,
         @Query("Cnic") cnic: String,
         @Query("PageNo") pageNumber: Int,
-        @Query("pageSize") pageSize: Int
+        @Query("pageSize") pageSize: Int,
+        @Query("status") status: String,
     ): Response<BookingHistoryResponse>
 
 }

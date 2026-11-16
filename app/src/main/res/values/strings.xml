@@ -99,4 +99,10 @@
     <string name="confirm_new_password">Confirm New Password *</string>
     <string name="re_enter_new_password">Re-enter new password</string>
     <string name="reset_password">Reset Password</string>
+    <string name="no_active_bookings">No Active Bookings</string>
+    <string name="your_upcoming_and_active_bus_ticket_bookings_will_appear_here">Your upcoming and active bus ticket bookings will appear here.</string>
+    <string name="no_past_bookings">No Past Bookings</string>
+    <string name="your_completed_bus_journeys_will_appear_here">Your completed bus journeys will appear here.</string>
+    <string name="no_cancelled_bookings">No Cancelled Bookings</string>
+    <string name="any_cancelled_reservations_will_appear_here">Any cancelled reservations will appear here.</string>
 </resources>
