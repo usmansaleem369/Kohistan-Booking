@@ -1,5 +1,6 @@
 package com.example.kohistanbookingapp.api
 
+import com.example.kohistanbookingapp.models.request.CancelBookingRequest
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.request.CreateProfileRequest
 import com.example.kohistanbookingapp.models.request.ForgotPasswordRequest
@@ -109,8 +110,7 @@ interface ApiService {
 
     @POST("/api/Booking/CancelReservation") // Match your exact backend cancel endpoint
     suspend fun cancelBooking(
-        @Query("transactionId") transactionId: Long,
-        @Query("seatNo") seatNo: List<Int>
+      @Body request: CancelBookingRequest
     ): Response<ApiResponse<Unit>>
 
 }

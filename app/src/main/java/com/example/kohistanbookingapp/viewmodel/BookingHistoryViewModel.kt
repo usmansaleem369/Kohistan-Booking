@@ -6,15 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kohistanbookingapp.models.local.BookingFilter
+import com.example.kohistanbookingapp.models.request.CancelBookingRequest
 import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
 import com.example.kohistanbookingapp.repository.BookingHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.text.compareTo
-import kotlin.text.filterNot
-import kotlin.text.orEmpty
 
 @HiltViewModel
 class BookingHistoryViewModel@Inject constructor(
@@ -29,9 +27,6 @@ class BookingHistoryViewModel@Inject constructor(
     val bookingsList: LiveData<List<BookingHistoryItem>> = _bookingsList
 
     val cancelBookingResponse = bookingHistoryRepository.cancelBookingResponse
-
-    private val _totalRecords = MutableLiveData(0)
-    val totalRecords: LiveData<Int> = _totalRecords
 
     private val _isLoadingMore = MutableLiveData(false)
     val isLoadingMore: LiveData<Boolean> = _isLoadingMore
@@ -97,7 +92,6 @@ class BookingHistoryViewModel@Inject constructor(
         val merged = (currentItems + response.data).distinctBy { it.transactionId }
 
         _bookingsList.value = merged
-        _totalRecords.value = meta?.totalRecords ?: merged.size
     }
 
     fun onBookingHistoryError() {
@@ -107,19 +101,42 @@ class BookingHistoryViewModel@Inject constructor(
     fun cancelBooking(bookingItem: BookingHistoryItem) {
         pendingCancelTransactionId = bookingItem.transactionId
         pendingCancelledSeatNos = bookingItem.seats.map { it.seatNo }
+
+        val cancelBookingRequest = CancelBookingRequest(transactionId = pendingCancelTransactionId, seatNos = pendingCancelledSeatNos)
         viewModelScope.launch {
             bookingHistoryRepository.cancelBooking(
-                transactionId = pendingCancelTransactionId,
-                seats = pendingCancelledSeatNos
+              cancelBookingRequest
             )
 
         }
     }
 
     fun removeCancelledBookingFromList() {
-        val updated = _bookingsList.value.orEmpty().filterNot { it.transactionId == pendingCancelTransactionId }
-        _bookingsList.value = updated
-        _totalRecords.value = (_totalRecords.value ?: 1).minus(1).coerceAtLeast(0)
+        if (pendingCancelTransactionId == -1L || pendingCancelledSeatNos.isEmpty()) return
+
+
+        val updated = _bookingsList.value.orEmpty().mapNotNull { item ->
+            if (item.transactionId != pendingCancelTransactionId) {
+                item
+            } else {
+                val remainingSeats = item.seats.filterNot { it.seatNo in pendingCancelledSeatNos }
+                if (remainingSeats.isEmpty()) {
+                    null
+                } else {
+                    item.copy(
+                        seats = remainingSeats,
+                        totalFare = remainingSeats.sumOf { it.fare?:0.0 }
+                    )
+                }
+            }
+        }
+
+        _bookingsList.postValue(updated)
+
+
+
+        pendingCancelTransactionId = -1L
+        pendingCancelledSeatNos = emptyList()
     }
 
 
@@ -128,7 +145,6 @@ class BookingHistoryViewModel@Inject constructor(
         totalPages = 1
         _selectedFilter.value = BookingFilter.UPCOMING
         _bookingsList.value = emptyList()
-        _totalRecords.value = 0
         _isLoadingMore.value = false
     }
 

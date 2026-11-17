@@ -1,10 +1,12 @@
 package com.example.kohistanbookingapp.ui.activities
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
+import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +15,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.ActivityPassengerDetailsBinding
+import com.example.kohistanbookingapp.databinding.DialogPaymentHoldBinding
 import com.example.kohistanbookingapp.models.request.BookingSeatItem
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.response.SeatGender
 import com.example.kohistanbookingapp.models.response.SelectedSeat
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.attachCnicFormatter
 import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
@@ -68,8 +72,8 @@ class PassengerDetailsActivity : AppCompatActivity() {
         }
 
         binding.btnPayWithJazzCash.setOnClickListener {
-            if (validateInputs()) {
-                submitBookingRequest()
+            if (validateInputs(isPayOnline = true)) {
+                submitBookingRequest(isPayOnline = true)
             }
         }
     }
@@ -146,45 +150,33 @@ class PassengerDetailsActivity : AppCompatActivity() {
     }
 
     private fun setInputFieldsHelper() {
-        binding.llPassengerDetails.etPassengerCnic.addTextChangedListener(object : TextWatcher {
-            private var isFormatting = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if (isFormatting || s == null) return
-                isFormatting = true
-                val digits = s.toString().replace("-", "")
-                val formatted = buildString {
-                    digits.forEachIndexed { index, c ->
-                        if (index == 5 || index == 12) append('-')
-                        append(c)
-                    }
-                }
-                s.replace(0, s.length, formatted)
-                isFormatting = false
-            }
-        })
-
-        binding.llPassengerDetails.etPassengerPhone.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if (!binding.llPaymentMethod.etJazzCashAccount.hasFocus()) {
-                    binding.llPaymentMethod.etJazzCashAccount.setText(s?.toString().orEmpty())
-                }
-            }
-        })
-
         binding.llPassengerDetails.apply {
             etPassengerName.clearErrorOnTextChange()
-            etPassengerCnic.clearErrorOnTextChange()
-            etPassengerPhone.clearErrorOnTextChange()
             etPassengerEmail.clearErrorOnTextChange()
+            etPassengerCnic.attachCnicFormatter(mirrorTarget = binding.llPaymentMethod.etJazzCashCnic)
+
+            etPassengerPhone.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (etPassengerPhone.error != null) etPassengerPhone.error = null
+                }
+                override fun afterTextChanged(s: Editable?) {
+                    val target = binding.llPaymentMethod.etJazzCashAccount
+                    if (!target.hasFocus()) {
+                        target.setText(s?.toString().orEmpty())
+                    }
+                }
+            })
         }
-        binding.llPaymentMethod.etJazzCashAccount.clearErrorOnTextChange()
+
+        binding.llPaymentMethod.apply {
+            etJazzCashAccount.clearErrorOnTextChange()
+            etJazzCashCnic.attachCnicFormatter()
+        }
     }
 
-    private fun validateInputs(): Boolean {
+
+    private fun validateInputs(isPayOnline: Boolean): Boolean {
 
         if (selectedSeats.isEmpty()) {
             AppUtils.showCustomToast("No seats selected. Please go back and select seats.", layoutInflater, this)
@@ -234,12 +226,32 @@ class PassengerDetailsActivity : AppCompatActivity() {
                 return false
             }
 
+            if (isPayOnline) {
+                binding.llPaymentMethod.apply {
+                    val jazzCashNumber = etJazzCashAccount.text.toString().replace("-", "").trim()
+                    val jazzCashCnicDigits = etJazzCashCnic.text.toString().replace("-", "").trim()
+
+                    if (!jazzCashNumber.matches(Regex("^03\\d{9}$"))) {
+                        etJazzCashAccount.error =
+                            "Enter a valid 11-digit JazzCash account number (03XXXXXXXXX)"
+                        etJazzCashAccount.requestFocus()
+                        return false
+                    }
+
+                    if (jazzCashCnicDigits.length != 13) {
+                        etJazzCashCnic.error = "Please enter a valid 13-digit account holder CNIC"
+                        etJazzCashCnic.requestFocus()
+                        return false
+                    }
+                }
+            }
+
             return true
         }
     }
 
 
-    private fun submitBookingRequest() {
+    private fun submitBookingRequest(isPayOnline: Boolean) {
         val route = sharedPreferencesHelper.selectedRouteData ?: run {
             AppUtils.showCustomToast("Route information missing. Please search again.", layoutInflater, this)
             return
@@ -252,6 +264,15 @@ class PassengerDetailsActivity : AppCompatActivity() {
                     gender = if (seat.assignedGender == SeatGender.FEMALE) "Female" else "Male"
                 )
             }
+
+        val rawAccMobile = binding.llPaymentMethod.etJazzCashAccount.text.toString().replace("-", "").trim()
+        val formattedAccMobile = if (rawAccMobile.length == 11) {
+            "${rawAccMobile.substring(0, 4)}-${rawAccMobile.substring(4)}"
+        } else {
+            rawAccMobile
+        }
+        val formattedAccCnic = binding.llPaymentMethod.etJazzCashCnic.text.toString().trim()
+
         val request = CreateBookingRequest(
             terminalId = route.fromCityId ?: 0,
             routeId = route.routeId ?: 0,
@@ -264,7 +285,10 @@ class PassengerDetailsActivity : AppCompatActivity() {
             passengerName = binding.llPassengerDetails.etPassengerName.text.toString().trim(),
             cnic = binding.llPassengerDetails.etPassengerCnic.text.toString().replace("-", "").trim(),
             contactNo = binding.llPassengerDetails.etPassengerPhone.text.toString().replace("-", "").trim(),
-            email = binding.llPassengerDetails.etPassengerEmail.text.toString().trim().ifEmpty { null }
+            email = binding.llPassengerDetails.etPassengerEmail.text.toString().trim().ifEmpty { null },
+            payOnline = isPayOnline,
+            accCnic = if (isPayOnline) formattedAccCnic else null,
+            accMobileNumber = if (isPayOnline) formattedAccMobile else null
         )
 
         createBookingViewModel.createBooking(request)
@@ -273,19 +297,24 @@ class PassengerDetailsActivity : AppCompatActivity() {
     private fun observeViewModel() {
         createBookingViewModel.createBookingResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { bookingData ->
-                AppUtils.showCustomToast(
-                    "Seats reserved! Reservation ID: ${bookingData.reservationId}",
-                    layoutInflater,
-                    this
-                )
+                val payment = bookingData.payment
+                val isOnlineUnpaid = payment != null && !payment.isPaid
 
-                sharedPreferencesHelper.clearTicketSession()
-                createBookingViewModel.clearSession()
-                val intent = Intent(this, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                if (isOnlineUnpaid) {
+                    val errorReason = bookingData.paymentMessage?.takeIf { it.isNotBlank() } ?: payment.responseMessage?.takeIf { it.isNotBlank() } ?: "JazzCash payment could not be completed."
+
+                    showPaymentHoldDialog(
+                        reservationId = bookingData.reservationId.orEmpty(),
+                        errorMessage = errorReason
+                    )
+                } else {
+                    AppUtils.showCustomToast(
+                        "Seats reserved! Reservation ID: ${bookingData.reservationId}",
+                        layoutInflater,
+                        this
+                    )
+                    finishBookingAndNavigateHome()
                 }
-                startActivity(intent)
-                finishAffinity()
             }
         }
 
@@ -301,5 +330,39 @@ class PassengerDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun showPaymentHoldDialog(reservationId: String, errorMessage: String) {
+        val dialogBinding = DialogPaymentHoldBinding.inflate(layoutInflater)
+        val dialog = Dialog(this).apply {
+            setContentView(dialogBinding.root)
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        dialogBinding.tvPaymentError.text = errorMessage
+        dialogBinding.tvReservationRef.text = "Reservation ID: #$reservationId"
+
+        dialogBinding.btnAcknowledgeHold.setOnClickListener {
+            dialog.dismiss()
+            finishBookingAndNavigateHome()
+        }
+
+        dialog.show()
+    }
+
+    private fun finishBookingAndNavigateHome() {
+        sharedPreferencesHelper.clearTicketSession()
+        createBookingViewModel.clearSession()
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finishAffinity()
     }
 }

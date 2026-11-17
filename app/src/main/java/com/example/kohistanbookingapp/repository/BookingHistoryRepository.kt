@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.api.ApiService
+import com.example.kohistanbookingapp.models.request.CancelBookingRequest
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
 import com.example.kohistanbookingapp.util.Event
@@ -54,10 +55,10 @@ class BookingHistoryRepository @Inject constructor(
         }
     }
 
-    suspend fun cancelBooking(transactionId: Long,seats: List<Int>) {
+    suspend fun cancelBooking(cancelBookingRequest: CancelBookingRequest) {
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
         try {
-            val response = apiService.cancelBooking(transactionId,seats)
+            val response = apiService.cancelBooking(cancelBookingRequest)
 
             response.handleResponse(
                 onSuccess = {

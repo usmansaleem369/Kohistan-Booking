@@ -37,7 +37,17 @@ data class CreateBookingRequest(
     val contactNo: String,
 
     @SerializedName("Email")
-    val email: String? = null
+    val email: String? = null,
+
+    @SerializedName("PayOnline")
+    val payOnline: Boolean,
+
+    @SerializedName("AccCnic")
+    val accCnic: String? = null,
+
+    @SerializedName("AccMobileNumber")
+    val accMobileNumber: String? = null
+
 )
 
 data class BookingSeatItem(

@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:padding="@dimen/_14sdp">
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +32,7 @@
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
             android:text="JC"
-            android:textColor="#FFD100"
+            android:textColor="@color/btn_gold"
             android:textSize="@dimen/_12ssp" />
 
         <LinearLayout
@@ -70,7 +69,7 @@
             android:clickable="false" />
     </LinearLayout>
 
-    <!-- Optional separate JazzCash Wallet Number -->
+    <!-- JazzCash Wallet Mobile Number -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -94,4 +93,31 @@
         android:textColor="@color/text_color_on_light"
         android:textColorHint="@color/btn_gold"
         android:textSize="@dimen/_10ssp" />
+
+    <!-- JazzCash Account Holder CNIC -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/manrope_semibold"
+        android:text="Account Holder CNIC *"
+        android:textColor="@color/btn_navy"
+        android:textSize="@dimen/_10ssp" />
+
+    <EditText
+        android:id="@+id/etJazzCashCnic"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/bg_input_field"
+        android:digits="0123456789-"
+        android:fontFamily="@font/manrope_regular"
+        android:hint="XXXXX-XXXXXXX-X"
+        android:inputType="number"
+        android:maxLength="15"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/text_color_on_light"
+        android:textColorHint="@color/btn_gold"
+        android:textSize="@dimen/_10ssp" />
+
 </LinearLayout>

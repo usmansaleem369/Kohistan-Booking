@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_16sdp"
+    app:cardBackgroundColor="@color/card_bg_warm"
+    app:cardCornerRadius="@dimen/_14sdp"
+    app:cardElevation="0dp"
+    app:strokeColor="#EAECF0"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/_18sdp">
+
+        <!-- Warning Badge -->
+        <FrameLayout
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:background="@drawable/bg_circle_soft_red">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/manrope_bold"
+                android:text="!"
+                android:textColor="@color/red_textcolor"
+                android:textSize="@dimen/_18ssp" />
+        </FrameLayout>
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:fontFamily="@font/manrope_bold"
+            android:text="Payment Unsuccessful"
+            android:textColor="@color/red_textcolor"
+            android:textSize="@dimen/_14ssp" />
+
+        <!-- JazzCash Error Message -->
+        <TextView
+            android:id="@+id/tvPaymentError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/manrope_medium"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/_2sdp"
+            android:textColor="@color/text_color_on_light"
+            android:textSize="@dimen/_10ssp"
+            tools:text="The provided mobile number is not a valid JazzCash Account or the MPIN you entered is incorrect." />
+
+        <!-- 30-Minute Hold Info Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/bg_seat_box_warm"
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp">
+
+            <TextView
+                android:id="@+id/tvReservationRef"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_bold"
+                android:textColor="@color/btn_navy"
+                android:textSize="@dimen/_9ssp"
+                tools:text="Reservation ID: #2611171651542" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/manrope_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="Your seat is on hold for 30 minutes. Please confirm your payment within 30 minutes from the My Bookings screen, otherwise your seat will be automatically cancelled."
+                android:textColor="@color/text_color_on_light"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <!-- Action Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAcknowledgeHold"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:backgroundTint="@color/btn_navy"
+            android:fontFamily="@font/manrope_bold"
+            android:text="Go to My Bookings"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_10ssp"
+            app:cornerRadius="@dimen/_8sdp" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

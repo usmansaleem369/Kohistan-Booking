@@ -63,8 +63,8 @@ object NetworkModule {
     }
     
     @Provides
-    fun provideBaseUrl(sharedPreferencesHelper: SharedPreferencesHelper): String {
-        return "http://192.168.55.24:8078/"//"http://172.195.0.155:82"//"http://192.168.55.24:8078/"
+    fun provideBaseUrl(): String {
+        return "http://172.195.0.155:82"//"http://172.195.0.155:82"//"http://192.168.55.24:8078/"
     }
     
     @Provides
