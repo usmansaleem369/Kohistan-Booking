@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:paddingHorizontal="@dimen/_10sdp"
-    tools:context=".ui.HomeFragment">
+    tools:context=".ui.fragments.HomeFragment">
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvToolbar"
         android:layout_width="match_parent"

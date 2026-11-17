@@ -1,4 +1,4 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.activities
 
 import android.Manifest
 import android.content.Intent
@@ -15,11 +15,14 @@ import androidx.fragment.app.Fragment
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.ActivityMainBinding
+import com.example.kohistanbookingapp.ui.fragments.BookingsFragment
+import com.example.kohistanbookingapp.ui.fragments.HomeFragment
+import com.example.kohistanbookingapp.ui.fragments.ProfileFragment
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.NavTab
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
-import com.example.kohistanbookingapp.viewmodel.ApiViewModel
+import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
 import com.example.kohistanbookingapp.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val apiViewModel: ApiViewModel by viewModels()
+    private val createBookingViewModel: CreateBookingViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
     private val locationPermissionLauncher =
         registerForActivityResult(
@@ -86,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeApiViewModel() {
-        apiViewModel.apiRequestStatus.observe(this) { event ->
+        createBookingViewModel.apiRequestStatus.observe(this) { event ->
             event.getContentIfNotHandled()?.let { status ->
                 handleApiStatus(status)
             }
@@ -106,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         authViewModel.logoutResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 sharedPreferencesHelper.clearUserData()
-                apiViewModel.clearSession()
+                createBookingViewModel.clearSession()
                 val intent = Intent(this, LoginActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }

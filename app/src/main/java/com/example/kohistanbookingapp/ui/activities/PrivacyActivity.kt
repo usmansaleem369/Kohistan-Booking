@@ -1,4 +1,4 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

@@ -1,4 +1,4 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.text.iterator
 import kotlin.time.Duration.Companion.milliseconds
 
 @SuppressLint("CustomSplashScreen")

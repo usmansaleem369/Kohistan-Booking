@@ -6,39 +6,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kohistanbookingapp.models.local.BookingFilter
-import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
-import com.example.kohistanbookingapp.models.response.CityData
-import com.example.kohistanbookingapp.repository.ApiRepository
+import com.example.kohistanbookingapp.repository.BookingHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.text.compareTo
+import kotlin.text.filterNot
+import kotlin.text.orEmpty
 
 @HiltViewModel
-class ApiViewModel @Inject constructor(
+class BookingHistoryViewModel@Inject constructor(
     application: Application,
-    private val apiRepository: ApiRepository
+    private val bookingHistoryRepository: BookingHistoryRepository
 ) : AndroidViewModel(application) {
-
-    val apiRequestStatus = apiRepository.apiRequestStatus
-    val allDepartureCities = apiRepository.allDepartureCities
-    val allDestinationCities = apiRepository.allDestinationCities
-
-    val selectedFromCity = apiRepository.selectedFromCity
-    val selectedToCity = apiRepository.selectedToCity
-
-    val routeDetailResponse = apiRepository.routeDetailResponse
-    val seatPatternResponse = apiRepository.seatPatternResponse
-    val bookedSeatsResponse = apiRepository.bookedSeatsResponse
-    val createBookingResponse = apiRepository.createBookingResponse
-    val bookingHistoryResponse = apiRepository.bookingHistoryResponse
+    val apiRequestStatus = bookingHistoryRepository.apiRequestStatus
+    val bookingHistoryResponse = bookingHistoryRepository.bookingHistoryResponse
 
     // Pagination state preserved across configuration changes
     private val _bookingsList = MutableLiveData<List<BookingHistoryItem>>(emptyList())
     val bookingsList: LiveData<List<BookingHistoryItem>> = _bookingsList
 
-    val cancelBookingResponse = apiRepository.cancelBookingResponse
+    val cancelBookingResponse = bookingHistoryRepository.cancelBookingResponse
 
     private val _totalRecords = MutableLiveData(0)
     val totalRecords: LiveData<Int> = _totalRecords
@@ -51,49 +41,9 @@ class ApiViewModel @Inject constructor(
 
     private var currentPage = 0
     private var totalPages = 1
-    private val pageSize = 10
+    private val pageSize = 2
 
     var pendingCancelTransactionId: Long = -1
-
-    fun setFromCity(city: CityData?) = apiRepository.setSelectedFromCity(city)
-    fun setToCity(city: CityData?) = apiRepository.setSelectedToCity(city)
-    fun swapCities() = apiRepository.swapCities()
-
-    fun getAllDepartureCities() {
-        viewModelScope.launch {
-            apiRepository.getAllDepartureCities()
-        }
-    }
-
-    fun getAllDestinationCities() {
-        viewModelScope.launch {
-            apiRepository.getAllDestinationCities()
-        }
-    }
-
-    fun getRouteDetails(date: String) {
-        viewModelScope.launch {
-            apiRepository.getRouteDetails(date)
-        }
-    }
-
-    fun getSeatPattern(vehicleTypeId: Int) {
-        viewModelScope.launch {
-            apiRepository.getSeatPattern(vehicleTypeId)
-        }
-    }
-
-    fun getBookedSeats() {
-        viewModelScope.launch {
-            apiRepository.getBookedSeats()
-        }
-    }
-
-    fun createBooking(request: CreateBookingRequest) {
-        viewModelScope.launch {
-            apiRepository.createBooking(request)
-        }
-    }
 
     fun loadInitialBookingsIfNeeded(memberId: Int) {
         if (currentPage == 0) {
@@ -126,7 +76,7 @@ class ApiViewModel @Inject constructor(
         }
         val currentFilter = _selectedFilter.value?.label ?: BookingFilter.UPCOMING.label
         viewModelScope.launch {
-            apiRepository.getBookingHistory(
+            bookingHistoryRepository.getBookingHistory(
                 memberId = memberId,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -156,7 +106,7 @@ class ApiViewModel @Inject constructor(
     fun cancelBooking(bookingItem: BookingHistoryItem) {
         pendingCancelTransactionId = bookingItem.transactionId
         viewModelScope.launch {
-            apiRepository.cancelBooking(
+            bookingHistoryRepository.cancelBooking(
                 transactionId = pendingCancelTransactionId
             )
 
@@ -169,6 +119,7 @@ class ApiViewModel @Inject constructor(
         _totalRecords.value = (_totalRecords.value ?: 1).minus(1).coerceAtLeast(0)
     }
 
+
     fun clearSession() {
         currentPage = 0
         totalPages = 1
@@ -176,6 +127,6 @@ class ApiViewModel @Inject constructor(
         _bookingsList.value = emptyList()
         _totalRecords.value = 0
         _isLoadingMore.value = false
-        apiRepository.clearSession()
     }
+
 }

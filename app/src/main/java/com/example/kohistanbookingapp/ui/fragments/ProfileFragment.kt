@@ -1,4 +1,4 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

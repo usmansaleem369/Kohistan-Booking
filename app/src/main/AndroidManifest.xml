@@ -17,7 +17,7 @@
         android:theme="@style/Base.Theme.KohistanBookingApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ui.activities.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
@@ -27,39 +27,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.RoutesActivity"
+            android:name=".ui.activities.RoutesActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.activities.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.SelectSeatActivity"
+            android:name=".ui.activities.SelectSeatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.PassengerDetailsActivity"
+            android:name=".ui.activities.PassengerDetailsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.RegistrationActivity"
+            android:name=".ui.activities.RegistrationActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.PrivacyActivity"
+            android:name=".ui.activities.PrivacyActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.ForgotPasswordActivity"
+            android:name=".ui.activities.ForgotPasswordActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.ResetPasswordOtpActivity"
+            android:name=".ui.activities.ResetPasswordOtpActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>

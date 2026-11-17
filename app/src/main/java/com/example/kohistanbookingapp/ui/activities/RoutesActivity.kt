@@ -1,10 +1,8 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,19 +15,9 @@ import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.AppUtils.setupTravelDatePicker
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
-import com.example.kohistanbookingapp.viewmodel.ApiViewModel
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
-import com.google.android.material.datepicker.MaterialDatePicker
+import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
+import com.example.kohistanbookingapp.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.Interceptor
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,7 +26,9 @@ class RoutesActivity : AppCompatActivity() {
     lateinit var sharedPreferencesHelper: SharedPreferencesHelper
 
     private lateinit var binding: ActivityRoutesBinding
-    private val apiViewModel: ApiViewModel by viewModels()
+    private val createBookingViewModel: CreateBookingViewModel by viewModels()
+
+   private val sharedViewModel: SharedViewModel by viewModels()
     private lateinit var routeTimeAdapter: RouteTimeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +46,7 @@ class RoutesActivity : AppCompatActivity() {
 
     private fun initUiAndListeners() {
         setupDatePicker()
-        apiViewModel.getRouteDetails(sharedPreferencesHelper.selectedTravelDate?:"")
+        createBookingViewModel.getRouteDetails(sharedPreferencesHelper.selectedTravelDate?:"")
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -74,11 +64,11 @@ class RoutesActivity : AppCompatActivity() {
 
         binding.tvSelectedCities.text = getString(
             R.string.to,
-            apiViewModel.selectedFromCity.value?.cityName,
-            apiViewModel.selectedToCity.value?.cityName
+            sharedViewModel.selectedFromCity.value?.cityName,
+            sharedViewModel.selectedToCity.value?.cityName
         )
 
-        apiViewModel.routeDetailResponse.observe(this) { event ->
+        createBookingViewModel.routeDetailResponse.observe(this) { event ->
          event.getContentIfNotHandled()?.let {routes->
              val allTimes = routes.distinctBy { it.routeId }
              if (allTimes.isEmpty()) {
@@ -91,7 +81,7 @@ class RoutesActivity : AppCompatActivity() {
              }
          }
         }
-        apiViewModel.apiRequestStatus.observe(this) { event ->
+        createBookingViewModel.apiRequestStatus.observe(this) { event ->
             event.getContentIfNotHandled()?.let { status ->
                 handleApiStatus(status)
             }
@@ -125,7 +115,7 @@ class RoutesActivity : AppCompatActivity() {
             sharedPreferencesHelper = sharedPreferencesHelper,
             title = "Select Travel Date"
         ) { formattedDate ->
-            apiViewModel.getRouteDetails(formattedDate)
+            createBookingViewModel.getRouteDetails(formattedDate)
         }
     }
 

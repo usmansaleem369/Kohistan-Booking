@@ -1,5 +1,6 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.fragments
 
+import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +21,7 @@ import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
-import com.example.kohistanbookingapp.viewmodel.ApiViewModel
+import com.example.kohistanbookingapp.viewmodel.BookingHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,7 +34,7 @@ class BookingsFragment : Fragment() {
     private var _binding: FragmentBookingsBinding? = null
     private val binding get() = _binding!!
 
-    private val apiViewModel: ApiViewModel by viewModels()
+    private val bookingHistoryViewModel: BookingHistoryViewModel by viewModels()
     private lateinit var bookingAdapter: BookingHistoryAdapter
 
     private val memberId: Int
@@ -56,7 +57,7 @@ class BookingsFragment : Fragment() {
         observeViewModel()
 
         if (memberId != 0) {
-            apiViewModel.loadInitialBookingsIfNeeded(memberId)
+            bookingHistoryViewModel.loadInitialBookingsIfNeeded(memberId)
         }
     }
 
@@ -107,7 +108,7 @@ class BookingsFragment : Fragment() {
         binding.swipeRefreshBookings.setProgressViewOffset(false, -1000, -1000)
         binding.swipeRefreshBookings.setOnRefreshListener {
             if (memberId != 0) {
-                apiViewModel.getBookingHistory(
+                bookingHistoryViewModel.getBookingHistory(
                     memberId = memberId,
                     pageNumber = 1,
                     isRefresh = true
@@ -118,13 +119,13 @@ class BookingsFragment : Fragment() {
         }
 
         binding.tabActive.setOnClickListener {
-            apiViewModel.selectFilter(BookingFilter.UPCOMING, memberId)
+            bookingHistoryViewModel.selectFilter(BookingFilter.UPCOMING, memberId)
         }
         binding.tabPast.setOnClickListener {
-            apiViewModel.selectFilter(BookingFilter.PAST, memberId)
+            bookingHistoryViewModel.selectFilter(BookingFilter.PAST, memberId)
         }
         binding.tabCancelled.setOnClickListener {
-            apiViewModel.selectFilter(BookingFilter.CANCELLED, memberId)
+            bookingHistoryViewModel.selectFilter(BookingFilter.CANCELLED, memberId)
         }
 
         bookingAdapter = BookingHistoryAdapter { bookingItem ->
@@ -144,7 +145,7 @@ class BookingsFragment : Fragment() {
                     val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
 
                     if (lastVisibleItem >= totalItemCount - 2) {
-                        apiViewModel.loadNextBookingsPage(memberId)
+                        bookingHistoryViewModel.loadNextBookingsPage(memberId)
                     }
                 }
             })
@@ -154,7 +155,7 @@ class BookingsFragment : Fragment() {
     private fun showCancelConfirmationDialog(item: BookingHistoryItem) {
         val dialogBinding = DialogConfirmCancelBinding.inflate(layoutInflater)
 
-        val dialog = android.app.Dialog(requireContext()).apply {
+        val dialog = Dialog(requireContext()).apply {
             setContentView(dialogBinding.root)
             setCancelable(true)
             window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -181,7 +182,7 @@ class BookingsFragment : Fragment() {
 
         dialogBinding.btnConfirmCancel.setOnClickListener {
             dialog.dismiss()
-            apiViewModel.cancelBooking(
+            bookingHistoryViewModel.cancelBooking(
                 bookingItem = item
             )
         }
@@ -190,42 +191,42 @@ class BookingsFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        apiViewModel.selectedFilter.observe(viewLifecycleOwner) { filter ->
+        bookingHistoryViewModel.selectedFilter.observe(viewLifecycleOwner) { filter ->
             updateTabStyles(filter)
             bookingAdapter.setCanCancelTickets(filter == BookingFilter.UPCOMING)
         }
 
-        apiViewModel.bookingsList.observe(viewLifecycleOwner) { list ->
+        bookingHistoryViewModel.bookingsList.observe(viewLifecycleOwner) { list ->
             bookingAdapter.submitList(list)
             val isEmpty = list.isEmpty()
             binding.llEmptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
             binding.rvBookings.visibility = if (isEmpty) View.GONE else View.VISIBLE
         }
 
-        apiViewModel.isLoadingMore.observe(viewLifecycleOwner) { loadingMore ->
+        bookingHistoryViewModel.isLoadingMore.observe(viewLifecycleOwner) { loadingMore ->
             binding.pbLoadMore.visibility = if (loadingMore) View.VISIBLE else View.GONE
         }
 
-        apiViewModel.bookingHistoryResponse.observe(viewLifecycleOwner) { event ->
+        bookingHistoryViewModel.bookingHistoryResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 binding.swipeRefreshBookings.isRefreshing = false
-                apiViewModel.onBookingHistoryFetched(response)
+                bookingHistoryViewModel.onBookingHistoryFetched(response)
             }
         }
 
-        apiViewModel.cancelBookingResponse.observe(viewLifecycleOwner) { event ->
+        bookingHistoryViewModel.cancelBookingResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 AppUtils.showCustomToast(response.message.ifEmpty { "Ticket cancelled successfully" }, layoutInflater, requireContext())
-                apiViewModel.removeCancelledBookingFromList()
+                bookingHistoryViewModel.removeCancelledBookingFromList()
             }
         }
 
-        apiViewModel.apiRequestStatus.observe(viewLifecycleOwner) { event ->
+        bookingHistoryViewModel.apiRequestStatus.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { status ->
                 when (status) {
                     is ApiRequestStatus.Loading -> {
                         if (!binding.swipeRefreshBookings.isRefreshing &&
-                            apiViewModel.isLoadingMore.value != true
+                            bookingHistoryViewModel.isLoadingMore.value != true
                         ) {
                             AppLoader.instance.showLoader(requireContext())
                         }
@@ -237,7 +238,7 @@ class BookingsFragment : Fragment() {
                     is ApiRequestStatus.Error -> {
                         AppLoader.instance.hideLoader()
                         binding.swipeRefreshBookings.isRefreshing = false
-                        apiViewModel.onBookingHistoryError()
+                        bookingHistoryViewModel.onBookingHistoryError()
                         AppUtils.showCustomToast(status.message, layoutInflater, requireContext())
                     }
                 }

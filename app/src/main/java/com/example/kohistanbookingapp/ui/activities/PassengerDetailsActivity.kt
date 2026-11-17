@@ -1,4 +1,4 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,7 +21,7 @@ import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
-import com.example.kohistanbookingapp.viewmodel.ApiViewModel
+import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
 import java.util.Locale
@@ -33,7 +33,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferencesHelper
     private lateinit var binding: ActivityPassengerDetailsBinding
-    private val apiViewModel: ApiViewModel by viewModels()
+    private val createBookingViewModel: CreateBookingViewModel by viewModels()
 
     private var selectedSeats: List<SelectedSeat> = emptyList()
     private var totalAmount: Double = 0.0
@@ -267,11 +267,11 @@ class PassengerDetailsActivity : AppCompatActivity() {
             email = binding.llPassengerDetails.etPassengerEmail.text.toString().trim().ifEmpty { null }
         )
 
-        apiViewModel.createBooking(request)
+        createBookingViewModel.createBooking(request)
     }
 
     private fun observeViewModel() {
-        apiViewModel.createBookingResponse.observe(this) { event ->
+        createBookingViewModel.createBookingResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { bookingData ->
                 AppUtils.showCustomToast(
                     "Seats reserved! Reservation ID: ${bookingData.reservationId}",
@@ -280,7 +280,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
                 )
 
                 sharedPreferencesHelper.clearTicketSession()
-                apiViewModel.clearSession()
+                createBookingViewModel.clearSession()
                 val intent = Intent(this, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
@@ -289,7 +289,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
             }
         }
 
-        apiViewModel.apiRequestStatus.observe(this) { event ->
+        createBookingViewModel.apiRequestStatus.observe(this) { event ->
             event.getContentIfNotHandled()?.let { status ->
                 when (status) {
                     is ApiRequestStatus.Loading -> AppLoader.instance.showLoader(this)

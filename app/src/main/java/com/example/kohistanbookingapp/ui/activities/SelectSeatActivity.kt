@@ -1,9 +1,8 @@
-package com.example.kohistanbookingapp.ui
+package com.example.kohistanbookingapp.ui.activities
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -23,7 +22,7 @@ import com.example.kohistanbookingapp.models.response.SelectedSeat
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
-import com.example.kohistanbookingapp.viewmodel.ApiViewModel
+import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
@@ -36,7 +35,7 @@ class SelectSeatActivity : AppCompatActivity() {
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferencesHelper
     private lateinit var binding: ActivitySelectSeatBinding
-    private val apiViewModel: ApiViewModel by viewModels()
+    private val createBookingViewModel: CreateBookingViewModel by viewModels()
     private lateinit var seatAdapter: BusSeatAdapter
 
     private var cachedSeatPattern: List<SeatPatternRow>? = null
@@ -66,7 +65,7 @@ class SelectSeatActivity : AppCompatActivity() {
         val route = sharedPreferencesHelper.selectedRouteData ?: return
         val travelDate = sharedPreferencesHelper.selectedTravelDate.orEmpty()
 
-        apiViewModel.getSeatPattern(route.vehicleTypeId ?: -1)
+        createBookingViewModel.getSeatPattern(route.vehicleTypeId ?: -1)
 
     }
 
@@ -169,7 +168,7 @@ class SelectSeatActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        apiViewModel.seatPatternResponse.observe(this) { event ->
+        createBookingViewModel.seatPatternResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { seatPatternRows ->
 
                 val vehicleId = seatPatternRows.firstOrNull()?.vehicleId
@@ -177,18 +176,18 @@ class SelectSeatActivity : AppCompatActivity() {
                     it.vehicleId == vehicleId
                 }
                // renderBusSeatsIfReady()
-                apiViewModel.getBookedSeats()
+                createBookingViewModel.getBookedSeats()
             }
         }
 
-        apiViewModel.bookedSeatsResponse.observe(this) { event ->
+        createBookingViewModel.bookedSeatsResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { bookedSeatsData ->
                 cachedBookedSeatsData = bookedSeatsData
                 renderBusSeatsIfReady()
             }
         }
 
-        apiViewModel.apiRequestStatus.observe(this) { event ->
+        createBookingViewModel.apiRequestStatus.observe(this) { event ->
             event.getContentIfNotHandled()?.let { status ->
                 handleApiStatus(status)
             }
