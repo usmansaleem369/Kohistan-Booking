@@ -17,20 +17,20 @@ data class BookedSeatsData(
     fun getMaleBookedSeatSet(): Set<Int> {
         return seats.orEmpty()
             .filter { it.gender.equals("male", ignoreCase = true) }
-            .mapNotNull { it.seatNo }
+            .map { it.seatNo }
             .toSet()
     }
 
     fun getFemaleBookedSeatSet(): Set<Int> {
         return seats.orEmpty()
             .filter { it.gender.equals("female", ignoreCase = true) }
-            .mapNotNull { it.seatNo }
+            .map { it.seatNo }
             .toSet()
     }
 }
 
 data class BookedSeatItem(
-    @SerializedName("SeatNo") val seatNo: Int? = null,
+    @SerializedName("SeatNo") val seatNo: Int = -1,
     @SerializedName("Fare") val fare: Double? = null,
     @SerializedName("Gender") val gender: String? = null,
     @SerializedName("TicketType") val ticketType: String? = null

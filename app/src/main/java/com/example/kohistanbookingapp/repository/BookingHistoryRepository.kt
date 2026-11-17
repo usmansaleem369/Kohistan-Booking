@@ -54,10 +54,10 @@ class BookingHistoryRepository @Inject constructor(
         }
     }
 
-    suspend fun cancelBooking(transactionId: Long) {
+    suspend fun cancelBooking(transactionId: Long,seats: List<Int>) {
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
         try {
-            val response = apiService.cancelBooking(transactionId)
+            val response = apiService.cancelBooking(transactionId,seats)
 
             response.handleResponse(
                 onSuccess = {

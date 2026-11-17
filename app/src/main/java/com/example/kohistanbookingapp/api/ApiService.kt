@@ -109,7 +109,8 @@ interface ApiService {
 
     @POST("/api/Booking/CancelReservation") // Match your exact backend cancel endpoint
     suspend fun cancelBooking(
-        @Query("transactionId") transactionId: Long
+        @Query("transactionId") transactionId: Long,
+        @Query("seatNo") seatNo: List<Int>
     ): Response<ApiResponse<Unit>>
 
 }

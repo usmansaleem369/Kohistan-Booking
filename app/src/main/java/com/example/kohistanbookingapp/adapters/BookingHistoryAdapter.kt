@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.databinding.ItemBookingHistoryBinding
 import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import java.text.NumberFormat
@@ -42,8 +43,10 @@ class BookingHistoryAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: BookingHistoryItem) {
-            binding.tvReservationId.text = "Booking ID #${item.reservationId}"
-            binding.tvBookedAt.text = "Booked on ${formatBookedAt(item.bookedAt)}"
+            binding.tvReservationId.text =
+                binding.root.context.getString(R.string.booking_id, item.reservationId)
+            binding.tvBookedAt.text =
+                binding.root.context.getString(R.string.booked_on, formatBookedAt(item.bookedAt))
             binding.tvTimeType.text = item.timeType
 
             binding.tvFromCity.text = item.fromCity
@@ -102,7 +105,7 @@ class BookingHistoryAdapter(
             val formatter = NumberFormat.getNumberInstance(Locale.US).apply {
                 maximumFractionDigits = 0
             }
-            return "Rs. ${formatter.format(amount)}"
+            return "PKR. ${formatter.format(amount)}"
         }
     }
 

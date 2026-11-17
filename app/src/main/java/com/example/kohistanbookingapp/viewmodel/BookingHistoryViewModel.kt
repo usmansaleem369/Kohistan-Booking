@@ -44,6 +44,7 @@ class BookingHistoryViewModel@Inject constructor(
     private val pageSize = 2
 
     var pendingCancelTransactionId: Long = -1
+    private var pendingCancelledSeatNos: List<Int> = emptyList()
 
     fun loadInitialBookingsIfNeeded(memberId: Int) {
         if (currentPage == 0) {
@@ -105,9 +106,11 @@ class BookingHistoryViewModel@Inject constructor(
 
     fun cancelBooking(bookingItem: BookingHistoryItem) {
         pendingCancelTransactionId = bookingItem.transactionId
+        pendingCancelledSeatNos = bookingItem.seats.map { it.seatNo }
         viewModelScope.launch {
             bookingHistoryRepository.cancelBooking(
-                transactionId = pendingCancelTransactionId
+                transactionId = pendingCancelTransactionId,
+                seats = pendingCancelledSeatNos
             )
 
         }

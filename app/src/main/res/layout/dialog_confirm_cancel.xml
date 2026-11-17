@@ -59,11 +59,56 @@
             android:textSize="@dimen/_10ssp"
             tools:text="Are you sure you want to cancel reservation #2611131014655 (Faisalabad to Gujranwala)? This action cannot be undone." />
 
+        <!-- Seat Selection Header + Select All Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/manrope_semibold"
+                android:text="Select Seats"
+                android:textColor="@color/btn_navy"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/tvSelectAllSeats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:fontFamily="@font/manrope_bold"
+                android:paddingVertical="@dimen/_2sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:text="Clear All"
+                android:textColor="@color/btn_gold"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <!-- Selectable Seats Grid -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCancelSeats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:nestedScrollingEnabled="false"
+            android:background="@drawable/bg_rounded_soft_gold"
+            android:padding="@dimen/_5sdp"
+            android:overScrollMode="never"
+            tools:itemCount="4"
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/item_cancel_seat"
+            tools:spanCount="3" />
+
         <!-- Action Buttons Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton

@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.BookingHistoryAdapter
+import com.example.kohistanbookingapp.adapters.CancelSeatAdapter
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.DialogConfirmCancelBinding
 import com.example.kohistanbookingapp.databinding.FragmentBookingsBinding
@@ -154,36 +156,57 @@ class BookingsFragment : Fragment() {
 
     private fun showCancelConfirmationDialog(item: BookingHistoryItem) {
         val dialogBinding = DialogConfirmCancelBinding.inflate(layoutInflater)
-
         val dialog = Dialog(requireContext()).apply {
             setContentView(dialogBinding.root)
             setCancelable(true)
             window?.setBackgroundDrawableResource(android.R.color.transparent)
             window?.setLayout(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
         }
 
-        val seatNumbers = item.seats.joinToString(", ") { it.seatNo.toString() }
+        val allSeatNumbers = item.seats.joinToString(", ") { it.seatNo.toString() }
         dialogBinding.tvDialogTitle.text = getString(R.string.cancel_ticket)
-        dialogBinding.tvDialogMessage.text =
-            getString(
-                R.string.cancel_reservation_detail,
-                item.reservationId,
-                item.fromCity,
-                item.toCity,
-                seatNumbers
-            )
+        dialogBinding.tvDialogMessage.text = getString(
+            R.string.cancel_reservation_detail,
+            item.reservationId,
+            item.fromCity,
+            item.toCity,
+            allSeatNumbers
+        )
 
-        dialogBinding.btnKeepTicket.setOnClickListener {
-            dialog.dismiss()
+        val seatAdapter = CancelSeatAdapter(item.seats) { selected ->
+            val hasSelection = selected.isNotEmpty()
+            dialogBinding.btnConfirmCancel.isEnabled = hasSelection
+            dialogBinding.btnConfirmCancel.alpha = if (hasSelection) 1f else 0.5f
+            dialogBinding.tvSelectAllSeats.text = if (selected.size == item.seats.size) "Clear All" else "Select All"
+        }
+        dialogBinding.tvSelectAllSeats.setOnClickListener {
+            seatAdapter.toggleSelectAll()
         }
 
+        val spanCount = if (item.seats.size >= 3){
+            3
+        } else{
+            item.seats.size
+        }
+
+        dialogBinding.rvCancelSeats.apply {
+            layoutManager = GridLayoutManager(requireContext(), spanCount)
+            adapter = seatAdapter
+        }
+
+        dialogBinding.btnKeepTicket.setOnClickListener { dialog.dismiss() }
         dialogBinding.btnConfirmCancel.setOnClickListener {
+            val selected = seatAdapter.getSelectedSeats()
+            if (selected.isEmpty()) return@setOnClickListener
             dialog.dismiss()
             bookingHistoryViewModel.cancelBooking(
-                bookingItem = item
+                bookingItem = item.copy(
+                    seats = selected,
+                    totalFare = selected.sumOf { it.fare ?:0.0 }
+                )
             )
         }
 
