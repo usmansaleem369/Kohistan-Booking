@@ -128,7 +128,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/manrope_semibold"
-                                android:text="First Name *"
+                                android:text="@string/first_name_"
                                 android:textColor="#344054"
                                 android:textSize="@dimen/_10ssp" />
 
@@ -139,7 +139,7 @@
                                 android:layout_marginTop="@dimen/_4sdp"
                                 android:background="@drawable/bg_input_field"
                                 android:fontFamily="@font/manrope_regular"
-                                android:hint="First name"
+                                android:hint="@string/first_name"
                                 android:imeOptions="actionNext"
                                 android:inputType="textPersonName|textCapWords"
                                 android:paddingHorizontal="@dimen/_12sdp"
@@ -159,7 +159,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/manrope_semibold"
-                                android:text="Last Name *"
+                                android:text="@string/last_name_"
                                 android:textColor="#344054"
                                 android:textSize="@dimen/_10ssp" />
 
@@ -170,7 +170,7 @@
                                 android:layout_marginTop="@dimen/_4sdp"
                                 android:background="@drawable/bg_input_field"
                                 android:fontFamily="@font/manrope_regular"
-                                android:hint="Last name"
+                                android:hint="@string/last_name"
                                 android:imeOptions="actionNext"
                                 android:inputType="textPersonName|textCapWords"
                                 android:paddingHorizontal="@dimen/_12sdp"
@@ -213,7 +213,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Date of Birth *"
+                        android:text="@string/date_of_birth_"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -227,7 +227,7 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:fontFamily="@font/manrope_regular"
-                        android:hint="YYYY-MM-DD"
+                        android:hint="@string/yyyy_mm_dd"
                         android:inputType="none"
                         android:paddingHorizontal="@dimen/_12sdp"
                         android:textColor="@color/text_color_on_light"
@@ -280,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Nationality *"
+                        android:text="@string/nationality_"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -291,11 +291,11 @@
                         android:layout_marginTop="@dimen/_4sdp"
                         android:background="@drawable/bg_input_field"
                         android:fontFamily="@font/manrope_regular"
-                        android:hint="Pakistani"
+                        android:hint="@string/pakistani"
                         android:imeOptions="actionNext"
                         android:inputType="textCapWords"
                         android:paddingHorizontal="@dimen/_12sdp"
-                        android:text="Pakistani"
+                        android:text="@string/pakistani"
                         android:textColor="@color/text_color_on_light"
                         android:textColorHint="#98A2B3"
                         android:textSize="@dimen/_10ssp" />
@@ -334,7 +334,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Username *"
+                        android:text="@string/username_"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -345,7 +345,7 @@
                         android:layout_marginTop="@dimen/_4sdp"
                         android:background="@drawable/bg_input_field"
                         android:fontFamily="@font/manrope_regular"
-                        android:hint="Enter username"
+                        android:hint="@string/enter_username"
                         android:imeOptions="actionNext"
                         android:inputType="textNoSuggestions"
                         android:paddingHorizontal="@dimen/_12sdp"
@@ -421,7 +421,7 @@
                         android:layout_marginTop="@dimen/_4sdp"
                         android:background="@drawable/bg_input_field"
                         android:fontFamily="@font/manrope_regular"
-                        android:hint="House 5, Street 3, Faisalabad"
+                        android:hint="@string/house_5_street_3_faisalabad"
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress|textCapSentences"
                         android:paddingHorizontal="@dimen/_12sdp"

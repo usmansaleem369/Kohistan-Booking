@@ -34,7 +34,7 @@
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp"
-                app:strokeColor="#EAECF0"
+                app:strokeColor="@color/card_border_light"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -98,7 +98,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/manrope_semibold"
-                                android:text="First Name"
+                                android:text="@string/first_name"
                                 android:textColor="#344054"
                                 android:textSize="@dimen/_10ssp" />
 
@@ -132,7 +132,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/manrope_semibold"
-                                android:text="Last Name"
+                                android:text="@string/last_name"
                                 android:textColor="#344054"
                                 android:textSize="@dimen/_10ssp" />
 
@@ -162,7 +162,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Username"
+                        android:text="@string/username"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -190,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Email Address"
+                        android:text="@string/email_address"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -218,7 +218,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="CNIC Number"
+                        android:text="@string/cnic_number"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -259,7 +259,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/manrope_semibold"
-                                android:text="Date of Birth"
+                                android:text="@string/date_of_birth"
                                 android:textColor="#344054"
                                 android:textSize="@dimen/_10ssp" />
 
@@ -293,7 +293,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/manrope_semibold"
-                                android:text="Nationality"
+                                android:text="@string/nationality"
                                 android:textColor="#344054"
                                 android:textSize="@dimen/_10ssp" />
 
@@ -329,7 +329,7 @@
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp"
                 android:layout_marginBottom="@dimen/_70sdp"
-                app:strokeColor="#EAECF0"
+                app:strokeColor="@color/card_border_light"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -342,7 +342,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_bold"
-                        android:text="Editable Details"
+                        android:text="@string/editable_details"
                         android:textColor="@color/btn_navy"
                         android:textSize="@dimen/_12ssp" />
 
@@ -351,7 +351,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/manrope_regular"
-                        android:text="You can update your mobile number, gender, and address"
+                        android:text="@string/you_can_update_your_mobile_number_gender_and_address"
                         android:textColor="#667085"
                         android:textSize="@dimen/_9ssp" />
 
@@ -361,7 +361,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Mobile Number (Cell No) *"
+                        android:text="@string/mobile_number_cell_no"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -372,7 +372,7 @@
                         android:layout_marginTop="@dimen/_4sdp"
                         android:background="@drawable/bg_input_field"
                         android:fontFamily="@font/manrope_regular"
-                        android:hint="03XX-XXXXXXX"
+                        android:hint="@string/_03xx_xxxxxxx"
                         android:imeOptions="actionNext"
                         android:inputType="phone"
                         android:maxLength="12"
@@ -388,7 +388,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Gender *"
+                        android:text="@string/gender"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -407,7 +407,7 @@
                             android:buttonTint="@color/btn_navy"
                             android:checked="true"
                             android:fontFamily="@font/manrope_medium"
-                            android:text="Male"
+                            android:text="@string/male"
                             android:textColor="@color/text_color_on_light"
                             android:textSize="@dimen/_10ssp" />
 
@@ -417,7 +417,7 @@
                             android:layout_height="wrap_content"
                             android:buttonTint="@color/btn_navy"
                             android:fontFamily="@font/manrope_medium"
-                            android:text="Female"
+                            android:text="@string/female"
                             android:textColor="@color/text_color_on_light"
                             android:textSize="@dimen/_10ssp" />
                     </RadioGroup>
@@ -428,7 +428,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_semibold"
-                        android:text="Address *"
+                        android:text="@string/address"
                         android:textColor="#344054"
                         android:textSize="@dimen/_10ssp" />
 
@@ -439,7 +439,7 @@
                         android:layout_marginTop="@dimen/_4sdp"
                         android:background="@drawable/bg_input_field"
                         android:fontFamily="@font/manrope_regular"
-                        android:hint="House 9, Street 4, Faisalabad"
+                        android:hint="@string/house_9_street_4_faisalabad"
                         android:imeOptions="actionDone"
                         android:inputType="textPostalAddress|textCapSentences"
                         android:paddingHorizontal="@dimen/_12sdp"
@@ -454,7 +454,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:background="@drawable/bg_seat_selected"
                         android:fontFamily="@font/manrope_bold"
-                        android:text="Save Changes"
+                        android:text="@string/save_changes"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/_11ssp" />

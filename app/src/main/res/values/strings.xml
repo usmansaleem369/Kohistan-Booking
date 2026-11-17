@@ -108,4 +108,23 @@
     <string name="cancel_ticket">Cancel Ticket?</string>
     <string name="cancel_reservation_detail">Are you sure you want to cancel reservation #%1$s\n(%2$s to %3$s, Seat %4$s)?\nThis action cannot be undone.</string>
     <string name="cancel_ticket_">Cancel Ticket</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="nationality">Nationality</string>
+    <string name="editable_details">Editable Details</string>
+    <string name="you_can_update_your_mobile_number_gender_and_address">You can update your mobile number, gender, and address</string>
+    <string name="mobile_number_cell_no">Mobile Number (Cell No) *</string>
+    <string name="address">Address *</string>
+    <string name="house_9_street_4_faisalabad">House 9, Street 4, Faisalabad</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="first_name_">First Name *</string>
+    <string name="last_name_">Last Name *</string>
+    <string name="date_of_birth_">Date of Birth *</string>
+    <string name="yyyy_mm_dd">YYYY-MM-DD</string>
+    <string name="nationality_">Nationality *</string>
+    <string name="pakistani">Pakistani</string>
+    <string name="username_">Username *</string>
+    <string name="enter_username">Enter username</string>
+    <string name="house_5_street_3_faisalabad">House 5, Street 3, Faisalabad</string>
 </resources>
