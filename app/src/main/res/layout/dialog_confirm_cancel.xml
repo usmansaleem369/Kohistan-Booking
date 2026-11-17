@@ -2,17 +2,17 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_16sdp"
-    app:cardBackgroundColor="@android:color/white"
+    app:cardBackgroundColor="@color/card_bg_warm"
     app:cardCornerRadius="@dimen/_14sdp"
     app:cardElevation="0dp"
     app:strokeColor="#EAECF0"
     app:strokeWidth="1dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -41,20 +41,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_12sdp"
             android:fontFamily="@font/manrope_bold"
-            android:text="Cancel Ticket?"
-            android:textColor="@color/btn_navy"
-            android:textSize="@dimen/_14ssp" />
+            android:text="@string/cancel_ticket"
+            android:textColor="@color/red_textcolor"
+            android:textSize="@dimen/_14ssp"
+            tools:ignore="HardcodedText" />
 
         <!-- Message -->
         <TextView
             android:id="@+id/tvDialogMessage"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
             android:lineSpacingExtra="@dimen/_2sdp"
-            android:textColor="#667085"
+            android:textColor="@color/text_color_on_light"
             android:textSize="@dimen/_10ssp"
             tools:text="Are you sure you want to cancel reservation #2611131014655 (Faisalabad to Gujranwala)? This action cannot be undone." />
 
@@ -62,7 +63,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_18sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
@@ -73,7 +74,7 @@
                 android:layout_marginEnd="@dimen/_6sdp"
                 android:layout_weight="1"
                 android:fontFamily="@font/manrope_semibold"
-                android:text="No, Keep"
+                android:text="No"
                 android:textAllCaps="false"
                 android:textColor="@color/btn_navy"
                 android:textSize="@dimen/_10ssp"
@@ -89,7 +90,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/red_textcolor"
                 android:fontFamily="@font/manrope_bold"
-                android:text="Yes, Cancel"
+                android:text="Yes"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/_10ssp"

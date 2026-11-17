@@ -11,7 +11,7 @@
     app:cardBackgroundColor="@color/card_bg_warm"
     app:cardCornerRadius="@dimen/_12sdp"
     app:cardElevation="0dp"
-    app:strokeColor="#EAECF0"
+    app:strokeColor="@color/card_border_light"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -265,17 +265,16 @@
             android:id="@+id/btnCancelTicket"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_38sdp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/manrope_semibold"
-            android:text="Cancel Ticket"
+            android:text="@string/cancel_ticket_"
             android:textAllCaps="false"
-            android:textColor="@color/red_textcolor"
+            android:textColor="@color/white"
             android:textSize="@dimen/_10ssp"
             android:visibility="gone"
             app:cornerRadius="@dimen/_8sdp"
-            app:strokeColor="@color/red_textcolor"
-            app:strokeWidth="1dp"
+            app:backgroundTint="@color/red_textcolor"
             tools:visibility="visible" />
 
     </LinearLayout>

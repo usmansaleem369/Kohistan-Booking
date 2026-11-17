@@ -159,7 +159,7 @@ class BookingsFragment : Fragment() {
             setCancelable(true)
             window?.setBackgroundDrawableResource(android.R.color.transparent)
             window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
         }
@@ -192,6 +192,7 @@ class BookingsFragment : Fragment() {
     private fun observeViewModel() {
         apiViewModel.selectedFilter.observe(viewLifecycleOwner) { filter ->
             updateTabStyles(filter)
+            bookingAdapter.setCanCancelTickets(filter == BookingFilter.UPCOMING)
         }
 
         apiViewModel.bookingsList.observe(viewLifecycleOwner) { list ->

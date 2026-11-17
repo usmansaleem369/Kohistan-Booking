@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/_12ssp"
-        android:background="@color/card_bg_warm"
+        android:background="@drawable/bg_toolbar_with_border"
         app:layout_constraintTop_toTopOf="parent">
     <ImageView
         android:layout_width="@dimen/_20sdp"

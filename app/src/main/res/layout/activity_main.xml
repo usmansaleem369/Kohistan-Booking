@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/card_bg_warm"
-                app:strokeColor="@color/btn_gold"
+                app:strokeColor="@color/card_border_light"
                 app:strokeWidth="1dp"
                 app:cardCornerRadius="0dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,12 +48,12 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/_10sdp">
+                    android:padding="@dimen/_14sdp">
 
                     <ImageView
                         android:id="@+id/ivMenu"
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
                         android:src="@drawable/ic_menu"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -69,8 +69,8 @@
                        app:layout_constraintEnd_toEndOf="parent">
                        <de.hdodenhof.circleimageview.CircleImageView
                            android:id="@+id/ivProfile"
-                           android:layout_width="@dimen/_18sdp"
-                           android:layout_height="@dimen/_18sdp"
+                           android:layout_width="@dimen/_24sdp"
+                           android:layout_height="@dimen/_24sdp"
                            android:src="@drawable/ic_profile"
                           app:layout_constraintStart_toStartOf="parent"
                            app:layout_constraintTop_toTopOf="parent"
@@ -85,12 +85,12 @@
                            android:layout_marginStart="@dimen/_5sdp"
                            app:layout_constraintTop_toTopOf="@id/ivProfile"
                            app:layout_constraintBottom_toBottomOf="@id/ivProfile"
-                           android:textSize="@dimen/_10ssp"
+                           android:textSize="@dimen/_12ssp"
                            app:layout_constraintStart_toEndOf="@id/ivProfile"/>
 
                        <ImageView
-                           android:layout_width="@dimen/_18sdp"
-                           android:layout_height="@dimen/_18sdp"
+                           android:layout_width="@dimen/_24sdp"
+                           android:layout_height="@dimen/_24sdp"
                            android:src="@drawable/ic_notification"
                            app:layout_constraintEnd_toEndOf="parent"
                            app:layout_constraintTop_toTopOf="parent"/>
@@ -101,12 +101,13 @@
                         android:layout_height="0dp"
                         app:layout_constraintTop_toTopOf="@id/ivMenu"
                         app:layout_constraintBottom_toBottomOf="@id/ivMenu"
-                        app:layout_constraintStart_toEndOf="@id/ivMenu"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:fontFamily="@font/manrope_bold"
-                        android:textSize="@dimen/_12ssp"
-                        android:visibility="gone"
+                        android:textSize="@dimen/_14ssp"
+                        android:visibility="visible"
+                        android:gravity="center"
                         android:textColor="@color/text_color_on_light"
                         android:id="@+id/tvTitle"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
