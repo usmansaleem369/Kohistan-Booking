@@ -460,7 +460,7 @@ object AppUtils {
                 requestFocus()
                 false
             }
-            !Patterns.EMAIL_ADDRESS.matcher(trimmed).matches() -> {
+            isValidEmail(trimmed) -> {
                 error = invalidMessage
                 requestFocus()
                 false
