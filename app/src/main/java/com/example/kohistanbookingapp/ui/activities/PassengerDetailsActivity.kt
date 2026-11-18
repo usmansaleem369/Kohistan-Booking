@@ -290,7 +290,11 @@ class PassengerDetailsActivity : AppCompatActivity() {
                     is ApiRequestStatus.Idle -> AppLoader.instance.hideLoader()
                     is ApiRequestStatus.Error -> {
                         AppLoader.instance.hideLoader()
-                        AppUtils.showCustomToast(status.message, layoutInflater, this)
+                        if (status.showDialog) {
+                            AppUtils.showErrorDialog(this, layoutInflater, status.message)
+                        } else {
+                            AppUtils.showCustomToast(status.message, layoutInflater, this)
+                        }
                     }
                 }
             }
