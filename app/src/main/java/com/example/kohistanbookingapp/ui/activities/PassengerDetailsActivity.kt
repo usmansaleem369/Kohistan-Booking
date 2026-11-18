@@ -174,7 +174,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
 
         binding.llPaymentMethod.apply {
             etJazzCashAccount.clearErrorOnTextChange()
-            etJazzCashCnic.attachCnicFormatter()
+            etJazzCashCnic.attachCnicFormatter(mirrorTarget = etJazzCashCnic)
         }
     }
 

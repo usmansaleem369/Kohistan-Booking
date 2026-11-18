@@ -270,7 +270,7 @@ class BookingsFragment : Fragment() {
                     clearErrorOnTextChange()
                 }
                 etJazzCashCnic.apply {
-                    attachCnicFormatter()
+                    attachCnicFormatter(mirrorTarget = etJazzCashCnic)
                     bookingHistoryItem.cnic?.takeIf { it.isNotBlank() }?.let(::setText)
                 }
             }

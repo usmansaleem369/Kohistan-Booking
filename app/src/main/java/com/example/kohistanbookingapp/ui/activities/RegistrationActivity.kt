@@ -57,7 +57,7 @@ class RegistrationActivity : AppCompatActivity() {
             etUserName, etPhone, etEmail, etAddress, etPassword
         ).forEach { it.clearErrorOnTextChange() }
 
-        etCnic.attachCnicFormatter()
+        etCnic.attachCnicFormatter(mirrorTarget = etCnic)
         setupDobDatePicker(etDob)
 
         ivBack.setOnClickListener {
