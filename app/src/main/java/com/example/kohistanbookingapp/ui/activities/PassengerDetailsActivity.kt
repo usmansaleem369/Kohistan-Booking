@@ -226,9 +226,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
             AppUtils.showCustomToast("Route information missing. Please search again.", layoutInflater, this)
             return
         }
-        val seatItems = selectedSeats
-            .sortedBy { it.seatNumber }
-            .map { seat ->
+        val seatItems = selectedSeats.sortedBy { it.seatNumber }.map { seat ->
                 BookingSeatItem(
                     seatNo = seat.seatNumber,
                     gender = if (seat.assignedGender == SeatGender.FEMALE) "Female" else "Male"

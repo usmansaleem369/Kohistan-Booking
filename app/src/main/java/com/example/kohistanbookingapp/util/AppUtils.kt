@@ -254,13 +254,7 @@ object AppUtils {
                 if (isFormatting || s == null) return
                 isFormatting = true
 
-                val digits = s.toString().filter { it.isDigit() }.take(13)
-                val formatted = buildString {
-                    digits.forEachIndexed { index, c ->
-                        if (index == 5 || index == 12) append('-')
-                        append(c)
-                    }
-                }
+                val formatted = s.toString().toFormattedCnic()
 
                 if (s.toString() != formatted) {
                     s.replace(0, s.length, formatted)
@@ -274,9 +268,6 @@ object AppUtils {
             }
         })
     }
-
-
-
     private fun createUtcDateFormat(pattern: String = TRAVEL_DATE_PATTERN): SimpleDateFormat =
         SimpleDateFormat(pattern, Locale.ENGLISH).apply {
             timeZone = TimeZone.getTimeZone("UTC")
@@ -460,7 +451,7 @@ object AppUtils {
                 requestFocus()
                 false
             }
-            isValidEmail(trimmed) -> {
+            !isValidEmail(trimmed) -> {
                 error = invalidMessage
                 requestFocus()
                 false
