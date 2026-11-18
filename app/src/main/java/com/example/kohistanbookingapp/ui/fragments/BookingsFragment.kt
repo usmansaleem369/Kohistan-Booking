@@ -24,6 +24,7 @@ import com.example.kohistanbookingapp.models.request.JazzCashPayRequest
 import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.applySystemAndImeInsets
 import com.example.kohistanbookingapp.util.AppUtils.attachCnicFormatter
 import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
 import com.example.kohistanbookingapp.util.AppUtils.toFormattedCnic
@@ -233,7 +234,6 @@ class BookingsFragment : Fragment() {
     private fun showPayNowBottomSheetDialog(bookingHistoryItem: BookingHistoryItem) {
         val bottomSheetJazzcashPaymentBinding = BottomSheetJazzcashPaymentBinding.inflate(layoutInflater)
         activePaymentSheetBinding = bottomSheetJazzcashPaymentBinding
-
         val jazzCashBottomSheet = BottomSheetDialog(requireContext()).apply {
             setContentView(bottomSheetJazzcashPaymentBinding.root)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED

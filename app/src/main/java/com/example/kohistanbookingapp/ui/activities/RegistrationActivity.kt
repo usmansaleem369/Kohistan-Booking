@@ -13,6 +13,7 @@ import com.example.kohistanbookingapp.databinding.ActivityRegistrationBinding
 import com.example.kohistanbookingapp.models.request.CreateProfileRequest
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.applySystemAndImeInsets
 import com.example.kohistanbookingapp.util.AppUtils.attachCnicFormatter
 import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
 import com.example.kohistanbookingapp.util.AppUtils.setupDobDatePicker
@@ -40,11 +41,7 @@ class RegistrationActivity : AppCompatActivity() {
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.main.applySystemAndImeInsets()
 
         prefillExistingProfileIfAvailable()
         initUiAndListeners()

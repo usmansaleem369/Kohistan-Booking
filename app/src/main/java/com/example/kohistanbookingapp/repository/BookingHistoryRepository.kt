@@ -105,26 +105,22 @@ class BookingHistoryRepository @Inject constructor(
                             ?.takeIf { it.isNotBlank() }
                             ?: res.message
                             ?: "JazzCash payment could not be completed."
-                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(failMsg,showDialog = true)))
+                        _apiRequestStatus.postValue(
+                            Event(ApiRequestStatus.Error(failMsg, showDialog = true))
+                        )
                     }
                 },
                 onError = { errorMessage ->
                     _apiRequestStatus.postValue(
-                        Event(ApiRequestStatus.Error(errorMessage,showDialog = true))
+                        Event(ApiRequestStatus.Error(errorMessage, showDialog = true))
                     )
                 }
             )
-        } catch (e: SocketTimeoutException) {
-            _apiRequestStatus.postValue(
-                Event(
-                    ApiRequestStatus.Error(
-                        "Payment request timed out. Please refresh My Bookings before trying again."
-                    )
-                )
-            )
         } catch (e: Exception) {
             _apiRequestStatus.postValue(
-                Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e)))
+                Event(
+                    ApiRequestStatus.Error(message = ExceptionHandler.getPaymentMessage(e), showDialog = true)
+                )
             )
         }
     }

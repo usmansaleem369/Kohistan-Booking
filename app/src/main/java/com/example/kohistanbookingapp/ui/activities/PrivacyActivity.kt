@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.kohistanbookingapp.databinding.ActivityPrivacyBinding
+import com.example.kohistanbookingapp.util.AppUtils.applySystemAndImeInsets
 
 class PrivacyActivity : AppCompatActivity() {
 
@@ -18,11 +19,7 @@ class PrivacyActivity : AppCompatActivity() {
         binding = ActivityPrivacyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.main.applySystemAndImeInsets()
 
         binding.ivBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()

@@ -233,26 +233,41 @@ class CreateBookingRepository @Inject constructor(
             request
         }
 
+        val isOnlinePayment = formattedRequest.payOnline
+
         isRequestInProgress = true
         _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
 
         try {
             val response = apiService.createBooking(formattedRequest)
-            _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
             response.handleResponse(
                 onSuccess = { res ->
-                    res.data?.let { bookingData ->
-                        _createBookingResponse.postValue(Event(bookingData))
-                    } ?: run {
-                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Error("Reservation details missing in response.")))
+                    val bookingData = res.data
+                    if (bookingData == null) {
+                        _apiRequestStatus.postValue(
+                            Event(ApiRequestStatus.Error("Reservation details missing in response."))
+                        )
+                        return@handleResponse
                     }
+
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+                    _createBookingResponse.postValue(Event(bookingData))
                 },
                 onError = { error ->
-                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(error)))
+                    _apiRequestStatus.postValue(
+                        Event(ApiRequestStatus.Error(error, showDialog = isOnlinePayment))
+                    )
                 }
             )
         } catch (e: Exception) {
-            _apiRequestStatus.postValue(Event(ApiRequestStatus.Error(ExceptionHandler.getMessage(e))))
+            val errorMessage = if (isOnlinePayment) {
+                ExceptionHandler.getPaymentMessage(e)
+            } else {
+                ExceptionHandler.getMessage(e)
+            }
+            _apiRequestStatus.postValue(
+                Event(ApiRequestStatus.Error(errorMessage, showDialog = isOnlinePayment))
+            )
         } finally {
             isRequestInProgress = false
         }

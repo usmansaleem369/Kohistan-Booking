@@ -33,6 +33,8 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -457,6 +459,25 @@ object AppUtils {
                 false
             }
             else -> true
+        }
+    }
+
+    fun View.applySystemAndImeInsets(
+        applyTop: Boolean = true,
+        applyBottom: Boolean = true,
+        applyHorizontal: Boolean = true
+    ) {
+        ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+
+            v.setPadding(
+                if (applyHorizontal) systemBars.left else v.paddingLeft,
+                if (applyTop) systemBars.top else v.paddingTop,
+                if (applyHorizontal) systemBars.right else v.paddingRight,
+                if (applyBottom) maxOf(systemBars.bottom, ime.bottom) else v.paddingBottom
+            )
+            insets
         }
     }
 }

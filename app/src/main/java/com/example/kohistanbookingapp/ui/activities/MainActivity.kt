@@ -20,6 +20,7 @@ import com.example.kohistanbookingapp.ui.fragments.HomeFragment
 import com.example.kohistanbookingapp.ui.fragments.ProfileFragment
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.applySystemAndImeInsets
 import com.example.kohistanbookingapp.util.NavTab
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
@@ -66,16 +67,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom
-            )
-            insets
-        }
+        binding.root.applySystemAndImeInsets()
 
         checkLocationPermission()
 

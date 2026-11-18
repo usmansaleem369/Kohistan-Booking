@@ -10,26 +10,26 @@ import java.net.UnknownHostException
 object ExceptionHandler {
 
     fun getMessage(e: Throwable): String {
-        return when (e) {
-
-            is UnknownHostException,
-            is NoRouteToHostException -> {
+        val cause = (e as? java.io.IOException)?.cause ?: e
+        return when {
+            e is UnknownHostException || cause is UnknownHostException ||
+                    e is NoRouteToHostException || cause is NoRouteToHostException -> {
                 "No internet connection. Please check your network."
             }
 
-            is ConnectException -> {
+            e is ConnectException || cause is ConnectException -> {
                 "Unable to connect to server. Please try again later."
             }
 
-            is SocketException -> {
-                "Network connection lost. Please check your internet and try again."
+            e is SocketException || cause is SocketException -> {
+                "Connection interrupted while waiting for response. Please check your bookings before retrying."
             }
 
-            is SocketTimeoutException -> {
+            e is SocketTimeoutException || cause is SocketTimeoutException -> {
                 "Connection timed out. Server is taking too long to respond."
             }
 
-            is HttpException -> {
+            e is HttpException -> {
                 when (e.code()) {
                     400 -> "Bad request."
                     401 -> "Unauthorized. Please login again."
@@ -43,6 +43,17 @@ object ExceptionHandler {
             else -> {
                 "Something went wrong. Please try again."
             }
+        }
+    }
+
+    fun getPaymentMessage(e: Throwable): String {
+        val cause = (e as? java.io.IOException)?.cause ?: e
+        return when {
+            e is SocketException || cause is SocketException ||
+                    e is SocketTimeoutException || cause is SocketTimeoutException -> {
+                "Connection interrupted while confirming payment. Please refresh My Bookings to verify status before paying again."
+            }
+            else -> getMessage(e)
         }
     }
 }

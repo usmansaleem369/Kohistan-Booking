@@ -12,6 +12,7 @@ import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.databinding.ActivityLoginBinding
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.applySystemAndImeInsets
 import com.example.kohistanbookingapp.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,11 +28,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.main.applySystemAndImeInsets()
 
         setupClickListeners()
         observeViewModel()

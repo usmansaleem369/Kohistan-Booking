@@ -21,6 +21,7 @@ import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.models.response.SelectedSeat
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.applySystemAndImeInsets
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -49,11 +50,7 @@ class SelectSeatActivity : AppCompatActivity() {
         binding = ActivitySelectSeatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.main.applySystemAndImeInsets()
 
         initUIAndListeners()
         setupSeatGridAdapter()
