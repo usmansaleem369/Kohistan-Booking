@@ -57,7 +57,7 @@
                 android:id="@+id/tvTimeType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_rounded_soft_gold"
+                android:background="@drawable/bg_rounded_light_gold"
                 android:fontFamily="@font/manrope_semibold"
                 android:paddingHorizontal="@dimen/_8sdp"
                 android:paddingVertical="@dimen/_3sdp"
@@ -139,7 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/bg_rounded_soft_gold"
+            android:background="@drawable/bg_rounded_light_gold"
             android:baselineAligned="false"
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/_10sdp"
@@ -261,21 +261,54 @@
                     tools:text="Rs. 2,100" />
             </LinearLayout>
         </LinearLayout>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCancelTicket"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        <!-- Action Buttons Row: Cancel Ticket & Pay Now -->
+        <LinearLayout
+            android:id="@+id/llBookingActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
-            android:fontFamily="@font/manrope_semibold"
-            android:text="@string/cancel_ticket_"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10ssp"
+            android:orientation="horizontal"
             android:visibility="gone"
-            app:cornerRadius="@dimen/_8sdp"
-            app:backgroundTint="@color/red_textcolor"
-            tools:visibility="visible" />
+            tools:visibility="visible">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelTicket"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_weight="1"
+                android:fontFamily="@font/manrope_semibold"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/cancel_ticket_"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/red_textcolor"
+                android:textSize="@dimen/_10ssp"
+                android:visibility="gone"
+                app:cornerRadius="@dimen/_8sdp"
+                app:strokeWidth="1dp"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPayNow"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/btn_gold"
+                android:fontFamily="@font/manrope_bold"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Pay Now"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10ssp"
+                android:visibility="gone"
+                app:cornerRadius="@dimen/_8sdp"
+                tools:visibility="visible" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

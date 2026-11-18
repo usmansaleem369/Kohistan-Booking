@@ -4,6 +4,7 @@ import com.example.kohistanbookingapp.models.request.CancelBookingRequest
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
 import com.example.kohistanbookingapp.models.request.CreateProfileRequest
 import com.example.kohistanbookingapp.models.request.ForgotPasswordRequest
+import com.example.kohistanbookingapp.models.request.JazzCashPayRequest
 import com.example.kohistanbookingapp.models.request.RefreshTokenRequest
 import com.example.kohistanbookingapp.models.request.ResetPasswordRequest
 import com.example.kohistanbookingapp.models.request.UpdateProfileRequest
@@ -11,6 +12,7 @@ import com.example.kohistanbookingapp.models.response.SeatPatternRow
 import com.example.kohistanbookingapp.models.response.ApiResponse
 import com.example.kohistanbookingapp.models.response.BookedSeatsData
 import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
+import com.example.kohistanbookingapp.models.response.BookingPaymentInfo
 import com.example.kohistanbookingapp.models.response.CityData
 import com.example.kohistanbookingapp.models.response.CreateBookingData
 import com.example.kohistanbookingapp.models.response.LoginResponse
@@ -112,5 +114,10 @@ interface ApiService {
     suspend fun cancelBooking(
       @Body request: CancelBookingRequest
     ): Response<ApiResponse<Unit>>
+
+    @POST("/api/EPayment/PayBookingOnline")
+    suspend fun payAfterBooking(
+        @Body request: JazzCashPayRequest
+    ): Response<ApiResponse<BookingPaymentInfo>>
 
 }

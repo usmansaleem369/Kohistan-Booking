@@ -74,43 +74,43 @@ class RouteTimeAdapter(
             binding.root.setOnClickListener { itemClickListener() }
         }
 
-        fun bind(item: RouteData) {
+        fun bind(routeData: RouteData) {
             binding.apply {
-                tvDepartureTime.text = AppUtils.formatToAmPm(item.routeTimeValue.orEmpty())
-                tvType.text = item.vehicleType ?: "Economical"
-                tvFromCity.text = item.fromCity.orEmpty()
-                tvToCity.text = item.toCity.orEmpty()
+                tvDepartureTime.text = AppUtils.formatToAmPm(routeData.routeTimeValue.orEmpty())
+                tvType.text = routeData.vehicleType ?: "Economical"
+                tvFromCity.text = routeData.fromCity.orEmpty()
+                tvToCity.text = routeData.toCity.orEmpty()
 
-                val seats = item.remainingSeats ?: 0
+                val seats = routeData.remainingSeats ?: 0
                 tvRemainingSeats.text = if (seats == 1) "1 Seat Left" else "$seats Seats Left"
 
                 tvArrival.text = TravelTimeEstimator.calculateArrivalTime(
-                    departureTime24 = item.routeTimeValue,
-                    fromCity = item.fromCity,
-                    toCity = item.toCity
+                    departureTime24 = routeData.routeTimeValue,
+                    fromCity = routeData.fromCity,
+                    toCity = routeData.toCity
                 )
 
-                bindPricingAndPromo(item)
+                bindPricingAndPromo(routeData)
                 bindDate(bookingDate)
             }
         }
 
-        private fun bindPricingAndPromo(item: RouteData) {
+        private fun bindPricingAndPromo(routeData: RouteData) {
             binding.apply {
-                val effectiveFare = item.getEffectiveFare()
+                val effectiveFare = routeData.getEffectiveFare()
                 tvPrice.text = if (effectiveFare > 0.0) {
                     "PKR ${priceFormatter.format(effectiveFare)}"
                 } else {
                     "N/A"
                 }
 
-                if (item.hasPromotion() && item.fare != null) {
+                if (routeData.hasPromotion() && routeData.fare != null) {
                     tvOriginalPrice.visibility = View.VISIBLE
-                    tvOriginalPrice.text = "PKR ${priceFormatter.format(item.fare)}"
+                    tvOriginalPrice.text = "PKR ${priceFormatter.format(routeData.fare)}"
                     tvOriginalPrice.paintFlags = tvOriginalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
-                    val discountPct = item.discountPercentage?.toInt() ?: 0
-                    val promoTitle = item.promotionName.orEmpty().trim()
+                    val discountPct = routeData.discountPercentage?.toInt() ?: 0
+                    val promoTitle = routeData.promotionName.orEmpty().trim()
                     val badgeText = buildString {
                         if (promoTitle.isNotEmpty()) append(promoTitle)
                         if (promoTitle.isNotEmpty() && discountPct > 0) append(" • ")

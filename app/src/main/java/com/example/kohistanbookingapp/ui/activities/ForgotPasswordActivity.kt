@@ -14,6 +14,7 @@ import com.example.kohistanbookingapp.models.request.ForgotPasswordRequest
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
+import com.example.kohistanbookingapp.util.AppUtils.validateEmail
 import com.example.kohistanbookingapp.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,11 +73,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         }
 
         if (trimmed.contains("@")) {
-            if (!Patterns.EMAIL_ADDRESS.matcher(trimmed).matches()) {
-                binding.etEmail.error = "Please enter a valid email address"
-                binding.etEmail.requestFocus()
-                return false
-            }
+            if (!binding.etEmail.validateEmail()) return false
         } else if (trimmed.length < 3 || trimmed.contains(" ")) {
             binding.etEmail.error = "Username must be at least 3 characters with no spaces"
             binding.etEmail.requestFocus()

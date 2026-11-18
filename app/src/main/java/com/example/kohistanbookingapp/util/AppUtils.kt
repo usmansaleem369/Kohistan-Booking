@@ -27,6 +27,7 @@ import android.os.Build
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Patterns
 import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
@@ -385,6 +386,86 @@ object AppUtils {
             editText.setText(formattedDob)
             editText.error = null
             onDateSelected?.invoke(formattedDob)
+        }
+    }
+
+    fun String.toCleanDigits(): String = replace("-", "").trim()
+
+    fun String.toFormattedCnic(): String {
+        val digits = filter { it.isDigit() }.take(13)
+        return buildString {
+            digits.forEachIndexed { index, c ->
+                if (index == 5 || index == 12) append('-')
+                append(c)
+            }
+        }
+    }
+
+    fun String.toFormattedPakMobile(): String {
+        val digits = filter { it.isDigit() }.take(11)
+        return if (digits.length > 4) {
+            "${digits.substring(0, 4)}-${digits.substring(4)}"
+        } else {
+            digits
+        }
+    }
+
+
+    fun isValidCnic(cnic: String?): Boolean {
+        val digits = cnic?.toCleanDigits().orEmpty()
+        return CNIC_REGEX.matches(digits)
+    }
+
+    fun isValidPakMobile(mobile: String?): Boolean {
+        val digits = mobile?.toCleanDigits().orEmpty()
+        return PAK_MOBILE_REGEX.matches(digits)
+    }
+
+
+    fun EditText.validateCnic(
+        errorMessage: String = "Please enter a valid 13-digit CNIC number"
+    ): Boolean {
+        val isValid = isValidCnic(text?.toString())
+        if (!isValid) {
+            error = errorMessage
+            requestFocus()
+        }
+        return isValid
+    }
+
+    fun EditText.validatePakMobile(
+        errorMessage: String = "Enter a valid Pakistani mobile number (03XXXXXXXXX)"
+    ): Boolean {
+        val isValid = isValidPakMobile(text?.toString())
+        if (!isValid) {
+            error = errorMessage
+            requestFocus()
+        }
+        return isValid
+    }
+
+    fun isValidEmail(email: String?): Boolean {
+        val trimmed = email?.trim().orEmpty()
+        return trimmed.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(trimmed).matches()
+    }
+
+    fun EditText.validateEmail(
+        requiredMessage: String = "Email address is required",
+        invalidMessage: String = "Please enter a valid email address"
+    ): Boolean {
+        val trimmed = text?.toString()?.trim().orEmpty()
+        return when {
+            trimmed.isEmpty() -> {
+                error = requiredMessage
+                requestFocus()
+                false
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(trimmed).matches() -> {
+                error = invalidMessage
+                requestFocus()
+                false
+            }
+            else -> true
         }
     }
 }

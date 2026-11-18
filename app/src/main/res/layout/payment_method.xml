@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:padding="@dimen/_14sdp">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,7 +31,7 @@
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
             android:text="JC"
-            android:textColor="@color/btn_gold"
+            android:textColor="#FDBF03"
             android:textSize="@dimen/_12ssp" />
 
         <LinearLayout

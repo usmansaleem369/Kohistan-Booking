@@ -3,6 +3,7 @@ package com.example.kohistanbookingapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class BookingHistoryAdapter(
-    private val onCancelClick: (BookingHistoryItem) -> Unit
+    private val onCancelClick: (BookingHistoryItem) -> Unit,
+    private val onPayNowClick: (BookingHistoryItem) -> Unit
 ) : ListAdapter<BookingHistoryItem, BookingHistoryAdapter.BookingViewHolder>(DiffCallback) {
 
     private var canCancelTickets: Boolean = true
@@ -42,37 +44,44 @@ class BookingHistoryAdapter(
         private val binding: ItemBookingHistoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: BookingHistoryItem) {
-            binding.tvReservationId.text =
-                binding.root.context.getString(R.string.booking_id, item.reservationId)
-            binding.tvBookedAt.text =
-                binding.root.context.getString(R.string.booked_on, formatBookedAt(item.bookedAt))
-            binding.tvTimeType.text = item.timeType
+        fun bind(bookingHistoryItem: BookingHistoryItem) {
+            binding.apply {
+                tvReservationId.text =
+                    root.context.getString(R.string.booking_id, bookingHistoryItem.reservationId)
+                tvBookedAt.text =
+                    root.context.getString(R.string.booked_on, formatBookedAt(bookingHistoryItem.bookedAt))
+                tvTimeType.text = bookingHistoryItem.timeType
 
-            binding.tvFromCity.text = item.fromCity
-            binding.tvToCity.text = item.toCity
-            //binding.tvRouteName.text = item.routeName
-           // binding.tvDropPoint.text = "Drop: ${item.dropPoint}"
+                tvFromCity.text = bookingHistoryItem.fromCity
+                tvToCity.text = bookingHistoryItem.toCity
+                // tvRouteName.text = item.routeName
+                // tvDropPoint.text = "Drop: ${item.dropPoint}"
 
-            val formattedDate = formatDepartureDate(item.departureDate)
-            val formattedTime = formatDepartureTime(item.departureTime)
-            binding.tvDepartureDateTime.text = "$formattedDate • $formattedTime"
+                val formattedDate = formatDepartureDate(bookingHistoryItem.departureDate)
+                val formattedTime = formatDepartureTime(bookingHistoryItem.departureTime)
+                tvDepartureDateTime.text = "$formattedDate • $formattedTime"
 
-            val seatCount = item.seats.size
-            binding.tvSeatCountLabel.text = if (seatCount == 1) "Seat (1)" else "Seats ($seatCount)"
-            binding.tvSeatNumbers.text = item.seats.joinToString(", ") { seat ->
-                val g = seat.gender?.firstOrNull()?.uppercaseChar()?.toString().orEmpty()
-                if (g.isNotEmpty()) "${seat.seatNo} ($g)" else "${seat.seatNo}"
+                val seatCount = bookingHistoryItem.seats.size
+                tvSeatCountLabel.text = if (seatCount == 1) "Seat (1)" else "Seats ($seatCount)"
+                tvSeatNumbers.text = bookingHistoryItem.seats.joinToString(", ") { seat ->
+                    val g = seat.gender?.firstOrNull()?.uppercaseChar()?.toString().orEmpty()
+                    if (g.isNotEmpty()) "${seat.seatNo} ($g)" else "${seat.seatNo}"
+                }
+
+                tvPassengerName.text = bookingHistoryItem.passengerName
+                tvContactNo.text = bookingHistoryItem.contactNo
+                tvTotalFare.text = formatCurrency(bookingHistoryItem.totalFare)
+
+                // root.setOnClickListener { onItemClick(item) }
+
+                val showActions = canCancelTickets
+                llBookingActions.visibility = if (showActions) View.VISIBLE else View.GONE
+                btnCancelTicket.visibility = if (showActions) View.VISIBLE else View.GONE
+                btnPayNow.isVisible = !bookingHistoryItem.isPaid
+
+                btnCancelTicket.setOnClickListener { onCancelClick(bookingHistoryItem) }
+                btnPayNow.setOnClickListener { onPayNowClick(bookingHistoryItem) }
             }
-
-            binding.tvPassengerName.text = item.passengerName
-            binding.tvContactNo.text = item.contactNo
-            binding.tvTotalFare.text = formatCurrency(item.totalFare)
-
-           // binding.root.setOnClickListener { onItemClick(item) }
-
-            binding.btnCancelTicket.visibility = if (canCancelTickets) View.VISIBLE else View.GONE
-            binding.btnCancelTicket.setOnClickListener { onCancelClick(item) }
         }
 
         private fun formatDepartureDate(raw: String): String {

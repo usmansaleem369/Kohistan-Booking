@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.tvSignUp.setOnClickListener {
             startActivity(Intent(this, RegistrationActivity::class.java))
-            finish()
+           // finish()
         }
     }
 

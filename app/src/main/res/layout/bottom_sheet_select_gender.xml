@@ -16,7 +16,7 @@
         android:layout_height="@dimen/_4sdp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/_14sdp"
-        android:background="@color/btn_gold" />
+        android:background="@drawable/rounded_corners_bg" />
 
     <!-- Header Row -->
     <LinearLayout

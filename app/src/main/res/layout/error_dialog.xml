@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:background="@color/white"
+    android:background="@drawable/bg_rounded_soft_gold"
     android:orientation="vertical"
     android:padding="@dimen/_5sdp">
 
@@ -13,11 +13,11 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Error"
-        android:fontFamily="sans-serif-black"
+        android:text="Payment Error"
+        android:fontFamily="@font/manrope_bold"
         android:gravity="center"
-        android:textColor="@color/text_on_gold"
-        android:textSize="@dimen/_18ssp" />
+        android:textColor="@color/red_textcolor"
+        android:textSize="@dimen/_14ssp" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -25,9 +25,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/_5sdp"
+        android:fontFamily="@font/manrope_regular"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_12ssp" />
+        android:textColor="@color/text_color_on_light"
+        android:textSize="@dimen/_10ssp" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -36,8 +37,9 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/_8sdp"
         android:text="Ok"
+        android:fontFamily="@font/manrope_regular"
         android:textColor="@color/text_on_navy"
-        app:backgroundTint="@color/btn_navy"
+        app:backgroundTint="@color/btn_gold"
         app:cornerRadius="@dimen/_5sdp" />
 
 </LinearLayout>

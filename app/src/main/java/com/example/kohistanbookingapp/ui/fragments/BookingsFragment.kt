@@ -16,15 +16,26 @@ import com.example.kohistanbookingapp.R
 import com.example.kohistanbookingapp.adapters.BookingHistoryAdapter
 import com.example.kohistanbookingapp.adapters.CancelSeatAdapter
 import com.example.kohistanbookingapp.api.ApiRequestStatus
+import com.example.kohistanbookingapp.databinding.BottomSheetJazzcashPaymentBinding
 import com.example.kohistanbookingapp.databinding.DialogConfirmCancelBinding
 import com.example.kohistanbookingapp.databinding.FragmentBookingsBinding
 import com.example.kohistanbookingapp.models.local.BookingFilter
+import com.example.kohistanbookingapp.models.request.JazzCashPayRequest
 import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
+import com.example.kohistanbookingapp.util.AppUtils.attachCnicFormatter
+import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
+import com.example.kohistanbookingapp.util.AppUtils.toFormattedCnic
+import com.example.kohistanbookingapp.util.AppUtils.toFormattedPakMobile
+import com.example.kohistanbookingapp.util.AppUtils.validateCnic
+import com.example.kohistanbookingapp.util.AppUtils.validatePakMobile
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.BookingHistoryViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,6 +53,8 @@ class BookingsFragment : Fragment() {
     private val memberId: Int
         get() = sharedPreferencesHelper.userProfile?.memberId ?: 0
 
+    private var paymentBottomSheet: BottomSheetDialog? = null
+    private var activePaymentSheetBinding: BottomSheetJazzcashPaymentBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +67,6 @@ class BookingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initUiAndListeners()
         observeViewModel()
 
@@ -62,7 +74,6 @@ class BookingsFragment : Fragment() {
             bookingHistoryViewModel.loadInitialBookingsIfNeeded(memberId)
         }
     }
-
 
     private fun updateTabStyles(selectedFilter: BookingFilter) {
         val tabs = listOf(
@@ -130,9 +141,14 @@ class BookingsFragment : Fragment() {
             bookingHistoryViewModel.selectFilter(BookingFilter.CANCELLED, memberId)
         }
 
-        bookingAdapter = BookingHistoryAdapter { bookingItem ->
-            showCancelConfirmationDialog(bookingItem)
-        }
+        bookingAdapter = BookingHistoryAdapter(
+            onCancelClick = { bookingItem ->
+                showCancelConfirmationDialog(bookingItem)
+            },
+            onPayNowClick = { bookingItem ->
+                showPayNowBottomSheetDialog(bookingItem)
+            }
+        )
 
         val linearLayoutManager = LinearLayoutManager(requireContext())
         binding.rvBookings.apply {
@@ -154,7 +170,7 @@ class BookingsFragment : Fragment() {
         }
     }
 
-    private fun showCancelConfirmationDialog(item: BookingHistoryItem) {
+    private fun showCancelConfirmationDialog(bookingHistoryItem: BookingHistoryItem) {
         val dialogBinding = DialogConfirmCancelBinding.inflate(layoutInflater)
         val dialog = Dialog(requireContext()).apply {
             setContentView(dialogBinding.root)
@@ -166,30 +182,31 @@ class BookingsFragment : Fragment() {
             )
         }
 
-        val allSeatNumbers = item.seats.joinToString(", ") { it.seatNo.toString() }
+        val allSeatNumbers = bookingHistoryItem.seats.joinToString(", ") { it.seatNo.toString() }
         dialogBinding.tvDialogTitle.text = getString(R.string.cancel_ticket)
         dialogBinding.tvDialogMessage.text = getString(
             R.string.cancel_reservation_detail,
-            item.reservationId,
-            item.fromCity,
-            item.toCity,
+            bookingHistoryItem.reservationId,
+            bookingHistoryItem.fromCity,
+            bookingHistoryItem.toCity,
             allSeatNumbers
         )
 
-        val seatAdapter = CancelSeatAdapter(item.seats) { selected ->
+        val seatAdapter = CancelSeatAdapter(bookingHistoryItem.seats) { selected ->
             val hasSelection = selected.isNotEmpty()
             dialogBinding.btnConfirmCancel.isEnabled = hasSelection
             dialogBinding.btnConfirmCancel.alpha = if (hasSelection) 1f else 0.5f
-            dialogBinding.tvSelectAllSeats.text = if (selected.size == item.seats.size) "Clear All" else "Select All"
+            dialogBinding.tvSelectAllSeats.text =
+                if (selected.size == bookingHistoryItem.seats.size) "Clear All" else "Select All"
         }
         dialogBinding.tvSelectAllSeats.setOnClickListener {
             seatAdapter.toggleSelectAll()
         }
 
-        val spanCount = if (item.seats.size >= 3){
+        val spanCount = if (bookingHistoryItem.seats.size >= 3) {
             3
-        } else{
-            item.seats.size
+        } else {
+            bookingHistoryItem.seats.size
         }
 
         dialogBinding.rvCancelSeats.apply {
@@ -203,14 +220,86 @@ class BookingsFragment : Fragment() {
             if (selected.isEmpty()) return@setOnClickListener
             dialog.dismiss()
             bookingHistoryViewModel.cancelBooking(
-                bookingItem = item.copy(
+                bookingItem = bookingHistoryItem.copy(
                     seats = selected,
-                    totalFare = selected.sumOf { it.fare ?:0.0 }
+                    totalFare = selected.sumOf { it.fare ?: 0.0 }
                 )
             )
         }
 
         dialog.show()
+    }
+
+    private fun showPayNowBottomSheetDialog(bookingHistoryItem: BookingHistoryItem) {
+        val bottomSheetJazzcashPaymentBinding = BottomSheetJazzcashPaymentBinding.inflate(layoutInflater)
+        activePaymentSheetBinding = bottomSheetJazzcashPaymentBinding
+
+        val jazzCashBottomSheet = BottomSheetDialog(requireContext()).apply {
+            setContentView(bottomSheetJazzcashPaymentBinding.root)
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior.skipCollapsed = true
+            setOnShowListener { dialog ->
+                (dialog as? BottomSheetDialog)
+                    ?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                    ?.setBackgroundColor(Color.TRANSPARENT)
+            }
+            setOnDismissListener {
+                if (activePaymentSheetBinding === bottomSheetJazzcashPaymentBinding) {
+                    activePaymentSheetBinding = null
+                }
+                if (paymentBottomSheet === this) {
+                    paymentBottomSheet = null
+                }
+            }
+        }
+        paymentBottomSheet = jazzCashBottomSheet
+
+        val amountFormatted = String.format(Locale.US, "%,.0f", bookingHistoryItem.totalFare)
+
+        bottomSheetJazzcashPaymentBinding.apply {
+            layoutPaymentMethod.root.setBackgroundColor(
+                ResourcesCompat.getColor(resources, R.color.card_bg_warm, null)
+            )
+            tvSheetReservationInfo.text =
+                getString(R.string.reservation_rs, bookingHistoryItem.reservationId, amountFormatted)
+            btnPayJazzCash.text = getString(R.string.pay_rs, amountFormatted)
+
+            layoutPaymentMethod.apply {
+                etJazzCashAccount.apply {
+                    setText(bookingHistoryItem.contactNo.orEmpty())
+                    clearErrorOnTextChange()
+                }
+                etJazzCashCnic.apply {
+                    attachCnicFormatter()
+                    bookingHistoryItem.cnic?.takeIf { it.isNotBlank() }?.let(::setText)
+                }
+            }
+
+            btnPayJazzCash.setOnClickListener {
+                layoutPaymentMethod.apply {
+                    if (!etJazzCashAccount.validatePakMobile("Enter a valid 11-digit JazzCash number (03XXXXXXXXX)")) {
+                        return@setOnClickListener
+                    }
+                    if (!etJazzCashCnic.validateCnic("Enter a valid 13-digit account holder CNIC")) {
+                        return@setOnClickListener
+                    }
+
+                    val formattedMobile = etJazzCashAccount.text.toString().toFormattedPakMobile()
+                    val formattedCnic = etJazzCashCnic.text.toString().toFormattedCnic()
+
+                    btnPayJazzCash.isEnabled = false
+
+                    val jazzCashPayRequest = JazzCashPayRequest(
+                        bookingTransactionId = bookingHistoryItem.transactionId,
+                        accCnic = formattedCnic,
+                        accMobileNumber = formattedMobile
+                    )
+                    bookingHistoryViewModel.payAfterBooking(jazzCashPayRequest)
+                }
+            }
+        }
+
+        jazzCashBottomSheet.show()
     }
 
     private fun observeViewModel() {
@@ -239,8 +328,26 @@ class BookingsFragment : Fragment() {
 
         bookingHistoryViewModel.cancelBookingResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
-                AppUtils.showCustomToast(response.message.ifEmpty { "Ticket cancelled successfully" }, layoutInflater, requireContext())
+                AppUtils.showCustomToast(
+                    response.message.ifEmpty { "Ticket cancelled successfully" },
+                    layoutInflater,
+                    requireContext()
+                )
                 bookingHistoryViewModel.removeCancelledBookingFromList()
+            }
+        }
+
+        bookingHistoryViewModel.payAfterBookingResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                paymentBottomSheet?.dismiss()
+                response.data?.bookingTransactionId?.let { bookingTransactionId ->
+                    bookingHistoryViewModel.markBookingAsPaid(bookingTransactionId)
+                }
+                AppUtils.showCustomToast(
+                    response.message.ifEmpty { "Ticket confirmed." },
+                    layoutInflater,
+                    requireContext()
+                )
             }
         }
 
@@ -254,15 +361,23 @@ class BookingsFragment : Fragment() {
                             AppLoader.instance.showLoader(requireContext())
                         }
                     }
+
                     is ApiRequestStatus.Idle -> {
                         AppLoader.instance.hideLoader()
                         binding.swipeRefreshBookings.isRefreshing = false
                     }
+
                     is ApiRequestStatus.Error -> {
                         AppLoader.instance.hideLoader()
-                        binding.swipeRefreshBookings.isRefreshing = false
-                        bookingHistoryViewModel.onBookingHistoryError()
-                        AppUtils.showCustomToast(status.message, layoutInflater, requireContext())
+                        activePaymentSheetBinding?.btnPayJazzCash?.isEnabled = true
+
+                        if (status.showDialog) {
+                            AppUtils.showErrorDialog(requireActivity(), layoutInflater, status.message)
+                        } else {
+                            binding.swipeRefreshBookings.isRefreshing = false
+                            bookingHistoryViewModel.onBookingHistoryError()
+                            AppUtils.showCustomToast(status.message, layoutInflater, requireContext())
+                        }
                     }
                 }
             }
@@ -270,6 +385,9 @@ class BookingsFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        paymentBottomSheet?.dismiss()
+        paymentBottomSheet = null
+        activePaymentSheetBinding = null
         super.onDestroyView()
         _binding = null
     }

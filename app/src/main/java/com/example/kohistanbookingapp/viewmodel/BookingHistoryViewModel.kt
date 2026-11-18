@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kohistanbookingapp.models.local.BookingFilter
 import com.example.kohistanbookingapp.models.request.CancelBookingRequest
+import com.example.kohistanbookingapp.models.request.JazzCashPayRequest
 import com.example.kohistanbookingapp.models.response.BookingHistoryItem
 import com.example.kohistanbookingapp.models.response.BookingHistoryResponse
 import com.example.kohistanbookingapp.repository.BookingHistoryRepository
@@ -28,6 +29,8 @@ class BookingHistoryViewModel@Inject constructor(
 
     val cancelBookingResponse = bookingHistoryRepository.cancelBookingResponse
 
+    val payAfterBookingResponse = bookingHistoryRepository.payAfterBookingResponse
+
     private val _isLoadingMore = MutableLiveData(false)
     val isLoadingMore: LiveData<Boolean> = _isLoadingMore
 
@@ -36,7 +39,7 @@ class BookingHistoryViewModel@Inject constructor(
 
     private var currentPage = 0
     private var totalPages = 1
-    private val pageSize = 2
+    private val pageSize = 10
 
     var pendingCancelTransactionId: Long = -1
     private var pendingCancelledSeatNos: List<Int> = emptyList()
@@ -115,15 +118,15 @@ class BookingHistoryViewModel@Inject constructor(
         if (pendingCancelTransactionId == -1L || pendingCancelledSeatNos.isEmpty()) return
 
 
-        val updated = _bookingsList.value.orEmpty().mapNotNull { item ->
-            if (item.transactionId != pendingCancelTransactionId) {
-                item
+        val updated = _bookingsList.value.orEmpty().mapNotNull { bookingHistoryItem ->
+            if (bookingHistoryItem.transactionId != pendingCancelTransactionId) {
+                bookingHistoryItem
             } else {
-                val remainingSeats = item.seats.filterNot { it.seatNo in pendingCancelledSeatNos }
+                val remainingSeats = bookingHistoryItem.seats.filterNot { it.seatNo in pendingCancelledSeatNos }
                 if (remainingSeats.isEmpty()) {
                     null
                 } else {
-                    item.copy(
+                    bookingHistoryItem.copy(
                         seats = remainingSeats,
                         totalFare = remainingSeats.sumOf { it.fare?:0.0 }
                     )
@@ -138,6 +141,27 @@ class BookingHistoryViewModel@Inject constructor(
         pendingCancelTransactionId = -1L
         pendingCancelledSeatNos = emptyList()
     }
+
+    fun payAfterBooking(jazzCashPayRequest: JazzCashPayRequest) {
+        viewModelScope.launch {
+            bookingHistoryRepository.payAfterBooking(
+                jazzCashPayRequest
+            )
+
+        }
+    }
+
+    fun markBookingAsPaid(bookingTransactionId: Long) {
+        val updated = _bookingsList.value.orEmpty().map { bookingHistoryItem ->
+            if (bookingHistoryItem.transactionId == bookingTransactionId) {
+                bookingHistoryItem.copy(isPaid = true) // match the paid flag field name in BookingHistoryItem
+            } else {
+                bookingHistoryItem
+            }
+        }
+        _bookingsList.value = updated
+    }
+
 
 
     fun clearSession() {

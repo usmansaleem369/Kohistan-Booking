@@ -74,6 +74,9 @@ data class BookingHistoryItem(
     @SerializedName("TotalFare")
     val totalFare: Double,
 
+    @SerializedName("IsPaid")
+    val isPaid: Boolean,
+
     @SerializedName("Seats")
     val seats: List<BookedSeatItem> = emptyList()
 )

@@ -129,4 +129,12 @@
     <string name="house_5_street_3_faisalabad">House 5, Street 3, Faisalabad</string>
     <string name="booking_id">Booking ID #%1$s</string>
     <string name="booked_on">Booked on %1$s</string>
+    <string name="reservation_id">Reservation ID: #%1$s</string>
+    <string name="seat_hold_message">Your seat is on hold for 30 minutes. Please confirm your payment within 30 minutes from the My Bookings screen, otherwise your seat will be automatically cancelled.</string>
+    <string name="payment_unsuccessful">Payment Unsuccessful</string>
+    <string name="reservation_rs">Reservation #%1$s • Rs. %2$s</string>
+    <string name="pay_rs">Pay Rs. %1$s</string>
+    <string name="complete_payment">Complete Payment</string>
+    <string name="we_sent_a_6_digit_verification_code_to">We sent a 6-digit verification code to %1$s</string>
+    <string name="didn_t_receive_the_code">Didn\'t receive the code?</string>
 </resources>

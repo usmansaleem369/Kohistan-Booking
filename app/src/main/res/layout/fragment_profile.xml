@@ -31,7 +31,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/cb_lighter"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp"
                 app:strokeColor="@color/card_border_light"
@@ -325,7 +325,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_12sdp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/cb_lighter"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp"
                 android:layout_marginBottom="@dimen/_70sdp"

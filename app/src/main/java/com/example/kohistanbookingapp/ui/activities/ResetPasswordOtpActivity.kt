@@ -52,7 +52,8 @@ class ResetPasswordOtpActivity : AppCompatActivity() {
         }
 
         identifier = intent.getStringExtra(EXTRA_IDENTIFIER).orEmpty()
-        binding.tvOtpSentTo.text = "We sent a 6-digit verification code to $identifier"
+        binding.tvOtpSentTo.text =
+            getString(R.string.we_sent_a_6_digit_verification_code_to, identifier)
 
         otpBoxes = listOf(
             binding.etOtp1,
@@ -177,7 +178,7 @@ class ResetPasswordOtpActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                binding.tvOtpTimer.text = "Didn't receive the code?"
+                binding.tvOtpTimer.text = getString(R.string.didn_t_receive_the_code)
                 binding.tvResendOtp.isEnabled = true
                 binding.tvResendOtp.setTextColor(
                     ContextCompat.getColor(this@ResetPasswordOtpActivity, R.color.btn_navy)

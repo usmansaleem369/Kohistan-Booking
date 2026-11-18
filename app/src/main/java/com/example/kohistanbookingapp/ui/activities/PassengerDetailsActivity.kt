@@ -24,6 +24,9 @@ import com.example.kohistanbookingapp.util.AppLoader
 import com.example.kohistanbookingapp.util.AppUtils
 import com.example.kohistanbookingapp.util.AppUtils.attachCnicFormatter
 import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
+import com.example.kohistanbookingapp.util.AppUtils.validateCnic
+import com.example.kohistanbookingapp.util.AppUtils.validateEmail
+import com.example.kohistanbookingapp.util.AppUtils.validatePakMobile
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -177,18 +180,18 @@ class PassengerDetailsActivity : AppCompatActivity() {
 
 
     private fun validateInputs(isPayOnline: Boolean): Boolean {
-
         if (selectedSeats.isEmpty()) {
-            AppUtils.showCustomToast("No seats selected. Please go back and select seats.", layoutInflater, this)
+            AppUtils.showCustomToast(
+                "No seats selected. Please go back and select seats.",
+                layoutInflater,
+                this
+            )
             return false
         }
 
         binding.llPassengerDetails.apply {
             val name = etPassengerName.text.toString().trim()
-            val cnicDigits = etPassengerCnic.text.toString().replace("-", "").trim()
-            val phone = etPassengerPhone.text.toString().replace("-", "").trim()
             val email = etPassengerEmail.text.toString().trim()
-            val jazzCashNumber = binding.llPaymentMethod.etJazzCashAccount.text.toString().replace("-", "").trim()
 
             if (name.length < 3) {
                 etPassengerName.error = "Please enter valid passenger full name (at least 3 characters)"
@@ -196,58 +199,25 @@ class PassengerDetailsActivity : AppCompatActivity() {
                 return false
             }
 
-            if (cnicDigits.length != 13) {
-                etPassengerCnic.error = "Please enter a valid 13-digit CNIC number"
-                etPassengerCnic.requestFocus()
-                return false
-            }
+            if (!etPassengerCnic.validateCnic()) return false
 
-            if (!phone.matches(Regex("^03\\d{9}$"))) {
-                etPassengerPhone.error = "Enter a valid Pakistani mobile number (03XXXXXXXXX)"
-                etPassengerPhone.requestFocus()
-                return false
-            }
+            if (!etPassengerPhone.validatePakMobile()) return false
 
-            if (email.isEmpty()) {
-                etPassengerEmail.error = "Email address is required"
-                etPassengerEmail.requestFocus()
-                return false
-            }
+            if (!etPassengerEmail.validateEmail()) return false
+        }
 
-            if (email.isNotEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                etPassengerEmail.error = "Please enter a valid email address"
-                etPassengerEmail.requestFocus()
-                return false
-            }
-
-            if (!jazzCashNumber.matches(Regex("^03\\d{9}$"))) {
-                binding.llPaymentMethod.etJazzCashAccount.error = "Enter a valid 11-digit JazzCash account number (03XXXXXXXXX)"
-                binding.llPaymentMethod.etJazzCashAccount.requestFocus()
-                return false
-            }
-
-            if (isPayOnline) {
-                binding.llPaymentMethod.apply {
-                    val jazzCashNumber = etJazzCashAccount.text.toString().replace("-", "").trim()
-                    val jazzCashCnicDigits = etJazzCashCnic.text.toString().replace("-", "").trim()
-
-                    if (!jazzCashNumber.matches(Regex("^03\\d{9}$"))) {
-                        etJazzCashAccount.error =
-                            "Enter a valid 11-digit JazzCash account number (03XXXXXXXXX)"
-                        etJazzCashAccount.requestFocus()
-                        return false
-                    }
-
-                    if (jazzCashCnicDigits.length != 13) {
-                        etJazzCashCnic.error = "Please enter a valid 13-digit account holder CNIC"
-                        etJazzCashCnic.requestFocus()
-                        return false
-                    }
+        if (isPayOnline) {
+            binding.llPaymentMethod.apply {
+                if (!etJazzCashAccount.validatePakMobile("Enter a valid 11-digit JazzCash account number (03XXXXXXXXX)")) {
+                    return false
+                }
+                if (!etJazzCashCnic.validateCnic("Please enter a valid 13-digit account holder CNIC")) {
+                    return false
                 }
             }
-
-            return true
         }
+
+        return true
     }
 
 
@@ -346,9 +316,9 @@ class PassengerDetailsActivity : AppCompatActivity() {
         }
 
         dialogBinding.tvPaymentError.text = errorMessage
-        dialogBinding.tvReservationRef.text = "Reservation ID: #$reservationId"
+        dialogBinding.tvReservationRef.text = getString(R.string.reservation_id, reservationId)
 
-        dialogBinding.btnAcknowledgeHold.setOnClickListener {
+        dialogBinding.btnGoToHome.setOnClickListener {
             dialog.dismiss()
             finishBookingAndNavigateHome()
         }

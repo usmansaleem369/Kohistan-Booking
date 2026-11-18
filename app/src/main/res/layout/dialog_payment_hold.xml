@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_12sdp"
             android:fontFamily="@font/manrope_bold"
-            android:text="Payment Unsuccessful"
+            android:text="@string/payment_unsuccessful"
             android:textColor="@color/red_textcolor"
             android:textSize="@dimen/_14ssp" />
 
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_12sdp"
-            android:background="@drawable/bg_seat_box_warm"
+            android:background="@drawable/bg_rounded_light_gold"
             android:orientation="vertical"
             android:padding="@dimen/_10sdp">
 
@@ -81,20 +81,20 @@
                 android:layout_marginTop="@dimen/_4sdp"
                 android:fontFamily="@font/manrope_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
-                android:text="Your seat is on hold for 30 minutes. Please confirm your payment within 30 minutes from the My Bookings screen, otherwise your seat will be automatically cancelled."
+                android:text="@string/seat_hold_message"
                 android:textColor="@color/text_color_on_light"
                 android:textSize="@dimen/_9ssp" />
         </LinearLayout>
 
         <!-- Action Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAcknowledgeHold"
+            android:id="@+id/btnGoToHome"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginTop="@dimen/_14sdp"
-            android:backgroundTint="@color/btn_navy"
+            android:backgroundTint="@color/btn_gold"
             android:fontFamily="@font/manrope_bold"
-            android:text="Go to My Bookings"
+            android:text="Go to Home"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_10ssp"
