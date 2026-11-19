@@ -83,7 +83,6 @@ object NetworkModule {
             }
         }
 
-    // Standard client for GET routes, login, seat maps, booking history
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -101,7 +100,6 @@ object NetworkModule {
         .addInterceptor(loggingInterceptor)
         .build()
 
-    // Dedicated payment client: zero automatic socket retries + 90s read timeout for MPIN approval
     @Provides
     @Singleton
     @PaymentOkHttpClient

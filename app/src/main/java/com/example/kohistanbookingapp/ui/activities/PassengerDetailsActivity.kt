@@ -293,7 +293,9 @@ class PassengerDetailsActivity : AppCompatActivity() {
                         AppLoader.instance.hideLoader()
                         if (status.showDialog) {
                             AppUtils.showErrorDialog(this,  status.message, onOkClick = {
-                                finishBookingAndNavigateHome()
+                                if (status.message.contains("My Bookings",ignoreCase = true)) {
+                                    finishBookingAndNavigateHome()
+                                }
                             })
                         } else {
                             AppUtils.showCustomToast(status.message, layoutInflater, this)
