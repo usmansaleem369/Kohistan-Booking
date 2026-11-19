@@ -275,7 +275,7 @@ class PassengerDetailsActivity : AppCompatActivity() {
                     )
                 } else {
                     AppUtils.showCustomToast(
-                        "Seats reserved! Reservation ID: ${bookingData.reservationId}",
+                        "Seats reserved. You can check booking on My Booking screen.",
                         layoutInflater,
                         this
                     )
