@@ -56,7 +56,7 @@ class CreateBookingViewModel @Inject constructor(
 
     fun createBooking(request: CreateBookingRequest) {
         viewModelScope.launch {
-            createBookingRepository.createBooking(request)
+            createBookingRepository.createOnlineBookingWithWorker(request)
         }
     }
 

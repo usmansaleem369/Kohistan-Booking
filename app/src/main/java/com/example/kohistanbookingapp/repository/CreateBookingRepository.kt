@@ -3,6 +3,7 @@ package com.example.kohistanbookingapp.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.work.WorkInfo
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.api.ApiService
 import com.example.kohistanbookingapp.models.request.CreateBookingRequest
@@ -15,6 +16,9 @@ import com.example.kohistanbookingapp.util.Event
 import com.example.kohistanbookingapp.util.ExceptionHandler
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.util.handleResponse
+import com.example.kohistanbookingapp.worker.JazzCashPaymentWorker
+import com.example.kohistanbookingapp.worker.PaymentWorkScheduler
+import com.google.gson.Gson
 import java.net.URLDecoder
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -25,7 +29,9 @@ import javax.inject.Singleton
 class CreateBookingRepository @Inject constructor(
     private val apiService: ApiService,
     private val sharedPreferencesHelper: SharedPreferencesHelper,
-    private val sharedRepository: SharedRepository
+    private val sharedRepository: SharedRepository,
+    private val paymentWorkScheduler: PaymentWorkScheduler,
+    private val gson: Gson
 ) {
     private var isRequestInProgress = false
 
@@ -225,54 +231,54 @@ class CreateBookingRepository @Inject constructor(
             isRequestInProgress = false
         }
     }
-
-    suspend fun createBooking(request: CreateBookingRequest) {
-        val formattedRequest = if (request.departureDate.contains(",")) {
-            request.copy(departureDate = formatToIsoDate(request.departureDate))
-        } else {
-            request
-        }
-
-        val isOnlinePayment = formattedRequest.payOnline
-
+    suspend fun createOnlineBookingWithWorker(request: CreateBookingRequest) {
+        if (isRequestInProgress) return
         isRequestInProgress = true
-        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
 
         try {
-            val response = apiService.createBooking(formattedRequest)
-            response.handleResponse(
-                onSuccess = { res ->
-                    val bookingData = res.data
-                    if (bookingData == null) {
-                        _apiRequestStatus.postValue(
-                            Event(ApiRequestStatus.Error("Reservation details missing in response."))
-                        )
-                        return@handleResponse
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+            val finalWorkInfo = paymentWorkScheduler.enqueueCreateOnlineBooking(request)
+
+            when (finalWorkInfo?.state) {
+                WorkInfo.State.SUCCEEDED -> {
+                    val responseJson = finalWorkInfo.outputData
+                        .getString(JazzCashPaymentWorker.KEY_RESPONSE_JSON)
+                    val bookingData = responseJson?.let {
+                        gson.fromJson(it, CreateBookingData::class.java)
                     }
 
                     _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
-                    _createBookingResponse.postValue(Event(bookingData))
-                },
-                onError = { error ->
+                    if (bookingData != null) {
+                        _createBookingResponse.postValue(Event(bookingData))
+                    } else {
+                        _apiRequestStatus.postValue(
+                            Event(ApiRequestStatus.Error("Reservation details missing in response.", showDialog = true))
+                        )
+                    }
+                }
+
+                WorkInfo.State.FAILED,
+                WorkInfo.State.CANCELLED -> {
+                    val errorMsg = finalWorkInfo.outputData
+                        .getString(JazzCashPaymentWorker.KEY_ERROR)
+                        ?: "Connection interrupted while confirming payment. Please refresh My Bookings to verify status before paying again."
+                    val isJazzCashError = finalWorkInfo.outputData.getBoolean(JazzCashPaymentWorker.KEY_IS_JAZZCASH_ERROR, false) ||
+                            errorMsg.contains("jazzcash", ignoreCase = true) ||
+                            errorMsg.contains("mpin", ignoreCase = true)
                     _apiRequestStatus.postValue(
-                        Event(ApiRequestStatus.Error(error, showDialog = isOnlinePayment))
+                        Event(ApiRequestStatus.Error(errorMsg, showDialog = errorMsg.contains("JazzCash",ignoreCase = isJazzCashError)))
                     )
                 }
-            )
-        } catch (e: Exception) {
-            val errorMessage = if (isOnlinePayment) {
-                ExceptionHandler.getPaymentMessage(e)
-            } else {
-                ExceptionHandler.getMessage(e)
+
+                else -> {
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+                }
             }
-            _apiRequestStatus.postValue(
-                Event(ApiRequestStatus.Error(errorMessage, showDialog = isOnlinePayment))
-            )
         } finally {
             isRequestInProgress = false
         }
     }
-
     fun clearSession() {
         _allDestinationCities.postValue(Event(null))
         _allDepartureCities.postValue(Event(null))

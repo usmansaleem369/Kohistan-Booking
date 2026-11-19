@@ -372,7 +372,7 @@ class BookingsFragment : Fragment() {
                         activePaymentSheetBinding?.btnPayJazzCash?.isEnabled = true
 
                         if (status.showDialog) {
-                            AppUtils.showErrorDialog(requireActivity(), layoutInflater, status.message)
+                            AppUtils.showErrorDialog(requireActivity(),  status.message, onOkClick = {})
                         } else {
                             binding.swipeRefreshBookings.isRefreshing = false
                             bookingHistoryViewModel.onBookingHistoryError()

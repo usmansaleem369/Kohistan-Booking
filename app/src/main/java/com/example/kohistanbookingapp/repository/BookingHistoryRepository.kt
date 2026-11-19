@@ -2,6 +2,7 @@ package com.example.kohistanbookingapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.work.WorkInfo
 import com.example.kohistanbookingapp.api.ApiRequestStatus
 import com.example.kohistanbookingapp.api.ApiService
 import com.example.kohistanbookingapp.models.request.CancelBookingRequest
@@ -13,12 +14,17 @@ import com.example.kohistanbookingapp.util.Event
 import com.example.kohistanbookingapp.util.ExceptionHandler
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.util.handleResponse
-import java.net.SocketTimeoutException
+import com.example.kohistanbookingapp.worker.JazzCashPaymentWorker
+import com.example.kohistanbookingapp.worker.PaymentWorkScheduler
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
 
 class BookingHistoryRepository @Inject constructor(
     private val apiService: ApiService,
     private val sharedPreferencesHelper: SharedPreferencesHelper,
+    private val paymentWorkScheduler: PaymentWorkScheduler,
+    private val gson: Gson
 ) {
 
     private var isRequestInProgress = false
@@ -89,39 +95,49 @@ class BookingHistoryRepository @Inject constructor(
         }
     }
 
-    suspend fun payAfterBooking(request: JazzCashPayRequest) {
-        _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
-        try {
-            val response = apiService.payAfterBooking(request)
+    suspend fun payAfterBookingWithWorker(request: JazzCashPayRequest) {
 
-            response.handleResponse(
-                onSuccess = { res ->
-                    val paymentInfo = res.data
-                    if (paymentInfo == null || paymentInfo.isPaid) {
-                        _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
-                        _payAfterBookingResponse.postValue(Event(res))
-                    } else {
-                        val failMsg = paymentInfo.responseMessage
-                            ?.takeIf { it.isNotBlank() }
-                            ?: res.message
-                            ?: "JazzCash payment could not be completed."
-                        _apiRequestStatus.postValue(
-                            Event(ApiRequestStatus.Error(failMsg, showDialog = true))
-                        )
+
+        try {
+            _apiRequestStatus.postValue(Event(ApiRequestStatus.Loading))
+
+            val finalWorkInfo = paymentWorkScheduler.enqueuePayAfterBooking(request)
+
+            when (finalWorkInfo?.state) {
+                WorkInfo.State.SUCCEEDED -> {
+                    val responseJson = finalWorkInfo.outputData
+                        .getString(JazzCashPaymentWorker.KEY_RESPONSE_JSON)
+                    val responseType = object : TypeToken<ApiResponse<BookingPaymentInfo>>() {}.type
+                    val parsedResponse: ApiResponse<BookingPaymentInfo>? = responseJson?.let {
+                        gson.fromJson(it, responseType)
                     }
-                },
-                onError = { errorMessage ->
+
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+                    if (parsedResponse != null) {
+                        _payAfterBookingResponse.postValue(Event(parsedResponse))
+                    }
+                }
+
+                WorkInfo.State.FAILED,
+                WorkInfo.State.CANCELLED -> {
+                    val errorMsg = finalWorkInfo.outputData
+                        .getString(JazzCashPaymentWorker.KEY_ERROR)
+                        ?: "Connection interrupted while confirming payment. Please refresh My Bookings to verify status before paying again."
+                    val isJazzCashError = finalWorkInfo.outputData
+                        .getBoolean(JazzCashPaymentWorker.KEY_IS_JAZZCASH_ERROR, false) ||
+                            errorMsg.contains("jazzcash", ignoreCase = true) ||
+                            errorMsg.contains("mpin", ignoreCase = true)
                     _apiRequestStatus.postValue(
-                        Event(ApiRequestStatus.Error(errorMessage, showDialog = true))
+                        Event(ApiRequestStatus.Error(errorMsg, showDialog = errorMsg.contains("JazzCash",ignoreCase = isJazzCashError)))
                     )
                 }
-            )
-        } catch (e: Exception) {
-            _apiRequestStatus.postValue(
-                Event(
-                    ApiRequestStatus.Error(message = ExceptionHandler.getPaymentMessage(e), showDialog = true)
-                )
-            )
+
+                else -> {
+                    _apiRequestStatus.postValue(Event(ApiRequestStatus.Idle))
+                }
+            }
+        } finally {
         }
     }
+
 }

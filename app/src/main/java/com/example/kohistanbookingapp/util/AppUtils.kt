@@ -74,26 +74,26 @@ object AppUtils {
 
     fun showErrorDialog(
         activity: Activity,
-        layoutInflater: LayoutInflater,
         description: String,
+        onOkClick: () -> Unit = {}
     ) {
         if (activity.isFinishing || activity.isDestroyed) {
             return
         }
 
-        val errorDialogBinding =
-            ErrorDialogBinding.inflate(layoutInflater)
+        val errorDialogBinding = ErrorDialogBinding.inflate(activity.layoutInflater)
         errorDialogBinding.tvDescription.text = description
-        
-        
-        val errorDialog =
-            MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog_Rounded).setView(
-                errorDialogBinding.root
-            ).create()
+
+        val errorDialog = MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog_Rounded)
+            .setView(errorDialogBinding.root)
+            .setCancelable(false)
+            .create()
+
         errorDialogBinding.btnOk.setOnClickListener {
             errorDialog.dismiss()
+            onOkClick()
         }
-        errorDialog.setCancelable(false)
+
         errorDialog.show()
     }
 

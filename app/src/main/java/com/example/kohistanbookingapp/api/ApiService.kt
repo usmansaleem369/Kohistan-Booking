@@ -72,10 +72,10 @@ interface ApiService {
         @Query("ToCityId") toCityId: Int
     ): Response<ApiResponse<BookedSeatsData>>
 
-    @POST("api/Booking/CreateBooking")
+/*    @POST("api/Booking/CreateBooking")
     suspend fun createBooking(
         @Body request: CreateBookingRequest
-    ): Response<ApiResponse<CreateBookingData>>
+    ): Response<ApiResponse<CreateBookingData>>*/
 
     @POST("api/Profile/CreateProfile")
     suspend fun createProfile(
@@ -115,9 +115,9 @@ interface ApiService {
       @Body request: CancelBookingRequest
     ): Response<ApiResponse<Unit>>
 
-    @POST("/api/EPayment/PayBookingOnline")
+/*    @POST("/api/EPayment/PayBookingOnline")
     suspend fun payAfterBooking(
         @Body request: JazzCashPayRequest
-    ): Response<ApiResponse<BookingPaymentInfo>>
+    ): Response<ApiResponse<BookingPaymentInfo>>*/
 
 }

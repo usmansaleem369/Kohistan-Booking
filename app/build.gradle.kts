@@ -92,4 +92,8 @@ dependencies {
 
     //Swipe Refresh
     implementation(libs.androidx.swiperefreshlayout)
+
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
 }

@@ -23,7 +23,6 @@ class BookingHistoryViewModel@Inject constructor(
     val apiRequestStatus = bookingHistoryRepository.apiRequestStatus
     val bookingHistoryResponse = bookingHistoryRepository.bookingHistoryResponse
 
-    // Pagination state preserved across configuration changes
     private val _bookingsList = MutableLiveData<List<BookingHistoryItem>>(emptyList())
     val bookingsList: LiveData<List<BookingHistoryItem>> = _bookingsList
 
@@ -144,7 +143,7 @@ class BookingHistoryViewModel@Inject constructor(
 
     fun payAfterBooking(jazzCashPayRequest: JazzCashPayRequest) {
         viewModelScope.launch {
-            bookingHistoryRepository.payAfterBooking(
+            bookingHistoryRepository.payAfterBookingWithWorker(
                 jazzCashPayRequest
             )
 

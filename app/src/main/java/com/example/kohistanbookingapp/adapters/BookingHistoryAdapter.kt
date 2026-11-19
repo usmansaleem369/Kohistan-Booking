@@ -77,7 +77,7 @@ class BookingHistoryAdapter(
                 val showActions = canCancelTickets
                 llBookingActions.visibility = if (showActions) View.VISIBLE else View.GONE
                 btnCancelTicket.visibility = if (showActions) View.VISIBLE else View.GONE
-                btnPayNow.isVisible = !bookingHistoryItem.isPaid
+                //btnPayNow.isVisible = !bookingHistoryItem.isPaid
 
                 btnCancelTicket.setOnClickListener { onCancelClick(bookingHistoryItem) }
                 btnPayNow.setOnClickListener { onPayNowClick(bookingHistoryItem) }

@@ -28,6 +28,7 @@ import com.example.kohistanbookingapp.util.AppUtils.clearErrorOnTextChange
 import com.example.kohistanbookingapp.util.AppUtils.validateCnic
 import com.example.kohistanbookingapp.util.AppUtils.validateEmail
 import com.example.kohistanbookingapp.util.AppUtils.validatePakMobile
+import com.example.kohistanbookingapp.util.JazzCashFailureMessageHandler.formatJazzCashFailureMessage
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.viewmodel.CreateBookingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -267,10 +268,10 @@ class PassengerDetailsActivity : AppCompatActivity() {
 
                 if (isOnlineUnpaid) {
                     val errorReason = bookingData.paymentMessage?.takeIf { it.isNotBlank() } ?: payment.responseMessage?.takeIf { it.isNotBlank() } ?: "JazzCash payment could not be completed."
-
+                    val message = formatJazzCashFailureMessage(errorReason)
                     showPaymentHoldDialog(
                         reservationId = bookingData.reservationId.orEmpty(),
-                        errorMessage = errorReason
+                        errorMessage = message
                     )
                 } else {
                     AppUtils.showCustomToast(
@@ -291,7 +292,9 @@ class PassengerDetailsActivity : AppCompatActivity() {
                     is ApiRequestStatus.Error -> {
                         AppLoader.instance.hideLoader()
                         if (status.showDialog) {
-                            AppUtils.showErrorDialog(this, layoutInflater, status.message)
+                            AppUtils.showErrorDialog(this,  status.message, onOkClick = {
+                                finishBookingAndNavigateHome()
+                            })
                         } else {
                             AppUtils.showCustomToast(status.message, layoutInflater, this)
                         }

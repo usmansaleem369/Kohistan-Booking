@@ -1,14 +1,16 @@
 package com.example.kohistanbookingapp.module
 
-import com.example.kohistanbookingapp.BuildConfig
 import android.util.Log
+import com.example.kohistanbookingapp.BuildConfig
 import com.example.kohistanbookingapp.api.ApiService
+import com.example.kohistanbookingapp.api.PaymentApiService
 import com.example.kohistanbookingapp.util.SharedPreferencesHelper
 import com.example.kohistanbookingapp.util.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -26,13 +28,21 @@ annotation class AuthInterceptor
 @Retention(AnnotationRetention.BINARY)
 annotation class LoggingInterceptor
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PaymentOkHttpClient
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PaymentRetrofit
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
     fun provideBaseUrl(): String =
-        "http://192.168.55.24:8078/" // Staging: "http://172.195.0.155:82/"
+        "http://125.209.84.238:8083/"
 
     @Provides
     @Singleton
@@ -73,6 +83,7 @@ object NetworkModule {
             }
         }
 
+    // Standard client for GET routes, login, seat maps, booking history
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -83,10 +94,22 @@ object NetworkModule {
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(false)
+        .connectionPool(ConnectionPool(5, 30, TimeUnit.SECONDS))
+        .retryOnConnectionFailure(true)
         .authenticator(tokenAuthenticator)
         .addInterceptor(authInterceptor)
-        .addInterceptor(loggingInterceptor) // Runs after authInterceptor so headers appear in Logcat
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    // Dedicated payment client: zero automatic socket retries + 90s read timeout for MPIN approval
+    @Provides
+    @Singleton
+    @PaymentOkHttpClient
+    fun providePaymentOkHttpClient(
+        okHttpClient: OkHttpClient,
+    ): OkHttpClient = okHttpClient.newBuilder()
+        .retryOnConnectionFailure(false)
+        .readTimeout(90, TimeUnit.SECONDS)
         .build()
 
     @Provides
@@ -102,6 +125,25 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @PaymentRetrofit
+    fun providePaymentRetrofit(
+        @PaymentOkHttpClient paymentOkHttpClient: OkHttpClient,
+        baseUrl: String
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(paymentOkHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    @Provides
+    @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun providePaymentApiService(
+        @PaymentRetrofit paymentRetrofit: Retrofit
+    ): PaymentApiService =
+        paymentRetrofit.create(PaymentApiService::class.java)
 }
